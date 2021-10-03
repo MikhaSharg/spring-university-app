@@ -1,22 +1,20 @@
 CREATE TABLE groups
 (
-    group_id int GENERATED ALWAYS AS IDENTITY,
-    group_name varchar(10) NOT NULL UNIQUE,
-    CONSTRAINT PK_groups_group_id PRIMARY KEY (group_id) 
+    group_id SERIAL PRIMARY KEY,
+    group_name varchar(10) NOT NULL UNIQUE
 );
 
 CREATE TABLE students (
-    student_id int GENERATED ALWAYS AS IDENTITY,
+    student_id SERIAL PRIMARY KEY,
     first_name varchar(50) NOT NULL,
     last_name varchar (50) NOT NULL,
     gender varchar (50) NOT NULL,
     email varchar (50) NOT NULL,
     address varchar (50) NOT NULL,
     age int NOT NULL,
-    phone_number int NOT NULL,
+    phone_number bigint NOT NULL,
     role varchar (50),
     group_id int NOT NULL,
-    CONSTRAINT PK_students_student_id PRIMARY KEY (student_id), 
     CONSTRAINT FK_students_groups FOREIGN KEY (group_id) REFERENCES groups (group_id)
     );
 

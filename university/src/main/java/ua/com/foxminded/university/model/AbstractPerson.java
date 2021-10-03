@@ -1,6 +1,6 @@
 package ua.com.foxminded.university.model;
 
-public class AbstractPerson extends IdEntity {
+public abstract class AbstractPerson extends IdEntity {
 
     private String firstName;
     private String lastName;
@@ -8,10 +8,11 @@ public class AbstractPerson extends IdEntity {
     private String email;
     private String address;
     private Integer age;
-    private Integer phoneNumber;
+    private Long phoneNumber;
+    private String role;
 
-    public AbstractPerson(Long id, String firstName, String lastName, String gender, String email, String address,
-            Integer age, Integer phoneNumber) {
+    protected AbstractPerson(Long id, String firstName, String lastName, String gender, String email, String address,
+            Integer age, Long phoneNumber, String role) {
 
         super(id);
         this.firstName = firstName;
@@ -21,11 +22,20 @@ public class AbstractPerson extends IdEntity {
         this.address = address;
         this.age = age;
         this.phoneNumber = phoneNumber;
+        this.role = role;
     }
 
-    public AbstractPerson(String firstName, String lastName, String gender, String email, String address, Integer age,
-            Integer phoneNumber) {
-        this(null, firstName, lastName, gender, email, address, age, phoneNumber);
+    protected AbstractPerson(String firstName, String lastName, String gender, String email, String address,
+            Integer age, Long phoneNumber, String role) {
+
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.gender = gender;
+        this.email = email;
+        this.address = address;
+        this.age = age;
+        this.phoneNumber = phoneNumber;
+        this.role = role;
     }
 
     public String getFirstName() {
@@ -76,12 +86,20 @@ public class AbstractPerson extends IdEntity {
         this.age = age;
     }
 
-    public Integer getPhoneNumber() {
+    public Long getPhoneNumber() {
         return phoneNumber;
     }
 
-    public void setPhoneNumber(Integer phoneNumber) {
+    public void setPhoneNumber(Long phoneNumber) {
         this.phoneNumber = phoneNumber;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
     }
 
     @Override
@@ -143,6 +161,13 @@ public class AbstractPerson extends IdEntity {
         } else if (!phoneNumber.equals(other.phoneNumber))
             return false;
         return true;
+    }
+
+    @Override
+    public String toString() {
+        return "AbstractPerson [firstName=" + firstName + ", lastName=" + lastName + ", gender=" + gender + ", email="
+                + email + ", address=" + address + ", age=" + age + ", phoneNumber=" + phoneNumber + ", role=" + role
+                + "]";
     }
 
 }

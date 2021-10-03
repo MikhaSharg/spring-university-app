@@ -8,15 +8,15 @@ public class Teacher extends AbstractPerson {
     private List<Subject> subjects;
 
     public Teacher(Long id, String firstName, String lastName, String gender, String email, String address, Integer age,
-            Integer phoneNumber, String profile, List<Subject> subjects) {
-        super(id, firstName, lastName, gender, email, address, age, phoneNumber);
+            Long phoneNumber, String role, String profile, List<Subject> subjects) {
+        super(id, firstName, lastName, gender, email, address, age, phoneNumber, role);
         this.profile = profile;
         this.subjects = subjects;
     }
 
     public Teacher(String firstName, String lastName, String gender, String email, String address, Integer age,
-            Integer phoneNumber, String profile, List<Subject> subjects) {
-        super(null, firstName, lastName, gender, email, address, age, phoneNumber);
+            Long phoneNumber, String role, String profile, List<Subject> subjects) {
+        super(null, firstName, lastName, gender, email, address, age, phoneNumber, role);
         this.profile = profile;
         this.subjects = subjects;
     }

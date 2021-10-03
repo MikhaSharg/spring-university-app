@@ -2,32 +2,33 @@ package ua.com.foxminded.university.model;
 
 public class Student extends AbstractPerson {
 
-    private Group group;
+    private Long groupId;
 
     public Student(Long id, String firstName, String lastName, String gender, String email, String address, Integer age,
-            Integer phoneNumber) {
-        super(id, firstName, lastName, gender, email, address, age, phoneNumber);
+            Long phoneNumber, String role, Long gropId) {
+        super(id, firstName, lastName, gender, email, address, age, phoneNumber, role);
+        this.groupId = gropId;
     }
 
     public Student(String firstName, String lastName, String gender, String email, String address, Integer age,
-            Integer phoneNumber, Group group) {
-        super(null, firstName, lastName, gender, email, address, age, phoneNumber);
-        this.group = group;
+            Long phoneNumber, String role, Long gropId) {
+        super(firstName, lastName, gender, email, address, age, phoneNumber, role);
+        this.groupId = gropId;
     }
 
-    public Group getGroup() {
-        return group;
+    public Long getGroupId() {
+        return groupId;
     }
 
-    public void setGroup(Group group) {
-        this.group = group;
+    public void setGroupId(Long groupId) {
+        this.groupId = groupId;
     }
 
     @Override
     public int hashCode() {
         final int prime = 31;
         int result = super.hashCode();
-        result = prime * result + ((group == null) ? 0 : group.hashCode());
+        result = prime * result + ((groupId == null) ? 0 : groupId.hashCode());
         return result;
     }
 
@@ -40,12 +41,17 @@ public class Student extends AbstractPerson {
         if (getClass() != obj.getClass())
             return false;
         Student other = (Student) obj;
-        if (group == null) {
-            if (other.group != null)
+        if (groupId == null) {
+            if (other.groupId != null)
                 return false;
-        } else if (!group.equals(other.group))
+        } else if (!groupId.equals(other.groupId))
             return false;
         return true;
+    }
+
+    @Override
+    public String toString() {
+        return "Student [groupId=" + groupId + ", toString()=" + super.toString() + "]";
     }
 
 }

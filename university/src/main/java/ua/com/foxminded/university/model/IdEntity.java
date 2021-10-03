@@ -1,10 +1,13 @@
 package ua.com.foxminded.university.model;
 
-public class IdEntity {
+public abstract class IdEntity implements Entity<Long> {
 
     private Long Id;
 
-    public IdEntity(Long id) {
+    protected IdEntity() {
+    }
+
+    protected IdEntity(Long id) {
         Id = id;
     }
 
@@ -40,5 +43,5 @@ public class IdEntity {
             return false;
         return true;
     }
-    
+
 }
