@@ -1,7 +1,9 @@
 package ua.com.foxminded.university;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.util.Arrays;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,22 +14,21 @@ import org.springframework.jdbc.core.JdbcTemplate;
 class UniversityApplicationTest {
 
     @Autowired
-    JdbcTemplate template;
+    JdbcTemplate jdbcTemplate;
 
     @Test
-    void migrationDone() {
-
-        List<String> tables = template.queryForList(
-                "SELECT table_name FROM information_schema.tables WHERE table_schema='public'", String.class);
-        assertEquals(8, tables.size());
-
-        assertEquals("flyway_schema_history", tables.get(0));
-        assertEquals("groups", tables.get(1));
-        assertEquals("students", tables.get(2));
-        assertEquals("persons", tables.get(3));
-        assertEquals("teachers", tables.get(4));
-        assertEquals("subjects", tables.get(5));
-        assertEquals("audiences", tables.get(6));
-        assertEquals("lectures_shedule", tables.get(7));
+    void migrationTest() {
+        List<String> tables = jdbcTemplate.queryForList(
+                "SELECT table_name FROM information_schema.tables WHERE table_schema='PUBLIC'", String.class);
+        assertThat(tables.size()).isEqualTo(8);
+        System.out.println(tables);
+        assertThat(tables).containsAll(Arrays.asList("groups", "students", "persons", "teachers", "subjects",
+                "audiences", "flyway_schema_history", "lectures_shedule"));
     }
+
+    @Test
+    void contextLoads() {
+        assertThat(jdbcTemplate).isNotNull();
+    }
+
 }

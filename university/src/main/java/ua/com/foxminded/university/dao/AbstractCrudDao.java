@@ -12,6 +12,7 @@ import java.util.stream.Collectors;
 
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.jdbc.object.BatchSqlUpdate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
@@ -29,17 +30,14 @@ public abstract class AbstractCrudDao<T extends IdEntity> implements CrudDao<T, 
     }
 
     private T create(T entity) {
-        KeyHolder keyHolder = new GeneratedKeyHolder();
-        int updated = jdbcTemplate.update(con -> {
-            PreparedStatement ps = con.prepareStatement(getInsertQuery());
-            setInsertParams(ps, entity);
-            return ps;
-        }, keyHolder);
-        Number key = keyHolder.getKey();
-        if (updated != 1 || key == null) {
-            throw new IllegalArgumentException("Unable to create " + entity.toString());
-        }
+        Number key = getJdbcInsert().executeAndReturnKey(mapUpdateParam(entity));
         return createNewWithId(key.longValue(), entity);
+    }
+
+    private SimpleJdbcInsert getJdbcInsert() {
+        SimpleJdbcInsert jdbcInsert = new SimpleJdbcInsert(jdbcTemplate);
+        jdbcInsert.withTableName("students").setGeneratedKeyNames("student_id");
+        return jdbcInsert;
     }
 
     protected T update(T entity) {
@@ -79,20 +77,22 @@ public abstract class AbstractCrudDao<T extends IdEntity> implements CrudDao<T, 
     @Override
     public void deleteById(Long id) {
         if (jdbcTemplate.update(getDeleteByIdQuery(), id) != 1) {
-            throw new IllegalArgumentException("Unable to deleteitem with id " + id);
+            throw new IllegalArgumentException("Unable to delete item with id " + id);
 
         }
     }
 
     protected List<T> createBatch(List<T> value) {
+
         BatchSqlUpdate batchSqlUpdate = new BatchSqlUpdate();
         batchSqlUpdate.setJdbcTemplate(jdbcTemplate);
         batchSqlUpdate.setSql(getInsertOneNamedQuery());
         batchSqlUpdate.setReturnGeneratedKeys(true);
+        batchSqlUpdate.setGeneratedKeysColumnNames("student_id");
         declareInsertParams(batchSqlUpdate);
         List<T> updated = value.stream().map(item -> {
             KeyHolder keyHolder = new GeneratedKeyHolder();
-            Map<String, Object> paramMap = mapUpdateParam(item);
+            Map<String, Object> paramMap = mapInsertParam(item);
             batchSqlUpdate.updateByNamedParam(paramMap, keyHolder);
             assert keyHolder.getKey() != null;
             return createNewWithId(keyHolder.getKey().longValue(), item);
@@ -105,6 +105,7 @@ public abstract class AbstractCrudDao<T extends IdEntity> implements CrudDao<T, 
         BatchSqlUpdate batchSqlUpdate = new BatchSqlUpdate();
         batchSqlUpdate.setJdbcTemplate(jdbcTemplate);
         batchSqlUpdate.setSql(getUpdateOneNamedQuery());
+        declareUpdateParams(batchSqlUpdate);
         List<T> updated = value.stream().map(item -> {
             Map<String, Object> paramMap = mapUpdateParam(item);
             batchSqlUpdate.updateByNamedParam(paramMap);
@@ -114,13 +115,13 @@ public abstract class AbstractCrudDao<T extends IdEntity> implements CrudDao<T, 
         return updated;
     }
 
-    protected abstract String getUpdateOneNamedQuery();
-
-    protected abstract Map<String, Object> mapUpdateParam(T entity);
+    protected abstract void declareUpdateParams(BatchSqlUpdate batchSqlUpdate);
 
     protected abstract void declareInsertParams(BatchSqlUpdate batchSqlUpdate);
 
-    protected abstract String getInsertOneNamedQuery();
+    protected abstract Map<String, Object> mapUpdateParam(T entity);
+
+    protected abstract Map<String, Object> mapInsertParam(T entity);
 
     protected abstract void setInsertParams(PreparedStatement ps, T entity) throws SQLException;
 
@@ -133,6 +134,10 @@ public abstract class AbstractCrudDao<T extends IdEntity> implements CrudDao<T, 
     protected abstract String getInsertQuery();
 
     protected abstract String getUpdateQuery();
+
+    protected abstract String getUpdateOneNamedQuery();
+
+    protected abstract String getInsertOneNamedQuery();
 
     protected abstract String getSelectByIdQuery();
 
