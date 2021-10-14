@@ -19,6 +19,7 @@ import org.springframework.jdbc.support.KeyHolder;
 
 import ua.com.foxminded.university.model.IdEntity;
 
+
 public abstract class AbstractCrudDao<T extends IdEntity> implements CrudDao<T, Long> {
 
     protected final JdbcTemplate jdbcTemplate;
@@ -30,14 +31,8 @@ public abstract class AbstractCrudDao<T extends IdEntity> implements CrudDao<T, 
     }
 
     private T create(T entity) {
-        Number key = getJdbcInsert().executeAndReturnKey(mapUpdateParam(entity));
+        Number key = getJdbcInsert().executeAndReturnKey(mapInsertParam(entity));
         return createNewWithId(key.longValue(), entity);
-    }
-
-    private SimpleJdbcInsert getJdbcInsert() {
-        SimpleJdbcInsert jdbcInsert = new SimpleJdbcInsert(jdbcTemplate);
-        jdbcInsert.withTableName("students").setGeneratedKeyNames("student_id");
-        return jdbcInsert;
     }
 
     protected T update(T entity) {
@@ -88,7 +83,7 @@ public abstract class AbstractCrudDao<T extends IdEntity> implements CrudDao<T, 
         batchSqlUpdate.setJdbcTemplate(jdbcTemplate);
         batchSqlUpdate.setSql(getInsertOneNamedQuery());
         batchSqlUpdate.setReturnGeneratedKeys(true);
-        batchSqlUpdate.setGeneratedKeysColumnNames("student_id");
+        batchSqlUpdate.setGeneratedKeysColumnNames(getColumnNameWithId());
         declareInsertParams(batchSqlUpdate);
         List<T> updated = value.stream().map(item -> {
             KeyHolder keyHolder = new GeneratedKeyHolder();
@@ -100,6 +95,8 @@ public abstract class AbstractCrudDao<T extends IdEntity> implements CrudDao<T, 
         batchSqlUpdate.flush();
         return updated;
     }
+
+    protected abstract String getColumnNameWithId();
 
     protected List<T> updateBatch(List<T> value) {
         BatchSqlUpdate batchSqlUpdate = new BatchSqlUpdate();
@@ -144,5 +141,7 @@ public abstract class AbstractCrudDao<T extends IdEntity> implements CrudDao<T, 
     protected abstract String getDeleteByIdQuery();
 
     protected abstract String getSelectAllQuery();
+    
+    protected abstract SimpleJdbcInsert getJdbcInsert();
 
 }

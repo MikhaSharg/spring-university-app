@@ -3,11 +3,14 @@ package ua.com.foxminded.university.dao.jdbc;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.PreparedStatementSetter;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.SqlParameter;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.jdbc.object.BatchSqlUpdate;
 import org.springframework.stereotype.Repository;
 
@@ -38,6 +41,7 @@ public class JdbcStudentDao extends AbstractCrudDao<Student> implements StudentD
     private static final String INSERT_ONE_NAMED = "INSERT INTO students (first_name, last_name, gender, email, address, age, phone_number, role, group_id) VALUES (:FIRST_NAME, :LAST_NAME, :GENDER, :EMAIL, :ADDRESS, :AGE, :PHONE_NUMBER, :ROLE, :GROUP_ID)";
     private static final String UPDATE_ONE_NAMED = "UPDATE students SET first_name=:FIRST_NAME, last_name=:LAST_NAME, gender=:GENDER, email=:EMAIL, address=:ADDRESS, age=:AGE, phone_number=:PHONE_NUMBER, role=:ROLE, group_id=:GROUP_ID  WHERE student_id=:ID";
     private static final String SELECT_ALL = "SELECT * FROM students";
+    private static final String SELECT_BY_GROUPID = "SELECT * FROM students WHERE group_id =?";
 
     public JdbcStudentDao(JdbcTemplate jdbsTemplate, RowMapper<Student> rowMapper) {
         super(jdbsTemplate, rowMapper);
@@ -175,6 +179,29 @@ public class JdbcStudentDao extends AbstractCrudDao<Student> implements StudentD
     @Override
     protected String getDeleteByIdQuery() {
         return DELETE_BY_ID;
+    }
+
+    @Override
+    public List<Student> findStudentsByGroupId(Long groupId) {
+        PreparedStatementSetter ps = new PreparedStatementSetter() {
+            @Override
+            public void setValues(PreparedStatement ps) throws SQLException {
+                ps.setLong(1, groupId);
+            }
+        };
+        return jdbcTemplate.query(SELECT_BY_GROUPID, ps, rowMapper);
+    }
+
+    @Override
+    protected SimpleJdbcInsert getJdbcInsert() {
+          SimpleJdbcInsert jdbcInsert = new SimpleJdbcInsert(jdbcTemplate);
+          jdbcInsert.withTableName("students").setGeneratedKeyNames("student_id");
+          return jdbcInsert;
+    }
+
+    @Override
+    protected String getColumnNameWithId() {
+        return "student_id";
     }
 
 }

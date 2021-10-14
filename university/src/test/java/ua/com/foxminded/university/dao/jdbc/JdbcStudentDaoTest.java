@@ -28,7 +28,6 @@ class JdbcStudentDaoTest {
 
     @Autowired
     JdbcTemplate jdbcTemplate;
-
     private StudentDao dao;
 
     @PostConstruct
@@ -39,8 +38,8 @@ class JdbcStudentDaoTest {
     @Test
     @Sql(scripts = { "/clean_db.sql", "/students_init_test_values.sql" })
     void shouldInsertNew() {
-        Student student = new Student("Alex", "Sidorov", "Male", "AlexSidorov@gmail.com", "Kaliningrad",
-                Integer.valueOf(25), Long.valueOf(89313256895L), "no", Long.valueOf(1));
+        Student student = new Student("Alex", "Sidorov", "Male", "AlexSidorov@gmail.com", "Kaliningrad", 25,
+                89313256895L, "no", 1L);
         Student created = dao.save(student);
         student.setId(created.getId());
         assertThat(created).isEqualTo(student);
@@ -53,7 +52,6 @@ class JdbcStudentDaoTest {
                 "Saint Petersburg", Integer.valueOf(25), Long.valueOf(89523268951L), "no", Long.valueOf(1L));
         Student actual = dao.findById(1L).get();
         assertThat(actual).isEqualTo(expected);
-
     }
 
     @Test
@@ -190,6 +188,22 @@ class JdbcStudentDaoTest {
         assertThat(actual.stream().filter(item -> item.getFirstName() == "Viktor").count() == 1);
         assertThat(actual.stream().filter(item -> item.getFirstName() == "Andrey" && item.getLastName() == "Kunec")
                 .collect(Collectors.toList()).get(0)).isEqualTo(expected.get(1));
+    }
+
+    @Test
+    @Sql(scripts = { "/clean_db.sql", "/students_init_test_values.sql" })
+    void shouldFindStudentsBuGroupId() {
+
+        List<Student> expected = Arrays.asList(
+                new Student(Long.valueOf(1L), "Alex", "Petrov", "male", "AlexPetrov@gmail.com", "Saint Petersburg",
+                        Integer.valueOf(25), Long.valueOf(89523268951L), "no", Long.valueOf(1L)),
+                new Student(Long.valueOf(3L), "Roman", "Sidorov", "male", "RomanSidorov@gmail.com", "Moscow",
+                        Integer.valueOf(23), Long.valueOf(89583658547L), "no", Long.valueOf(1L)),
+                new Student(Long.valueOf(5L), "Dmitry", "Solodin", "male", "MikhailSolodin@gmail.com", "Andora",
+                        Integer.valueOf(35), Long.valueOf(89528769523L), "teacher", Long.valueOf(1L)));
+
+        List<Student> actual = dao.findStudentsByGroupId(1L);
+        assertThat(actual).isEqualTo(expected);
 
     }
 

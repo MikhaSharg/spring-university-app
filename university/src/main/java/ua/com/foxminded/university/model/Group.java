@@ -1,22 +1,36 @@
 package ua.com.foxminded.university.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Group extends IdEntity {
 
     private String name;
-    private List<Student> srudents;
+    private List<Student> students;
 
-    public Group(Long id, String name, List<Student> srudents) {
+    public Group(Long id, String name, List<Student> students) {
         super(id);
         this.name = name;
-        this.srudents = srudents;
+        this.students = students;
     }
 
     public Group(String name, List<Student> srudents) {
         super(null);
         this.name = name;
-        this.srudents = srudents;
+        this.students = srudents;
+    }
+
+    public Group(String name) {
+        super(null);
+        this.name = name;
+        this.students = new ArrayList<>();
+    }
+    
+    public Group(Long id, String name) {
+        super(id);
+        this.name = name;
+        this.students = new ArrayList<>();
+
     }
 
     public String getName() {
@@ -28,11 +42,11 @@ public class Group extends IdEntity {
     }
 
     public List<Student> getSrudents() {
-        return srudents;
+        return students;
     }
 
     public void setSrudents(List<Student> srudents) {
-        this.srudents = srudents;
+        this.students = srudents;
     }
 
     @Override
@@ -40,7 +54,7 @@ public class Group extends IdEntity {
         final int prime = 31;
         int result = super.hashCode();
         result = prime * result + ((name == null) ? 0 : name.hashCode());
-        result = prime * result + ((srudents == null) ? 0 : srudents.hashCode());
+        result = prime * result + ((students == null) ? 0 : students.hashCode());
         return result;
     }
 
@@ -58,12 +72,18 @@ public class Group extends IdEntity {
                 return false;
         } else if (!name.equals(other.name))
             return false;
-        if (srudents == null) {
-            if (other.srudents != null)
+        if (students == null) {
+            if (other.students != null)
                 return false;
-        } else if (!srudents.equals(other.srudents))
+        } else if (!students.equals(other.students))
             return false;
         return true;
     }
 
+    @Override
+    public String toString() {
+        return "Group [name=" + name + ", students=" + students + ", getId()=" + getId() + "]";
+    }
+
+   
 }
