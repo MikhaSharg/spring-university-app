@@ -14,6 +14,12 @@ public class Teacher extends AbstractPerson {
         this.subjects = subjects;
     }
 
+    public Teacher(Long id, String firstName, String lastName, String gender, String email, String address, Integer age,
+            Long phoneNumber, String role, String profile) {
+        super(id, firstName, lastName, gender, email, address, age, phoneNumber, role);
+        this.profile = profile;
+    }
+
     public Teacher(String firstName, String lastName, String gender, String email, String address, Integer age,
             Long phoneNumber, String role, String profile, List<Subject> subjects) {
         super(null, firstName, lastName, gender, email, address, age, phoneNumber, role);

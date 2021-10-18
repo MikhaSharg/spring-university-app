@@ -4,7 +4,6 @@ import static java.util.stream.Collectors.partitioningBy;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -18,7 +17,6 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 
 import ua.com.foxminded.university.model.IdEntity;
-
 
 public abstract class AbstractCrudDao<T extends IdEntity> implements CrudDao<T, Long> {
 
@@ -57,17 +55,26 @@ public abstract class AbstractCrudDao<T extends IdEntity> implements CrudDao<T, 
 
     @Override
     public Optional<T> findById(Long id) {
-        try {
-            return Optional.ofNullable(jdbcTemplate.queryForObject(getSelectByIdQuery(), rowMapper, id));
-        } catch (Exception e) {
-            return Optional.empty();
-        }
+        
+       return findEntityById(id);
+        
+//        try {
+//            return Optional.ofNullable(jdbcTemplate.queryForObject(getSelectByIdQuery(), rowMapper, id));
+//        } catch (Exception e) {
+//            return Optional.empty();
+//        }
     }
+
+    
 
     @Override
     public List<T> findAll() {
-        return jdbcTemplate.query(getSelectAllQuery(), rowMapper);
+        return findAllEntities();
+        
+//        return jdbcTemplate.query(getSelectAllQuery(), rowMapper);
     }
+
+    protected abstract List<T> findAllEntities();
 
     @Override
     public void deleteById(Long id) {
@@ -128,8 +135,6 @@ public abstract class AbstractCrudDao<T extends IdEntity> implements CrudDao<T, 
 
     protected abstract T createNew(T entity);
 
-    protected abstract String getInsertQuery();
-
     protected abstract String getUpdateQuery();
 
     protected abstract String getUpdateOneNamedQuery();
@@ -141,7 +146,9 @@ public abstract class AbstractCrudDao<T extends IdEntity> implements CrudDao<T, 
     protected abstract String getDeleteByIdQuery();
 
     protected abstract String getSelectAllQuery();
-    
+
     protected abstract SimpleJdbcInsert getJdbcInsert();
+    
+    protected abstract Optional<T> findEntityById(Long id);
 
 }

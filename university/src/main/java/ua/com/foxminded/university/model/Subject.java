@@ -3,18 +3,15 @@ package ua.com.foxminded.university.model;
 public class Subject extends IdEntity {
 
     private String name;
-    private Teacher teacher;
 
-    public Subject(Long id, String name, Teacher teacher) {
+    public Subject(Long id, String name) {
         super(id);
         this.name = name;
-        this.teacher = teacher;
     }
 
-    public Subject(String name, Teacher teacher) {
+    public Subject(String name) {
         super(null);
         this.name = name;
-        this.teacher = teacher;
     }
 
     public String getName() {
@@ -25,20 +22,11 @@ public class Subject extends IdEntity {
         this.name = name;
     }
 
-    public Teacher getTeacher() {
-        return teacher;
-    }
-
-    public void setTeacher(Teacher teacher) {
-        this.teacher = teacher;
-    }
-
     @Override
     public int hashCode() {
         final int prime = 31;
         int result = super.hashCode();
         result = prime * result + ((name == null) ? 0 : name.hashCode());
-        result = prime * result + ((teacher == null) ? 0 : teacher.hashCode());
         return result;
     }
 
@@ -56,12 +44,10 @@ public class Subject extends IdEntity {
                 return false;
         } else if (!name.equals(other.name))
             return false;
-        if (teacher == null) {
-            if (other.teacher != null)
-                return false;
-        } else if (!teacher.equals(other.teacher))
-            return false;
         return true;
     }
+
+
+
 
 }

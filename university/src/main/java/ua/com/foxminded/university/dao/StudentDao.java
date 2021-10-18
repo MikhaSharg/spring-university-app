@@ -6,6 +6,6 @@ import ua.com.foxminded.university.model.Student;
 
 public interface StudentDao extends CrudDao<Student, Long> {
     
-    public List<Student> findStudentsByGroupId(Long groupId);
+    public List<Student> findAllStudentsByGroupId(Long groupId);
 
 }

@@ -15,7 +15,6 @@ import ua.com.foxminded.university.dao.mappers.StudentMapper;
 import ua.com.foxminded.university.model.Student;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.util.List;
@@ -202,7 +201,7 @@ class JdbcStudentDaoTest {
                 new Student(Long.valueOf(5L), "Dmitry", "Solodin", "male", "MikhailSolodin@gmail.com", "Andora",
                         Integer.valueOf(35), Long.valueOf(89528769523L), "teacher", Long.valueOf(1L)));
 
-        List<Student> actual = dao.findStudentsByGroupId(1L);
+        List<Student> actual = dao.findAllStudentsByGroupId(1L);
         assertThat(actual).isEqualTo(expected);
 
     }

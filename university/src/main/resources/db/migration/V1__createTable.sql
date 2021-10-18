@@ -19,20 +19,19 @@ CREATE TABLE students (
     );
 
 CREATE TABLE teachers (
-    teacher_id int GENERATED ALWAYS AS IDENTITY,
+    teacher_id SERIAL PRIMARY KEY,
     first_name varchar(50) NOT NULL,
     last_name varchar (50) NOT NULL,
     gender varchar (50) NOT NULL,
     email varchar (50) NOT NULL,
     address varchar (50) NOT NULL,
     age int NOT NULL,
-    phone_number int NOT NULL,
-    profile varchar (50) NOT NULL,
+    phone_number bigint NOT NULL,
     role varchar (50),
-    CONSTRAINT PK_teachers_teacher_id PRIMARY KEY (teacher_id) 
+    profile varchar(50) NOT NULL
     );
     
-    CREATE TABLE persons (
+CREATE TABLE persons (
     person_id int GENERATED ALWAYS AS IDENTITY,
     first_name varchar(50) NOT NULL,
     last_name varchar (50) NOT NULL,
@@ -46,11 +45,14 @@ CREATE TABLE teachers (
     );
     
 CREATE TABLE subjects (
-    subject_id int GENERATED ALWAYS AS IDENTITY,
-    subject_name varchar(50) NOT NULL,
-    teacher_id int NOT NULL,
-    CONSTRAINT PK_subjects_subject_id PRIMARY KEY (subject_id),
-    CONSTRAINT FK_subjects_teachers FOREIGN KEY (teacher_id) REFERENCES teachers (teacher_id) 
+    subject_id SERIAL PRIMARY KEY,
+    subject_name varchar(50) NOT NULL
+    );
+    
+CREATE TABLE teachers_subjects (
+    teacher_id int REFERENCES teachers (teacher_id) ON UPDATE CASCADE ON DELETE CASCADE,
+    subject_id int REFERENCES subjects (subject_id) ON UPDATE CASCADE ON DELETE CASCADE,
+    CONSTRAINT PK_teachers_subjects PRIMARY KEY (teacher_id, subject_id)
     );
     
 CREATE TABLE audiences (
