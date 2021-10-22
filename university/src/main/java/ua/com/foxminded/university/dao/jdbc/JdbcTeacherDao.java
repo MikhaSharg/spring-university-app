@@ -4,12 +4,10 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Types;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -37,14 +35,14 @@ public class JdbcTeacherDao extends AbstractCrudDao<Teacher> implements TeacherD
     public static final String ROLE = "ROLE";
     public static final String PROFILE = "PROFILE";
 
-    private static final String UPDATE_ONE = "UPDATE teachers SET first_name=?, last_name=?, gender=?, email=?, address=?, age=?, phone_number=?, role=?, profile=?  WHERE teacher_id=?";
+    private static final String UPDATE_ONE = "UPDATE teachers SET first_name=?, last_name=?, gender=?, email=?, address=?, age=?, phone_number=?, role=?, profile=?  WHERE teacher_id=?; DELETE FROM teachers_subjects WHERE teacher_id = ?;";
     private static final String SELECT_BY_ID = "SELECT * FROM teachers WHERE teacher_id=?";
     private static final String DELETE_BY_ID = "DELETE FROM teachers WHERE teacher_id=?";
     private static final String INSERT_ONE_NAMED = "INSERT INTO teachers (first_name, last_name, gender, email, address, age, phone_number, role, profile) VALUES (:FIRST_NAME, :LAST_NAME, :GENDER, :EMAIL, :ADDRESS, :AGE, :PHONE_NUMBER, :ROLE, :PROFILE)";
     private static final String UPDATE_ONE_NAMED = "UPDATE teachers SET first_name=:FIRST_NAME, last_name=:LAST_NAME, gender=:GENDER, email=:EMAIL, address=:ADDRESS, age=:AGE, phone_number=:PHONE_NUMBER, role=:ROLE, profile=:PROFILE  WHERE teacher_id=:ID";
     private static final String SELECT_ALL = "SELECT * FROM teachers";
     private static final String SELECT_ONE_BY_ID = "SELECT t.*, s.* FROM teachers t LEFT JOIN teachers_subjects ts ON t.teacher_id = ts.teacher_id LEFT JOIN subjects s ON s.subject_id = ts.subject_id WHERE t.teacher_id = ?";
-    private static final String SELECT_All_SUBJECTS = "SELECT * FROM subjects s LEFT JOIN teachers_subjects ts ON s.subject_id=ts.subject_id WHERE ts.teacher_id  IN (SELECT (teacher_id) FROM teachers)";  ;
+    private static final String SELECT_All_SUBJECTS = "SELECT t.*, s.* FROM teachers t LEFT JOIN teachers_subjects ts ON t.teacher_id = ts.teacher_id LEFT JOIN subjects s ON s.subject_id = ts.subject_id";
 
     public JdbcTeacherDao(JdbcTemplate jdbsTemplate, RowMapper<Teacher> rowMapper) {
         super(jdbsTemplate, rowMapper);
@@ -61,6 +59,7 @@ public class JdbcTeacherDao extends AbstractCrudDao<Teacher> implements TeacherD
         ps.setLong(7, entity.getPhoneNumber());
         ps.setString(8, entity.getRole());
         ps.setString(9, entity.getProfile());
+
     }
 
     @Override
@@ -75,6 +74,7 @@ public class JdbcTeacherDao extends AbstractCrudDao<Teacher> implements TeacherD
         ps.setString(8, entity.getRole());
         ps.setString(9, entity.getProfile());
         ps.setLong(10, entity.getId());
+        ps.setLong(11, entity.getId());
     }
 
     @Override
@@ -88,6 +88,7 @@ public class JdbcTeacherDao extends AbstractCrudDao<Teacher> implements TeacherD
         return new Teacher(entity.getId(), entity.getFirstName(), entity.getLastName(), entity.getGender(),
                 entity.getEmail(), entity.getAddress(), entity.getAge(), entity.getPhoneNumber(), entity.getRole(),
                 entity.getProfile());
+
     }
 
     @Override
@@ -216,34 +217,94 @@ public class JdbcTeacherDao extends AbstractCrudDao<Teacher> implements TeacherD
                             rs.getString("profile"));
                 }
             }
+            if (subjects.get(0).getName() == null) {
+                subjects.clear();
+            }
+
             teacher.setSubjects(subjects);
+
             return teacher;
         });
 
-    }
-    
-    public List<Teacher> findAllTeachers() {
-        Map <Long , List<Subject>> subjects = new HashMap<>();
-        jdbcTemplate.query(SELECT_All_SUBJECTS, rs -> {
-            while (rs.next()) {
-                subjects.put(rs.getLong("teacher_id"), Arrays.asList(new Subject (rs.getLong("subject_id"), rs.getString("subject_name"))));
-            }
-            return subjects;    
-        });
-        
-        List <Teacher> teachers = jdbcTemplate.query(SELECT_ALL, rowMapper);   
-       List<Teacher> teachersWithSubjects = teachers.stream().map(teacher -> {
-           if(subjects.containsKey(teacher.getId())) {
-               teacher.setSubjects(subjects.get(teacher.getId()));
-           }
-         return teacher;
-       }).collect(Collectors.toList());
-         return teachersWithSubjects;      
     }
 
     @Override
     protected List<Teacher> findAllEntities() {
         return findAllTeachers();
-    }   
-    
+    }
+
+    public List<Teacher> findAllTeachers() {
+        return jdbcTemplate.query(SELECT_All_SUBJECTS, rs -> {
+
+            Long id = null;
+            int countId = 1;
+            List<Teacher> teachers = new ArrayList<>();
+
+            while (rs.next()) {
+
+                if (id == null && countId == 1) {
+                    id = rs.getLong("teacher_id");
+
+                    teachers.add(new Teacher(rs.getLong("teacher_id"), rs.getString("first_name"),
+                            rs.getString("last_name"), rs.getString("gender"), rs.getString("email"),
+                            rs.getString("address"), rs.getInt("age"), rs.getLong("phone_number"), rs.getString("role"),
+                            rs.getString("profile")));
+                    teachers.get(teachers.size() - 1)
+                            .addSubject(new Subject(rs.getLong("subject_id"), rs.getString("subject_name")));
+
+                    if (teachers.get(teachers.size() - 1).getSubjects().get(0).getName() == null) {
+                        teachers.get(teachers.size() - 1).getSubjects().clear();
+                    }
+                    countId++;
+                }
+
+                else if (id == rs.getLong("teacher_id") && countId != 1 && !rs.isLast()) {
+                    teachers.get(teachers.size() - 1)
+                            .addSubject(new Subject(rs.getLong("subject_id"), rs.getString("subject_name")));
+                    if (teachers.get(teachers.size() - 1).getSubjects().get(0).getName() == null) {
+                        teachers.get(teachers.size() - 1).getSubjects().clear();
+                    }
+
+                }
+
+                else if (rs.isLast()) {
+                    if (id == rs.getLong("teacher_id")) {
+                        teachers.get(teachers.size() - 1)
+                                .addSubject(new Subject(rs.getLong("subject_id"), rs.getString("subject_name")));
+
+                        if (teachers.get(teachers.size() - 1).getSubjects().get(0).getName() == null) {
+                            teachers.get(teachers.size() - 1).getSubjects().clear();
+                        }
+                    } else {
+                        teachers.add(new Teacher(rs.getLong("teacher_id"), rs.getString("first_name"),
+                                rs.getString("last_name"), rs.getString("gender"), rs.getString("email"),
+                                rs.getString("address"), rs.getInt("age"), rs.getLong("phone_number"),
+                                rs.getString("role"), rs.getString("profile")));
+                        teachers.get(teachers.size() - 1)
+                                .addSubject(new Subject(rs.getLong("subject_id"), rs.getString("subject_name")));
+                        if (teachers.get(teachers.size() - 1).getSubjects().get(0).getName() == null) {
+                            teachers.get(teachers.size() - 1).getSubjects().clear();
+                        }
+                    }
+                }
+
+                else if (id != rs.getLong("teacher_id")) {
+
+                    id = rs.getLong("teacher_id");
+                    teachers.add(new Teacher(rs.getLong("teacher_id"), rs.getString("first_name"),
+                            rs.getString("last_name"), rs.getString("gender"), rs.getString("email"),
+                            rs.getString("address"), rs.getInt("age"), rs.getLong("phone_number"), rs.getString("role"),
+                            rs.getString("profile")));
+                    teachers.get(teachers.size() - 1)
+                            .addSubject(new Subject(rs.getLong("subject_id"), rs.getString("subject_name")));
+                    if (teachers.get(teachers.size() - 1).getSubjects().get(0).getName() == null) {
+                        teachers.get(teachers.size() - 1).getSubjects().clear();
+                    }
+
+                }
+
+            }
+            return teachers;
+        });
+    }
 }

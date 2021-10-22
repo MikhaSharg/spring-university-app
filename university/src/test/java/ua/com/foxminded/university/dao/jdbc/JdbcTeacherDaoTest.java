@@ -3,6 +3,7 @@ package ua.com.foxminded.university.dao.jdbc;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -31,232 +32,261 @@ class JdbcTeacherDaoTest {
     @Autowired
     JdbcTemplate jdbcTemplate;
     private TeacherDao dao;
-    
+
     @PostConstruct
     void setUp() {
         dao = new JdbcTeacherDao(jdbcTemplate, new TeacherMapper());
     }
 
-    
     @Test
-  @Sql(scripts = { "/clean_db.sql", "/sql/teachers_init_test_values.sql" })
-  void shouldFindOneTeacherWithListOfSubjects() {
-    
-        List<Subject> subjects = Arrays.asList(
-                new Subject(1L, "math"),
-                new Subject(2L, "astornomy"),
-                new Subject(3L, "lenguege"),
-                new Subject(4L, "history")
-                );
-                Teacher expected = new Teacher(1L, "Alex", "Petrov", "male", "AlexPetrov@gmail.com", "Saint Petersburg", 25, 895232L, "no", "one", subjects);
-        Teacher actual = dao.findTeacherById(1L);
+    @Sql(scripts = { "/sql/clean_db.sql", "/sql/teachers_test_values.sql" })
+    void shouldFindOneTeacherWithListOfSubjects() {
+
+        List<Subject> subjects = Arrays.asList(new Subject(1L, "math"), new Subject(2L, "astronomy"),
+                new Subject(3L, "probability theory"), new Subject(4L, "history"));
+        Teacher expected = new Teacher(1L, "Alex", "Petrov", "male", "AlexPetrov@gmail.com", "Saint Petersburg", 25,
+                89313262896L, "no", "one", subjects);
+        Teacher actual = dao.findById(1L).get();
         assertThat(actual).isEqualTo(expected);
     }
-    
-    @Test
-    @Sql(scripts = { "/clean_db.sql", "/sql/teachers_init_test_values.sql" })
-    void shouldFindOneTeacher(){
-      
-          List<Subject> subjects = Arrays.asList(
-                  new Subject(1L, "math"),
-                  new Subject(2L, "astornomy"),
-                  new Subject(3L, "lenguege"),
-                  new Subject(4L, "history")
-                  );
-                  Teacher expected = new Teacher(1L, "Alex", "Petrov", "male", "AlexPetrov@gmail.com", "Saint Petersburg", 25, 895232L, "no", "one", subjects);
-          Teacher actual = dao.findById(1L).get();
-          assertThat(actual).isEqualTo(expected);
-      }
-    
-    @Test
-    @Sql(scripts = { "/clean_db.sql", "/sql/teachers_init_test_values.sql" })
-    void shouldAllTeachers(){
-        dao.findAll();
-        
-        
-        
-        
-        
-    }
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-//    @Test
-//    @Sql(scripts = { "/clean_db.sql", "/students_init_test_values.sql" })
-//    void shouldInsertNew() {
-//        Student student = new Student("Alex", "Sidorov", "Male", "AlexSidorov@gmail.com", "Kaliningrad", 25,
-//                89313256895L, "no", 1L);
-//        Student created = dao.save(student);
-//        student.setId(created.getId());
-//        assertThat(created).isEqualTo(student);
-//    }
 
-//    @Test
-//    @Sql(scripts = { "/clean_db.sql", "/students_init_test_values.sql" })
-//    void shouldFindStudent() {
-//        Student expected = new Student(Long.valueOf(1L), "Alex", "Petrov", "male", "AlexPetrov@gmail.com",
-//                "Saint Petersburg", Integer.valueOf(25), Long.valueOf(89523268951L), "no", Long.valueOf(1L));
-//        Student actual = dao.findById(1L).get();
-//        assertThat(actual).isEqualTo(expected);
-//    }
-//
-//    @Test
-//    @Sql(scripts = { "/clean_db.sql", "/students_init_test_values.sql" })
-//    void shouldNotFindStudent() {
-//        assertThat(dao.findById(50L)).isEmpty();
-//    }
-//
-//    @Test
-//    @Sql(scripts = { "/clean_db.sql", "/students_init_test_values.sql" })
-//    void shouldFindAllStudent() {
-//
-//        List<Student> expected = Arrays.asList(
-//                new Student(Long.valueOf(1L), "Alex", "Petrov", "male", "AlexPetrov@gmail.com", "Saint Petersburg",
-//                        Integer.valueOf(25), Long.valueOf(89523268951L), "no", Long.valueOf(1L)),
-//                new Student(Long.valueOf(2L), "Anna", "Ermakova", "female", "AnnaErmakova@gmail.com", "Kaliningrad",
-//                        Integer.valueOf(26), Long.valueOf(8952328575L), "teacher", Long.valueOf(2L)),
-//                new Student(Long.valueOf(3L), "Roman", "Sidorov", "male", "RomanSidorov@gmail.com", "Moscow",
-//                        Integer.valueOf(23), Long.valueOf(89583658547L), "no", Long.valueOf(1L)),
-//                new Student(Long.valueOf(4L), "Diana", "Gukova", "female", "DianaGukova@gmail.com", "Rostov",
-//                        Integer.valueOf(21), Long.valueOf(89538792563L), "no", Long.valueOf(2L)),
-//                new Student(Long.valueOf(5L), "Dmitry", "Solodin", "male", "MikhailSolodin@gmail.com", "Andora",
-//                        Integer.valueOf(35), Long.valueOf(89528769523L), "teacher", Long.valueOf(1L)));
-//
-//        List<Student> actual = dao.findAll();
-//        assertThat(actual).isEqualTo(expected);
-//    }
-//
-//    @Test
-//    @Sql(scripts = "/clean_db.sql")
-//    void shouldNotFindAllStudent() {
-//        assertThat(dao.findAll().size()).isZero();
-//    }
-//
-//    @Test
-//    @Sql(scripts = { "/clean_db.sql", "/students_init_test_values.sql" })
-//    void shouldUpdateStudent() {
-//
-//        Student expected = new Student(Long.valueOf(3L), "Alex", "Sidorov", "Male", "AlexSidorov@gmail.com",
-//                "Kaliningrad", Integer.valueOf(25), Long.valueOf(89313256895L), "no", Long.valueOf(1));
-//        assertThat(dao.findById(3L).get()).isNotEqualTo(expected);
-//        dao.save(expected);
-//        assertThat(dao.findById(3L).get()).isEqualTo(expected);
-//    }
-//
-//    @Test
-//    @Sql(scripts = { "/clean_db.sql", "/students_init_test_values.sql" })
-//    void shouldDeleteStudentById() {
-//        Student expected = new Student(Long.valueOf(1L), "Alex", "Petrov", "male", "AlexPetrov@gmail.com",
-//                "Saint Petersburg", Integer.valueOf(25), Long.valueOf(89523268951L), "no", Long.valueOf(1L));
-//        assertThat(dao.findById(1L)).get().isEqualTo(expected);
-//        assertThat(dao.findById(1L)).isPresent();
-//        dao.deleteById(1L);
-//        assertThat(dao.findById(1L)).isEmpty();
-//    }
-//
-//    @Test
-//    @Sql(scripts = "/clean_db.sql")
-//    void shouldNotDeleteStudentByIdIfNOtExist() {
-//        assertThat(dao.findById(30L)).isNotPresent();
-//        assertThat(dao.findById(30L)).isEmpty();
-//        assertThat(assertThrows(IllegalArgumentException.class, () -> dao.deleteById(30L)).getMessage())
-//                .contains("Unable to delete item with id ", "30");
-//    }
-//
-//    @Test
-//    @Sql(scripts = { "/clean_db.sql", "/students_init_test_values.sql" })
-//    void shouldBatchSave() {
-//        List<Student> expected = Arrays.asList(
-//                new Student(Long.valueOf(1L), "Viktor", "Kim", "male", "ViktorKim@gmail.com", "Svetlogorsk",
-//                        Integer.valueOf(21), Long.valueOf(89316589853L), "no", Long.valueOf(1L)),
-//
-//                new Student(Long.valueOf(2L), "Andrey", "Kunec", "male", "AndreyKunec@gmail.com", "Novgorod",
-//                        Integer.valueOf(22), Long.valueOf(89528975236L), "teacher", Long.valueOf(2L)),
-//
-//                new Student(Long.valueOf(3L), "Olga", "Pestrecova", "female", "OlgaPestrecova@gmail.com", "Kaliningrad",
-//                        Integer.valueOf(25), Long.valueOf(89625879654L), "no", Long.valueOf(1L)),
-//
-//                new Student(Long.valueOf(4L), "Maksim", "Progor", "male", "MaksimProgor@gmail.com", "Greboedov",
-//                        Integer.valueOf(27), Long.valueOf(8906258943L), "technician", Long.valueOf(2L)),
-//
-//                new Student(Long.valueOf(5L), "Ganna", "Golikiova", "female", "GannaGolikova@gmail.com", "Yalta",
-//                        Integer.valueOf(29), Long.valueOf(892265889122L), "teacher", Long.valueOf(1L)),
-//
-//                new Student(Long.valueOf(6L), "Alexander", "Osipov", "male", "AlexanderOsipov@gmail.com", "Omsk",
-//                        Integer.valueOf(25), Long.valueOf(89526895624L), "no", Long.valueOf(1L)),
-//
-//                new Student(Long.valueOf(7L), "Pavel", "Petrov", "male", "PavelPetrov@gmail.com", "Cuba",
-//                        Integer.valueOf(35), Long.valueOf(898565248566L), "teacher", Long.valueOf(1L)),
-//
-//                new Student(Long.valueOf(8L), "Aleksey", "Grudov", "male", "AlekseyGrudov@gmail.com", "Samara",
-//                        Integer.valueOf(28), Long.valueOf(89856895235L), "no", Long.valueOf(2L)),
-//
-//                new Student(Long.valueOf(9L), "Dmitry", "Sommer", "male", "DmitrySommer@gmail.com", "Kursk",
-//                        Integer.valueOf(21), Long.valueOf(89895325845L), "teacher", Long.valueOf(1L)),
-//
-//                new Student(Long.valueOf(10L), "Alisa", "Egorova", "female", "AlisaEgorova@gmail.com", "Tomsk",
-//                        Integer.valueOf(31), Long.valueOf(89225683268L), "metodist", Long.valueOf(2L)));
-//
-//        List<Student> toSave = Arrays.asList(
-//                new Student(Long.valueOf(1L), "Viktor", "Kim", "male", "ViktorKim@gmail.com", "Svetlogorsk",
-//                        Integer.valueOf(21), Long.valueOf(89316589853L), "no", Long.valueOf(1L)),
-//
-//                new Student(Long.valueOf(2L), "Andrey", "Kunec", "male", "AndreyKunec@gmail.com", "Novgorod",
-//                        Integer.valueOf(22), Long.valueOf(89528975236L), "teacher", Long.valueOf(2L)),
-//
-//                new Student(Long.valueOf(3L), "Olga", "Pestrecova", "female", "OlgaPestrecova@gmail.com", "Kaliningrad",
-//                        Integer.valueOf(25), Long.valueOf(89625879654L), "no", Long.valueOf(1L)),
-//
-//                new Student(Long.valueOf(4L), "Maksim", "Progor", "male", "MaksimProgor@gmail.com", "Greboedov",
-//                        Integer.valueOf(27), Long.valueOf(8906258943L), "technician", Long.valueOf(2L)),
-//
-//                new Student(Long.valueOf(5L), "Ganna", "Golikiova", "female", "GannaGolikova@gmail.com", "Yalta",
-//                        Integer.valueOf(29), Long.valueOf(892265889122L), "teacher", Long.valueOf(1L)),
-//
-//                new Student("Alexander", "Osipov", "male", "AlexanderOsipov@gmail.com", "Omsk", Integer.valueOf(25),
-//                        Long.valueOf(89526895624L), "no", Long.valueOf(1L)),
-//
-//                new Student("Pavel", "Petrov", "male", "PavelPetrov@gmail.com", "Cuba", Integer.valueOf(35),
-//                        Long.valueOf(898565248566L), "teacher", Long.valueOf(1L)),
-//
-//                new Student("Aleksey", "Grudov", "male", "AlekseyGrudov@gmail.com", "Samara", Integer.valueOf(28),
-//                        Long.valueOf(89856895235L), "no", Long.valueOf(2L)),
-//
-//                new Student("Dmitry", "Sommer", "male", "DmitrySommer@gmail.com", "Kursk", Integer.valueOf(21),
-//                        Long.valueOf(89895325845L), "teacher", Long.valueOf(1L)),
-//
-//                new Student("Alisa", "Egorova", "female", "AlisaEgorova@gmail.com", "Tomsk", Integer.valueOf(31),
-//                        Long.valueOf(89225683268L), "metodist", Long.valueOf(2L)));
-//
-//        List<Student> actual = dao.saveAll(toSave);
-//        assertThat(actual.size()).isEqualTo(toSave.size());
-//        assertThat(actual.stream().filter(item -> item.getId() == null).count()).isZero();
-//        assertThat(actual.stream().filter(item -> item.getFirstName() == "Viktor").count() == 1);
-//        assertThat(actual.stream().filter(item -> item.getFirstName() == "Andrey" && item.getLastName() == "Kunec")
-//                .collect(Collectors.toList()).get(0)).isEqualTo(expected.get(1));
-//    }
-//
-//    @Test
-//    @Sql(scripts = { "/clean_db.sql", "/students_init_test_values.sql" })
-//    void shouldFindStudentsBuGroupId() {
-//
-//        List<Student> expected = Arrays.asList(
-//                new Student(Long.valueOf(1L), "Alex", "Petrov", "male", "AlexPetrov@gmail.com", "Saint Petersburg",
-//                        Integer.valueOf(25), Long.valueOf(89523268951L), "no", Long.valueOf(1L)),
-//                new Student(Long.valueOf(3L), "Roman", "Sidorov", "male", "RomanSidorov@gmail.com", "Moscow",
-//                        Integer.valueOf(23), Long.valueOf(89583658547L), "no", Long.valueOf(1L)),
-//                new Student(Long.valueOf(5L), "Dmitry", "Solodin", "male", "MikhailSolodin@gmail.com", "Andora",
-//                        Integer.valueOf(35), Long.valueOf(89528769523L), "teacher", Long.valueOf(1L)));
-//
-//        List<Student> actual = dao.findAllStudentsByGroupId(1L);
-//        assertThat(actual).isEqualTo(expected);
+    @Test
+    @Sql(scripts = { "/sql/clean_db.sql", "/students_init_test_values.sql" })
+    void shouldNotFindOneTeacher() {
+        assertThat(dao.findById(50L)).isEmpty();
+    }
+
+    @Test
+    @Sql(scripts = { "/sql/clean_db.sql", "/sql/teachers_test_values.sql" })
+    void shouldfindAllTeachersIfExistOnlyOne() {
+
+        List<Subject> subjects = Arrays.asList(new Subject(1L, "math"), new Subject(2L, "astronomy"),
+                new Subject(3L, "probability theory"), new Subject(4L, "history"));
+        Teacher teacher = new Teacher(1L, "Alex", "Petrov", "male", "AlexPetrov@gmail.com", "Saint Petersburg", 25,
+                89313262896L, "no", "one", subjects);
+        List<Teacher> expected = Arrays.asList(teacher);
+        List<Teacher> actual = dao.findAll();
+        assertThat(actual).isEqualTo(expected);
+
+    }
+
+    @Test
+    @Sql(scripts = { "/sql/clean_db.sql", "/sql/teachers_test_values_1.sql" })
+    void shouldfindAllTeachersIfLastTeacherDoesntHaveSubjects() {
+
+        List<Subject> subjects1 = Arrays.asList(new Subject(1L, "math"), new Subject(2L, "astronomy"),
+                new Subject(3L, "probability theory"), new Subject(4L, "history"));
+        Teacher teacher1 = new Teacher(1L, "Alex", "Petrov", "male", "AlexPetrov@gmail.com", "Saint Petersburg", 25,
+                89313262896L, "no", "one", subjects1);
+
+        List<Subject> subjects2 = Arrays.asList(new Subject(2L, "astronomy"), new Subject(3L, "probability theory"));
+        Teacher teacher2 = new Teacher(2L, "Anna", "Ermakova", "female", "AnnaErmakova@gmail.com", "Kaliningrad", 26,
+                89215895789L, "no", "two", subjects2);
+
+        List<Subject> subjects3 = Arrays.asList(new Subject(4L, "history"));
+        Teacher teacher3 = new Teacher(3L, "Roman", "Sidorov", "male", "RomanSidorov@gmail.com", "Moscow", 23,
+                89112568975L, "no", "three", subjects3);
+
+        List<Subject> subjects4 = Arrays.asList(new Subject(1L, "math"), new Subject(4L, "history"));
+        Teacher teacher4 = new Teacher(4L, "Diana", "Gukova", "female", "DianaGukova@gmail.com", "Rostov", 21,
+                89225896325L, "no", "four", subjects4);
+
+        List<Subject> subjects5 = new ArrayList<>();
+        Teacher teacher5 = new Teacher(5L, "Dmitry", "Solodin", "male", "MikhailSolodin@gmail.com", "Andora", 35,
+                89052655985L, "student", "five", subjects5);
+
+        List<Teacher> expected = Arrays.asList(teacher1, teacher2, teacher3, teacher4, teacher5);
+        List<Teacher> actual = dao.findAll();
+        assertThat(actual).isEqualTo(expected);
+
+    }
+
+    @Test
+    @Sql(scripts = { "/sql/clean_db.sql", "/sql/teachers_test_values_2.sql" })
+    void shouldfindAllTeachersIfSomeTeachersHaveSubjects() {
+
+        List<Subject> subjects1 = new ArrayList<>();
+        Teacher teacher1 = new Teacher(1L, "Alex", "Petrov", "male", "AlexPetrov@gmail.com", "Saint Petersburg", 25,
+                89313262896L, "no", "one", subjects1);
+
+        List<Subject> subjects2 = Arrays.asList(new Subject(2L, "astronomy"), new Subject(3L, "probability theory"));
+        Teacher teacher2 = new Teacher(2L, "Anna", "Ermakova", "female", "AnnaErmakova@gmail.com", "Kaliningrad", 26,
+                89215895789L, "no", "two", subjects2);
+
+        List<Subject> subjects3 = new ArrayList<>();
+        Teacher teacher3 = new Teacher(3L, "Roman", "Sidorov", "male", "RomanSidorov@gmail.com", "Moscow", 23,
+                89112568975L, "no", "three", subjects3);
+
+        List<Subject> subjects4 = Arrays.asList(new Subject(1L, "math"), new Subject(4L, "history"));
+        Teacher teacher4 = new Teacher(4L, "Diana", "Gukova", "female", "DianaGukova@gmail.com", "Rostov", 21,
+                89225896325L, "no", "four", subjects4);
+
+        List<Subject> subjects5 = new ArrayList<>();
+        Teacher teacher5 = new Teacher(5L, "Dmitry", "Solodin", "male", "MikhailSolodin@gmail.com", "Andora", 35,
+                89052655985L, "student", "five", subjects5);
+
+        List<Teacher> expected = Arrays.asList(teacher1, teacher2, teacher3, teacher4, teacher5);
+        List<Teacher> actual = dao.findAll();
+        assertThat(actual).isEqualTo(expected);
+    }
+
+    @Test
+    @Sql(scripts = { "/sql/clean_db.sql", "/sql/teachers_test_values_3.sql" })
+    void shouldfindAllTeachersIfAllTeachersDontHaveSubjects() {
+
+        List<Subject> subjects1 = new ArrayList<>();
+        Teacher teacher1 = new Teacher(1L, "Alex", "Petrov", "male", "AlexPetrov@gmail.com", "Saint Petersburg", 25,
+                89313262896L, "no", "one", subjects1);
+
+        List<Subject> subjects2 = new ArrayList<>();
+        Teacher teacher2 = new Teacher(2L, "Anna", "Ermakova", "female", "AnnaErmakova@gmail.com", "Kaliningrad", 26,
+                89215895789L, "no", "two", subjects2);
+
+        List<Subject> subjects3 = new ArrayList<>();
+        Teacher teacher3 = new Teacher(3L, "Roman", "Sidorov", "male", "RomanSidorov@gmail.com", "Moscow", 23,
+                89112568975L, "no", "three", subjects3);
+
+        List<Subject> subjects4 = new ArrayList<>();
+        Teacher teacher4 = new Teacher(4L, "Diana", "Gukova", "female", "DianaGukova@gmail.com", "Rostov", 21,
+                89225896325L, "no", "four", subjects4);
+
+        List<Subject> subjects5 = new ArrayList<>();
+        Teacher teacher5 = new Teacher(5L, "Dmitry", "Solodin", "male", "MikhailSolodin@gmail.com", "Andora", 35,
+                89052655985L, "student", "five", subjects5);
+
+        List<Teacher> expected = Arrays.asList(teacher1, teacher2, teacher3, teacher4, teacher5);
+        List<Teacher> actual = dao.findAll();
+        assertThat(actual).isEqualTo(expected);
+    }
+
+    @Test
+    @Sql(scripts = { "/sql/clean_db.sql", "/sql/teachers_test_values_4.sql" })
+    void shouldfindAllTeachersIfAllTeachersHaveSubjects() {
+
+        List<Subject> subjects1 = Arrays.asList(new Subject(1L, "math"), new Subject(2L, "astronomy"),
+                new Subject(3L, "probability theory"), new Subject(4L, "history"));
+        Teacher teacher1 = new Teacher(1L, "Alex", "Petrov", "male", "AlexPetrov@gmail.com", "Saint Petersburg", 25,
+                89313262896L, "no", "one", subjects1);
+
+        List<Subject> subjects2 = Arrays.asList(new Subject(2L, "astronomy"), new Subject(3L, "probability theory"));
+        Teacher teacher2 = new Teacher(2L, "Anna", "Ermakova", "female", "AnnaErmakova@gmail.com", "Kaliningrad", 26,
+                89215895789L, "no", "two", subjects2);
+
+        List<Subject> subjects3 = Arrays.asList(new Subject(4L, "history"));
+        Teacher teacher3 = new Teacher(3L, "Roman", "Sidorov", "male", "RomanSidorov@gmail.com", "Moscow", 23,
+                89112568975L, "no", "three", subjects3);
+
+        List<Subject> subjects4 = Arrays.asList(new Subject(1L, "math"), new Subject(4L, "history"));
+        Teacher teacher4 = new Teacher(4L, "Diana", "Gukova", "female", "DianaGukova@gmail.com", "Rostov", 21,
+                89225896325L, "no", "four", subjects4);
+
+        List<Subject> subjects5 = Arrays.asList(new Subject(1L, "math"), new Subject(3L, "probability theory"),
+                new Subject(4L, "history"));
+        Teacher teacher5 = new Teacher(5L, "Dmitry", "Solodin", "male", "MikhailSolodin@gmail.com", "Andora", 35,
+                89052655985L, "student", "five", subjects5);
+
+        List<Teacher> expected = Arrays.asList(teacher1, teacher2, teacher3, teacher4, teacher5);
+        List<Teacher> actual = dao.findAll();
+        assertThat(actual).isEqualTo(expected);
+    }
+
+    @Test
+    @Sql(scripts = "/sql/clean_db.sql")
+    void shouldNotFindAllTeachers() {
+        assertThat(dao.findAll().size()).isZero();
+    }
+
+    @Test
+    @Sql(scripts = "/sql/clean_db.sql")
+    void shouldInsertNewTeacher() {
+        Teacher expected = new Teacher("Alex", "Petrov", "male", "AlexPetrov@gmail.com", "Saint Petersburg", 25,
+                89313262896L, "no", "one");
+        Teacher created = dao.save(expected);
+        expected.setId(created.getId());
+        assertThat(created).isEqualTo(expected);
+    }
+
+    @Test
+    @Sql(scripts = { "/sql/clean_db.sql", "/sql/teachers_test_values_4.sql" })
+    void shouldUpdateOneTeacher() {
+
+        Teacher expected = new Teacher(3L, "Elena", "Pestrecova", "female", "ElenaPestrecova@gmail.com", "Omsk", 28,
+                89658953265L, "no", "technology");
+
+        assertThat(dao.findById(3L).get()).isNotEqualTo(expected);
+        Teacher actual = dao.save(expected);
+        assertThat(actual).isEqualTo(expected);
+        assertThat(dao.findById(3L).get()).isEqualTo(expected);
+    }
+
+    @Test
+    @Sql(scripts = { "/sql/clean_db.sql", "/sql/teachers_test_values_4.sql" })
+    void shouldDeleteOneTeacherById() {
+
+        List<Subject> subjects = Arrays.asList(new Subject(1L, "math"), new Subject(2L, "astronomy"),
+                new Subject(3L, "probability theory"), new Subject(4L, "history"));
+        Teacher teacher = new Teacher(1L, "Alex", "Petrov", "male", "AlexPetrov@gmail.com", "Saint Petersburg", 25,
+                89313262896L, "no", "one", subjects);
+
+        assertThat(dao.findById(1L)).get().isEqualTo(teacher);
+        assertThat(dao.findById(1L)).isPresent();
+        dao.deleteById(1L);
+        assertThat(dao.findById(1L)).isEmpty();
+    }
+
+    @Test
+    @Sql(scripts = "/sql/clean_db.sql")
+    void shouldNotDeleteTeacherByIdIfNOtExist() {
+        assertThat(dao.findById(30L)).isNotPresent();
+        assertThat(dao.findById(30L)).isEmpty();
+        assertThat(assertThrows(IllegalArgumentException.class, () -> dao.deleteById(30L)).getMessage())
+                .contains("Unable to delete item with id ", "30");
+    }
+
+    @Test
+    @Sql(scripts = "/sql/clean_db.sql")
+    void shouldBatchSave() {
+
+        List<Teacher> expected = Arrays.asList(
+                new Teacher(1L, "Alex", "Petrov", "male", "AlexPetrov@gmail.com", "Saint Petersburg", 25, 89313262896L,
+                        "no", "one"),
+
+                new Teacher(2L, "Anna", "Ermakova", "female", "AnnaErmakova@gmail.com", "Kaliningrad", 26, 89215895789L,
+                        "no", "two"),
+
+                new Teacher(3L, "Roman", "Sidorov", "male", "RomanSidorov@gmail.com", "Moscow", 23, 89112568975L, "no",
+                        "three"),
+
+                new Teacher(4L, "Diana", "Gukova", "female", "DianaGukova@gmail.com", "Rostov", 21, 89225896325L, "no",
+                        "four"),
+
+                new Teacher(5L, "Dmitry", "Solodin", "male", "MikhailSolodin@gmail.com", "Andora", 35, 89052655985L,
+                        "student", "five"));
+
+        List<Teacher> toSave = Arrays.asList(
+                new Teacher(1L, "Alex", "Petrov", "male", "AlexPetrov@gmail.com", "Saint Petersburg", 25, 89313262896L,
+                        "no", "one"),
+
+                new Teacher("Anna", "Ermakova", "female", "AnnaErmakova@gmail.com", "Kaliningrad", 26, 89215895789L,
+                        "no", "two"),
+
+                new Teacher(3L, "Roman", "Sidorov", "male", "RomanSidorov@gmail.com", "Moscow", 23, 89112568975L, "no",
+                        "three"),
+
+                new Teacher(4L, "Diana", "Gukova", "female", "DianaGukova@gmail.com", "Rostov", 21, 89225896325L, "no",
+                        "four"),
+
+                new Teacher("Dmitry", "Solodin", "male", "MikhailSolodin@gmail.com", "Andora", 35, 89052655985L,
+                        "student", "five"));
+
+        List<Teacher> actual = dao.saveAll(toSave);
+        assertThat(actual.size()).isEqualTo(toSave.size());
+        assertThat(actual.stream().filter(item -> item.getId() == null).count()).isZero();
+        assertThat(actual.stream().filter(item -> item.getFirstName() == "Alex" && item.getLastName() == "Petrov")
+                .collect(Collectors.toList()).get(0)).isEqualTo(expected.get(0));
+        assertThat(actual.stream().filter(item -> item.getFirstName() == "Diana" && item.getLastName() == "Gukova")
+                .collect(Collectors.toList()).get(0)).isEqualTo(expected.get(3));
+
+    }
 
 }

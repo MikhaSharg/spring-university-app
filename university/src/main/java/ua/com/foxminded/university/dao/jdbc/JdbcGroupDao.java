@@ -135,8 +135,16 @@ public class JdbcGroupDao extends AbstractCrudDao<Group> implements GroupDao {
 
     @Override
     protected Optional<Group> findEntityById(Long id) {
-        // TODO Auto-generated method stub
-        return null;
+        try {
+            return Optional.ofNullable(jdbcTemplate.queryForObject(FIND_ONE_BY_ID, rowMapper, id));
+        } catch (Exception e) {
+            return Optional.empty();
+        }
+    }
+
+    @Override
+    protected List<Group> findAllEntities() {
+        return jdbcTemplate.query(SELECT_ALL, rowMapper);
     }
 
 }

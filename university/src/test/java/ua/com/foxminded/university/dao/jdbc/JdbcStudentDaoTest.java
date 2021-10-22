@@ -35,7 +35,7 @@ class JdbcStudentDaoTest {
     }
 
     @Test
-    @Sql(scripts = { "/clean_db.sql", "/students_init_test_values.sql" })
+    @Sql(scripts = { "/sql/clean_db.sql", "/students_init_test_values.sql" })
     void shouldInsertNew() {
         Student student = new Student("Alex", "Sidorov", "Male", "AlexSidorov@gmail.com", "Kaliningrad", 25,
                 89313256895L, "no", 1L);
@@ -45,7 +45,7 @@ class JdbcStudentDaoTest {
     }
 
     @Test
-    @Sql(scripts = { "/clean_db.sql", "/students_init_test_values.sql" })
+    @Sql(scripts = { "/sql/clean_db.sql", "/students_init_test_values.sql" })
     void shouldFindStudent() {
         Student expected = new Student(Long.valueOf(1L), "Alex", "Petrov", "male", "AlexPetrov@gmail.com",
                 "Saint Petersburg", Integer.valueOf(25), Long.valueOf(89523268951L), "no", Long.valueOf(1L));
@@ -54,13 +54,13 @@ class JdbcStudentDaoTest {
     }
 
     @Test
-    @Sql(scripts = { "/clean_db.sql", "/students_init_test_values.sql" })
+    @Sql(scripts = { "/sql/clean_db.sql", "/students_init_test_values.sql" })
     void shouldNotFindStudent() {
         assertThat(dao.findById(50L)).isEmpty();
     }
 
     @Test
-    @Sql(scripts = { "/clean_db.sql", "/students_init_test_values.sql" })
+    @Sql(scripts = { "/sql/clean_db.sql", "/students_init_test_values.sql" })
     void shouldFindAllStudent() {
 
         List<Student> expected = Arrays.asList(
@@ -80,13 +80,13 @@ class JdbcStudentDaoTest {
     }
 
     @Test
-    @Sql(scripts = "/clean_db.sql")
+    @Sql(scripts = "/sql/clean_db.sql")
     void shouldNotFindAllStudent() {
         assertThat(dao.findAll().size()).isZero();
     }
 
     @Test
-    @Sql(scripts = { "/clean_db.sql", "/students_init_test_values.sql" })
+    @Sql(scripts = { "/sql/clean_db.sql", "/students_init_test_values.sql" })
     void shouldUpdateStudent() {
 
         Student expected = new Student(Long.valueOf(3L), "Alex", "Sidorov", "Male", "AlexSidorov@gmail.com",
@@ -97,7 +97,7 @@ class JdbcStudentDaoTest {
     }
 
     @Test
-    @Sql(scripts = { "/clean_db.sql", "/students_init_test_values.sql" })
+    @Sql(scripts = { "/sql/clean_db.sql", "/students_init_test_values.sql" })
     void shouldDeleteStudentById() {
         Student expected = new Student(Long.valueOf(1L), "Alex", "Petrov", "male", "AlexPetrov@gmail.com",
                 "Saint Petersburg", Integer.valueOf(25), Long.valueOf(89523268951L), "no", Long.valueOf(1L));
@@ -108,7 +108,7 @@ class JdbcStudentDaoTest {
     }
 
     @Test
-    @Sql(scripts = "/clean_db.sql")
+    @Sql(scripts = "/sql/clean_db.sql")
     void shouldNotDeleteStudentByIdIfNOtExist() {
         assertThat(dao.findById(30L)).isNotPresent();
         assertThat(dao.findById(30L)).isEmpty();
@@ -117,7 +117,7 @@ class JdbcStudentDaoTest {
     }
 
     @Test
-    @Sql(scripts = { "/clean_db.sql", "/students_init_test_values.sql" })
+    @Sql(scripts = { "/sql/clean_db.sql", "/students_init_test_values.sql" })
     void shouldBatchSave() {
         List<Student> expected = Arrays.asList(
                 new Student(Long.valueOf(1L), "Viktor", "Kim", "male", "ViktorKim@gmail.com", "Svetlogorsk",
@@ -190,7 +190,7 @@ class JdbcStudentDaoTest {
     }
 
     @Test
-    @Sql(scripts = { "/clean_db.sql", "/students_init_test_values.sql" })
+    @Sql(scripts = { "/sql/clean_db.sql", "/students_init_test_values.sql" })
     void shouldFindStudentsBuGroupId() {
 
         List<Student> expected = Arrays.asList(

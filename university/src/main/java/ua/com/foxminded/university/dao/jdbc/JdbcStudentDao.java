@@ -206,7 +206,12 @@ public class JdbcStudentDao extends AbstractCrudDao<Student> implements StudentD
         } catch (Exception e) {
             return Optional.empty();
         }
-        
+
+    }
+
+    @Override
+    protected List<Student> findAllEntities() {
+        return jdbcTemplate.query(SELECT_ALL, rowMapper);
     }
 
 }

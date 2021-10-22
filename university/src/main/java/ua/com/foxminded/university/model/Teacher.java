@@ -1,11 +1,12 @@
 package ua.com.foxminded.university.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Teacher extends AbstractPerson {
 
     private String profile;
-    private List<Subject> subjects;
+    private List<Subject> subjects = new ArrayList<>();
 
     public Teacher(Long id, String firstName, String lastName, String gender, String email, String address, Integer age,
             Long phoneNumber, String role, String profile, List<Subject> subjects) {
@@ -27,6 +28,12 @@ public class Teacher extends AbstractPerson {
         this.subjects = subjects;
     }
 
+    public Teacher(String firstName, String lastName, String gender, String email, String address, Integer age,
+            Long phoneNumber, String role, String profile) {
+        super(null, firstName, lastName, gender, email, address, age, phoneNumber, role);
+        this.profile = profile;
+    }
+
     public String getProfile() {
         return profile;
     }
@@ -41,6 +48,10 @@ public class Teacher extends AbstractPerson {
 
     public void setSubjects(List<Subject> subjects) {
         this.subjects = subjects;
+    }
+
+    public void addSubject(Subject subject) {
+        this.subjects.add(subject);
     }
 
     @Override

@@ -47,6 +47,11 @@ public class Subject extends IdEntity {
         return true;
     }
 
+    @Override
+    public String toString() {
+        return "Subject [name=" + name + "]";
+    }
+
 
 
 
