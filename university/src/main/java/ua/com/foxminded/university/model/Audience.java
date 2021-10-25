@@ -47,6 +47,11 @@ public class Audience extends IdEntity {
         return true;
     }
 
+	@Override
+	public String toString() {
+		return "Audience [roomNumber=" + roomNumber + ", getId()=" + getId() + "]";
+	}
+
     
     
 }

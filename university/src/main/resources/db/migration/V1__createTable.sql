@@ -56,9 +56,8 @@ CREATE TABLE teachers_subjects (
     );
     
 CREATE TABLE audiences (
-    audience_id int GENERATED ALWAYS AS IDENTITY,
+    audience_id SERIAL PRIMARY KEY,
     room_number int NOT NULL UNIQUE,
-    floor int NOT NULL,
     CONSTRAINT PK_audiences_audience_id PRIMARY KEY (audience_id)
     );
 
