@@ -13,11 +13,13 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.SqlParameter;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.jdbc.object.BatchSqlUpdate;
+import org.springframework.stereotype.Repository;
 
 import ua.com.foxminded.university.dao.AbstractCrudDao;
 import ua.com.foxminded.university.dao.AudienceDao;
 import ua.com.foxminded.university.model.Audience;
 
+@Repository
 public class JdbcAudienceDao extends AbstractCrudDao<Audience> implements AudienceDao {
 
 	public static final String ID = "ID";

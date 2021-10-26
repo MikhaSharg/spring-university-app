@@ -10,6 +10,7 @@ public class Lecture extends IdEntity {
     private Teacher teacher;
     private Group group;
     private Subject subject;
+    
 
     public Lecture(Long id, String name, Date date, Audience audience, Teacher teacher, Group group, Subject subject) {
         super(id);

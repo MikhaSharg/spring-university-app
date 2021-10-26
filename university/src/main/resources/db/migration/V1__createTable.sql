@@ -57,18 +57,26 @@ CREATE TABLE teachers_subjects (
     
 CREATE TABLE audiences (
     audience_id SERIAL PRIMARY KEY,
-    room_number int NOT NULL UNIQUE,
-    CONSTRAINT PK_audiences_audience_id PRIMARY KEY (audience_id)
+    room_number int NOT NULL UNIQUE
     );
+    
+ CREATE TABLE lecture_sessions (
+    session_id SERIAL PRIMARY KEY,
+ 	period varchar(10) NOT NULL,
+    start_time varchar (10) NOT NULL UNIQUE,
+    end_time varchar (10) NOT NULL UNIQUE
+    );   
 
-CREATE TABLE lectures_shedule (
-    lecture_id int GENERATED ALWAYS AS IDENTITY,
-    lecture_name varchar(50) NOT NULL,
-    lecture_date date NOT NULL,
+CREATE TABLE lectures(
+    lecture_id SERIAL PRIMARY KEY,
+    subject_id int NOT NULL,
+    session_id int NOT NULL,
+    teacher_id int NOT NULL,
     audience_id int NOT NULL,
     group_id int NOT NULL,
-    subject_id int NOT NULL,
-    CONSTRAINT PK_lectures_shedule_id PRIMARY KEY (lecture_id),
+    lecture_date date NOT NULL,
+    CONSTRAINT FK_lectures_sessions FOREIGN KEY (session_id) REFERENCES lecture_sessions (session_id), 
+    CONSTRAINT FK_lectures_teachers FOREIGN KEY (teacher_id) REFERENCES teachers (teacher_id), 
     CONSTRAINT FK_lectures_audiences FOREIGN KEY (audience_id) REFERENCES audiences (audience_id), 
     CONSTRAINT FK_lectures_groups FOREIGN KEY (group_id) REFERENCES groups (group_id), 
     CONSTRAINT FK_lectures_subjects FOREIGN KEY (subject_id) REFERENCES subjects (subject_id)
