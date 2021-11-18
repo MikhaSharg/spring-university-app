@@ -56,19 +56,11 @@ public abstract class AbstractCrudDao<T extends IdEntity> implements CrudDao<T, 
 	@Override
 	public Optional<T> findById(Long id) {
 		return findEntityById(id);
-
-//        try {
-//            return Optional.ofNullable(jdbcTemplate.queryForObject(getSelectByIdQuery(), rowMapper, id));
-//        } catch (Exception e) {
-//            return Optional.empty();
-//        }
 	}
 
 	@Override
 	public List<T> findAll() {
 		return findAllEntities();
-
-//        return jdbcTemplate.query(getSelectAllQuery(), rowMapper);
 	}
 
 	protected abstract List<T> findAllEntities();

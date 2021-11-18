@@ -142,7 +142,6 @@ public class JdbcSubjectDao extends AbstractCrudDao<Subject> implements SubjectD
 	@Override
 	protected Optional<Subject> findEntityById(Long id) {
 		try {
-			System.out.println("Start");
 			return Optional.ofNullable(jdbcTemplate.queryForObject(SELECT_BY_ID, rowMapper, id));
 		} catch (Exception e) {
 			return Optional.empty();

@@ -1,5 +1,7 @@
 package ua.com.foxminded.university.model;
 
+import java.util.Set;
+
 public abstract class AbstractPerson extends IdEntity {
 
     private String firstName;

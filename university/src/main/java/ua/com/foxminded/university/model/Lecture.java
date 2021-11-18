@@ -1,138 +1,127 @@
 package ua.com.foxminded.university.model;
 
-import java.util.Date;
+import java.sql.Date;
+import java.time.LocalDate;
+import java.util.Objects;
 
 public class Lecture extends IdEntity {
 
-    private String name;
-    private Date date;
-    private Audience audience;
-    private Teacher teacher;
-    private Group group;
-    private Subject subject;
-    
+	private LocalDate date;
+	private LectureSessions session;
+	private Audience audience;
+	private Subject subject;
+	private Teacher teacher;
+	private Group group;
 
-    public Lecture(Long id, String name, Date date, Audience audience, Teacher teacher, Group group, Subject subject) {
-        super(id);
-        this.name = name;
-        this.date = date;
-        this.audience = audience;
-        this.teacher = teacher;
-        this.group = group;
-        this.subject = subject;
-    }
+	public Lecture(LocalDate date) {
+		super(null);
+		this.date = date;
 
-    public Lecture(String name, Date date, Audience audience, Teacher teacher, Group group, Subject subject) {
-        super(null);
-        this.name = name;
-        this.date = date;
-        this.audience = audience;
-        this.teacher = teacher;
-        this.group = group;
-        this.subject = subject;
-    }
+	}
 
-    public String getName() {
-        return name;
-    }
+	public Lecture(Long id, LocalDate date) {
+		super(id);
+		this.date = date;
 
-    public void setName(String name) {
-        this.name = name;
-    }
+	}
 
-    public Date getDate() {
-        return date;
-    }
+	public Lecture(LocalDate date, LectureSessions session, Audience audience, Subject subject, Teacher teacher,
+			Group group) {
+		super(null);
+		this.date = date;
+		this.session = session;
+		this.audience = audience;
+		this.subject = subject;
+		this.teacher = teacher;
+		this.group = group;
+	}
+	
+	public Lecture(Long id, LocalDate date, LectureSessions session, Audience audience, Subject subject, Teacher teacher,
+			Group group) {
+		super(id);
+		this.date = date;
+		this.session = session;
+		this.audience = audience;
+		this.subject = subject;
+		this.teacher = teacher;
+		this.group = group;
+	}
+  
 
-    public void setDate(Date date) {
-        this.date = date;
-    }
+	public LocalDate getDate() {			
+		return date;
+	}
 
-    public Audience getAudience() {
-        return audience;
-    }
+	public void setDate(LocalDate date) {
+		this.date = date;
+	}
 
-    public void setAudience(Audience audience) {
-        this.audience = audience;
-    }
+	public LectureSessions getSession() {
+		return session;
+	}
 
-    public Teacher getTeacher() {
-        return teacher;
-    }
+	public void setSession(LectureSessions session) {
+		this.session = session;
+	}
 
-    public void setTeacher(Teacher teacher) {
-        this.teacher = teacher;
-    }
+	public Audience getAudience() {
+		return audience;
+	}
 
-    public Group getGroup() {
-        return group;
-    }
+	public void setAudience(Audience audience) {
+		this.audience = audience;
+	}
 
-    public void setGroup(Group group) {
-        this.group = group;
-    }
+	public Subject getSubject() {
+		return subject;
+	}
 
-    public Subject getSubject() {
-        return subject;
-    }
+	public void setSubject(Subject subject) {
+		this.subject = subject;
+	}
 
-    public void setSubject(Subject subject) {
-        this.subject = subject;
-    }
+	public Teacher getTeacher() {
+		return teacher;
+	}
 
-    @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = super.hashCode();
-        result = prime * result + ((audience == null) ? 0 : audience.hashCode());
-        result = prime * result + ((date == null) ? 0 : date.hashCode());
-        result = prime * result + ((group == null) ? 0 : group.hashCode());
-        result = prime * result + ((name == null) ? 0 : name.hashCode());
-        result = prime * result + ((subject == null) ? 0 : subject.hashCode());
-        result = prime * result + ((teacher == null) ? 0 : teacher.hashCode());
-        return result;
-    }
+	public void setTeacher(Teacher teacher) {
+		this.teacher = teacher;
+	}
 
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (!super.equals(obj))
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        Lecture other = (Lecture) obj;
-        if (audience == null) {
-            if (other.audience != null)
-                return false;
-        } else if (!audience.equals(other.audience))
-            return false;
-        if (date == null) {
-            if (other.date != null)
-                return false;
-        } else if (!date.equals(other.date))
-            return false;
-        if (group == null) {
-            if (other.group != null)
-                return false;
-        } else if (!group.equals(other.group))
-            return false;
-        if (name == null) {
-            if (other.name != null)
-                return false;
-        } else if (!name.equals(other.name))
-            return false;
-        if (subject == null) {
-            if (other.subject != null)
-                return false;
-        } else if (!subject.equals(other.subject))
-            return false;
-        if (teacher == null) {
-            if (other.teacher != null)
-                return false;
-        } else if (!teacher.equals(other.teacher))
-            return false;
-        return true;
-    }
+	public Group getGroup() {
+		return group;
+	}
+
+	public void setGroup(Group group) {
+		this.group = group;
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = super.hashCode();
+		result = prime * result + Objects.hash(audience, date, group, session, subject, teacher);
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (!super.equals(obj))
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Lecture other = (Lecture) obj;
+		return Objects.equals(audience, other.audience) && Objects.equals(date, other.date)
+				&& Objects.equals(group, other.group) && Objects.equals(session, other.session)
+				&& Objects.equals(subject, other.subject) && Objects.equals(teacher, other.teacher);
+	}
+
+	@Override
+	public String toString() {
+		return "Lecture [date=" + date + "\n, session=" + session + "\n, audience=" + audience + "\n, subject=" + subject
+				+ "\n, teacher=" + teacher + "\n, group=" + group + "\n, getId()=" + getId() + "]";
+	}
 
 }

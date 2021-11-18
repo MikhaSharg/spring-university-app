@@ -69,12 +69,13 @@ CREATE TABLE audiences (
 
 CREATE TABLE lectures(
     lecture_id SERIAL PRIMARY KEY,
-    subject_id int NOT NULL,
-    session_id int NOT NULL,
-    teacher_id int NOT NULL,
-    audience_id int NOT NULL,
-    group_id int NOT NULL,
     lecture_date date NOT NULL,
+    session_id int NOT NULL,
+    audience_id int NOT NULL,
+    subject_id int NOT NULL,
+    teacher_id int NOT NULL,
+    group_id int NOT NULL,
+    
     CONSTRAINT FK_lectures_sessions FOREIGN KEY (session_id) REFERENCES lecture_sessions (session_id), 
     CONSTRAINT FK_lectures_teachers FOREIGN KEY (teacher_id) REFERENCES teachers (teacher_id), 
     CONSTRAINT FK_lectures_audiences FOREIGN KEY (audience_id) REFERENCES audiences (audience_id), 
