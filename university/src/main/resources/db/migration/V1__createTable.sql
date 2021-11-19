@@ -81,13 +81,29 @@ CREATE TABLE lectures(
     CONSTRAINT FK_lectures_audiences FOREIGN KEY (audience_id) REFERENCES audiences (audience_id), 
     CONSTRAINT FK_lectures_groups FOREIGN KEY (group_id) REFERENCES groups (group_id), 
     CONSTRAINT FK_lectures_subjects FOREIGN KEY (subject_id) REFERENCES subjects (subject_id)
-    )
+    );
 
+CREATE TABLE roles (
+    role_id SERIAL PRIMARY KEY,
+ 	name varchar(20) NOT NULL
+    );   
 
+CREATE TABLE teachers_roles (
+    teacher_id int REFERENCES teachers (teacher_id) ON UPDATE CASCADE ON DELETE CASCADE,
+    role_id int REFERENCES roles (role_id) ON UPDATE CASCADE ON DELETE CASCADE,
+    CONSTRAINT PK_teachers_roles PRIMARY KEY (teacher_id, role_id)
+    );
+    
+CREATE TABLE students_roles (
+    student_id int REFERENCES students (student_id) ON UPDATE CASCADE ON DELETE CASCADE,
+    role_id int REFERENCES roles (role_id) ON UPDATE CASCADE ON DELETE CASCADE,
+    CONSTRAINT PK_students_roles PRIMARY KEY (student_id, role_id)
+    );
 
-
-
-
-
+CREATE TABLE persons_roles (
+    person_id int REFERENCES persons (person_id) ON UPDATE CASCADE ON DELETE CASCADE,
+    role_id int REFERENCES roles (role_id) ON UPDATE CASCADE ON DELETE CASCADE,
+    CONSTRAINT PK_persons_roles PRIMARY KEY (person_id, role_id)
+    );
 
 

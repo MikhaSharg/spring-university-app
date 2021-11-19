@@ -122,7 +122,7 @@ class JdbcStudentDaoTest {
     void shouldBatchSave() {
         List<Student> expected = Arrays.asList(
                 new Student(Long.valueOf(1L), "Viktor", "Kim", "male", "ViktorKim@gmail.com", "Svetlogorsk",
-                        Integer.valueOf(21), Long.valueOf(89316589853L), "no", Long.valueOf(1L)),
+                        Integer.valueOf(21), Long.valueOf(89316589853L), "student", Long.valueOf(1L)),
 
                 new Student(Long.valueOf(2L), "Andrey", "Kunec", "male", "AndreyKunec@gmail.com", "Novgorod",
                         Integer.valueOf(22), Long.valueOf(89528975236L), "teacher", Long.valueOf(2L)),
@@ -153,7 +153,7 @@ class JdbcStudentDaoTest {
 
         List<Student> toSave = Arrays.asList(
                 new Student(Long.valueOf(1L), "Viktor", "Kim", "male", "ViktorKim@gmail.com", "Svetlogorsk",
-                        Integer.valueOf(21), Long.valueOf(89316589853L), "no", Long.valueOf(1L)),
+                        Integer.valueOf(21), Long.valueOf(89316589853L), "student", Long.valueOf(1L)),
 
                 new Student(Long.valueOf(2L), "Andrey", "Kunec", "male", "AndreyKunec@gmail.com", "Novgorod",
                         Integer.valueOf(22), Long.valueOf(89528975236L), "teacher", Long.valueOf(2L)),

@@ -20,9 +20,9 @@ class UniversityApplicationTest {
     void migrationTest() {
         List<String> tables = jdbcTemplate.queryForList(
                 "SELECT table_name FROM information_schema.tables WHERE table_schema='PUBLIC'", String.class);
-        assertThat(tables.size()).isEqualTo(10);
+        assertThat(tables.size()).isEqualTo(14);
         assertThat(tables).containsAll(Arrays.asList("groups", "students", "persons", "teachers", "subjects",
-                "teachers_subjects", "audiences", "flyway_schema_history", "lecture_sessions", "lectures"));
+                "teachers_subjects", "audiences", "flyway_schema_history", "lecture_sessions", "lectures", "roles", "teachers_roles", "students_roles", "persons_roles"));
     }
 
     @Test
