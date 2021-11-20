@@ -39,7 +39,7 @@ CREATE TABLE persons (
     email varchar (50) NOT NULL,
     address varchar (50) NOT NULL,
     age int NOT NULL,
-    phone_number int NOT NULL,
+    phone_number bigint NOT NULL,
     role varchar (50),
     CONSTRAINT PK_persons_person_id PRIMARY KEY (person_id) 
     );
