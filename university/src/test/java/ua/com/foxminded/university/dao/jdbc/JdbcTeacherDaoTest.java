@@ -45,13 +45,13 @@ class JdbcTeacherDaoTest {
         List<Subject> subjects = Arrays.asList(new Subject(1L, "math"), new Subject(2L, "astronomy"),
                 new Subject(3L, "probability theory"), new Subject(4L, "history"));
         Teacher expected = new Teacher(1L, "Alex", "Petrov", "male", "AlexPetrov@gmail.com", "Saint Petersburg", 25,
-                89313262896L, "no", "one", subjects);
+                89313262896L, "teacher", "one", subjects);
         Teacher actual = dao.findById(1L).get();
         assertThat(actual).isEqualTo(expected);
     }
 
     @Test
-    @Sql(scripts = { "/sql/clean_db.sql", "/students_init_test_values.sql" })
+    @Sql(scripts = { "/sql/clean_db.sql", "/sql/teachers_test_values.sql" })
     void shouldNotFindOneTeacher() {
         assertThat(dao.findById(50L)).isEmpty();
     }
@@ -63,7 +63,7 @@ class JdbcTeacherDaoTest {
         List<Subject> subjects = Arrays.asList(new Subject(1L, "math"), new Subject(2L, "astronomy"),
                 new Subject(3L, "probability theory"), new Subject(4L, "history"));
         Teacher teacher = new Teacher(1L, "Alex", "Petrov", "male", "AlexPetrov@gmail.com", "Saint Petersburg", 25,
-                89313262896L, "no", "one", subjects);
+                89313262896L, "teacher", "one", subjects);
         List<Teacher> expected = Arrays.asList(teacher);
         List<Teacher> actual = dao.findAll();
         assertThat(actual).isEqualTo(expected);
@@ -77,23 +77,23 @@ class JdbcTeacherDaoTest {
         List<Subject> subjects1 = Arrays.asList(new Subject(1L, "math"), new Subject(2L, "astronomy"),
                 new Subject(3L, "probability theory"), new Subject(4L, "history"));
         Teacher teacher1 = new Teacher(1L, "Alex", "Petrov", "male", "AlexPetrov@gmail.com", "Saint Petersburg", 25,
-                89313262896L, "no", "one", subjects1);
+                89313262896L, "teacher", "one", subjects1);
 
         List<Subject> subjects2 = Arrays.asList(new Subject(2L, "astronomy"), new Subject(3L, "probability theory"));
         Teacher teacher2 = new Teacher(2L, "Anna", "Ermakova", "female", "AnnaErmakova@gmail.com", "Kaliningrad", 26,
-                89215895789L, "no", "two", subjects2);
+                89215895789L, "teacher", "two", subjects2);
 
         List<Subject> subjects3 = Arrays.asList(new Subject(4L, "history"));
         Teacher teacher3 = new Teacher(3L, "Roman", "Sidorov", "male", "RomanSidorov@gmail.com", "Moscow", 23,
-                89112568975L, "no", "three", subjects3);
+                89112568975L, "teacher", "three", subjects3);
 
         List<Subject> subjects4 = Arrays.asList(new Subject(1L, "math"), new Subject(4L, "history"));
         Teacher teacher4 = new Teacher(4L, "Diana", "Gukova", "female", "DianaGukova@gmail.com", "Rostov", 21,
-                89225896325L, "no", "four", subjects4);
+                89225896325L, "teacher", "four", subjects4);
 
         List<Subject> subjects5 = new ArrayList<>();
         Teacher teacher5 = new Teacher(5L, "Dmitry", "Solodin", "male", "MikhailSolodin@gmail.com", "Andora", 35,
-                89052655985L, "student", "five", subjects5);
+                89052655985L, "teacher", "five", subjects5);
 
         List<Teacher> expected = Arrays.asList(teacher1, teacher2, teacher3, teacher4, teacher5);
         List<Teacher> actual = dao.findAll();
@@ -107,23 +107,23 @@ class JdbcTeacherDaoTest {
 
         List<Subject> subjects1 = new ArrayList<>();
         Teacher teacher1 = new Teacher(1L, "Alex", "Petrov", "male", "AlexPetrov@gmail.com", "Saint Petersburg", 25,
-                89313262896L, "no", "one", subjects1);
+                89313262896L, "teacher", "one", subjects1);
 
         List<Subject> subjects2 = Arrays.asList(new Subject(2L, "astronomy"), new Subject(3L, "probability theory"));
         Teacher teacher2 = new Teacher(2L, "Anna", "Ermakova", "female", "AnnaErmakova@gmail.com", "Kaliningrad", 26,
-                89215895789L, "no", "two", subjects2);
+                89215895789L, "teacher", "two", subjects2);
 
         List<Subject> subjects3 = new ArrayList<>();
         Teacher teacher3 = new Teacher(3L, "Roman", "Sidorov", "male", "RomanSidorov@gmail.com", "Moscow", 23,
-                89112568975L, "no", "three", subjects3);
+                89112568975L, "teacher", "three", subjects3);
 
         List<Subject> subjects4 = Arrays.asList(new Subject(1L, "math"), new Subject(4L, "history"));
         Teacher teacher4 = new Teacher(4L, "Diana", "Gukova", "female", "DianaGukova@gmail.com", "Rostov", 21,
-                89225896325L, "no", "four", subjects4);
+                89225896325L, "teacher", "four", subjects4);
 
         List<Subject> subjects5 = new ArrayList<>();
         Teacher teacher5 = new Teacher(5L, "Dmitry", "Solodin", "male", "MikhailSolodin@gmail.com", "Andora", 35,
-                89052655985L, "student", "five", subjects5);
+                89052655985L, "teacher", "five", subjects5);
 
         List<Teacher> expected = Arrays.asList(teacher1, teacher2, teacher3, teacher4, teacher5);
         List<Teacher> actual = dao.findAll();
@@ -136,23 +136,23 @@ class JdbcTeacherDaoTest {
 
         List<Subject> subjects1 = new ArrayList<>();
         Teacher teacher1 = new Teacher(1L, "Alex", "Petrov", "male", "AlexPetrov@gmail.com", "Saint Petersburg", 25,
-                89313262896L, "no", "one", subjects1);
+                89313262896L, "teacher", "one", subjects1);
 
         List<Subject> subjects2 = new ArrayList<>();
         Teacher teacher2 = new Teacher(2L, "Anna", "Ermakova", "female", "AnnaErmakova@gmail.com", "Kaliningrad", 26,
-                89215895789L, "no", "two", subjects2);
+                89215895789L, "teacher", "two", subjects2);
 
         List<Subject> subjects3 = new ArrayList<>();
         Teacher teacher3 = new Teacher(3L, "Roman", "Sidorov", "male", "RomanSidorov@gmail.com", "Moscow", 23,
-                89112568975L, "no", "three", subjects3);
+                89112568975L, "teacher", "three", subjects3);
 
         List<Subject> subjects4 = new ArrayList<>();
         Teacher teacher4 = new Teacher(4L, "Diana", "Gukova", "female", "DianaGukova@gmail.com", "Rostov", 21,
-                89225896325L, "no", "four", subjects4);
+                89225896325L, "teacher", "four", subjects4);
 
         List<Subject> subjects5 = new ArrayList<>();
         Teacher teacher5 = new Teacher(5L, "Dmitry", "Solodin", "male", "MikhailSolodin@gmail.com", "Andora", 35,
-                89052655985L, "student", "five", subjects5);
+                89052655985L, "teacher", "five", subjects5);
 
         List<Teacher> expected = Arrays.asList(teacher1, teacher2, teacher3, teacher4, teacher5);
         List<Teacher> actual = dao.findAll();
@@ -166,24 +166,24 @@ class JdbcTeacherDaoTest {
         List<Subject> subjects1 = Arrays.asList(new Subject(1L, "math"), new Subject(2L, "astronomy"),
                 new Subject(3L, "probability theory"), new Subject(4L, "history"));
         Teacher teacher1 = new Teacher(1L, "Alex", "Petrov", "male", "AlexPetrov@gmail.com", "Saint Petersburg", 25,
-                89313262896L, "no", "one", subjects1);
+                89313262896L, "teacher", "one", subjects1);
 
         List<Subject> subjects2 = Arrays.asList(new Subject(2L, "astronomy"), new Subject(3L, "probability theory"));
         Teacher teacher2 = new Teacher(2L, "Anna", "Ermakova", "female", "AnnaErmakova@gmail.com", "Kaliningrad", 26,
-                89215895789L, "no", "two", subjects2);
+                89215895789L, "teacher", "two", subjects2);
 
         List<Subject> subjects3 = Arrays.asList(new Subject(4L, "history"));
         Teacher teacher3 = new Teacher(3L, "Roman", "Sidorov", "male", "RomanSidorov@gmail.com", "Moscow", 23,
-                89112568975L, "no", "three", subjects3);
+                89112568975L, "teacher", "three", subjects3);
 
         List<Subject> subjects4 = Arrays.asList(new Subject(1L, "math"), new Subject(4L, "history"));
         Teacher teacher4 = new Teacher(4L, "Diana", "Gukova", "female", "DianaGukova@gmail.com", "Rostov", 21,
-                89225896325L, "no", "four", subjects4);
+                89225896325L, "teacher", "four", subjects4);
 
         List<Subject> subjects5 = Arrays.asList(new Subject(1L, "math"), new Subject(3L, "probability theory"),
                 new Subject(4L, "history"));
         Teacher teacher5 = new Teacher(5L, "Dmitry", "Solodin", "male", "MikhailSolodin@gmail.com", "Andora", 35,
-                89052655985L, "student", "five", subjects5);
+                89052655985L, "teacher", "five", subjects5);
 
         List<Teacher> expected = Arrays.asList(teacher1, teacher2, teacher3, teacher4, teacher5);
         List<Teacher> actual = dao.findAll();
@@ -200,7 +200,7 @@ class JdbcTeacherDaoTest {
     @Sql(scripts = "/sql/clean_db.sql")
     void shouldInsertNewTeacher() {
         Teacher expected = new Teacher("Alex", "Petrov", "male", "AlexPetrov@gmail.com", "Saint Petersburg", 25,
-                89313262896L, "no", "one");
+                89313262896L, "teacher", "one");
         Teacher created = dao.save(expected);
         expected.setId(created.getId());
         assertThat(created).isEqualTo(expected);
@@ -211,7 +211,7 @@ class JdbcTeacherDaoTest {
     void shouldUpdateOneTeacher() {
 
         Teacher expected = new Teacher(3L, "Elena", "Pestrecova", "female", "ElenaPestrecova@gmail.com", "Omsk", 28,
-                89658953265L, "no", "technology");
+                89658953265L, "teacher", "technology");
 
         assertThat(dao.findById(3L).get()).isNotEqualTo(expected);
         Teacher actual = dao.save(expected);
@@ -226,7 +226,7 @@ class JdbcTeacherDaoTest {
         List<Subject> subjects = Arrays.asList(new Subject(1L, "math"), new Subject(2L, "astronomy"),
                 new Subject(3L, "probability theory"), new Subject(4L, "history"));
         Teacher teacher = new Teacher(1L, "Alex", "Petrov", "male", "AlexPetrov@gmail.com", "Saint Petersburg", 25,
-                89313262896L, "no", "one", subjects);
+                89313262896L, "teacher", "one", subjects);
 
         assertThat(dao.findById(1L)).get().isEqualTo(teacher);
         assertThat(dao.findById(1L)).isPresent();
@@ -249,35 +249,35 @@ class JdbcTeacherDaoTest {
 
         List<Teacher> expected = Arrays.asList(
                 new Teacher(1L, "Alex", "Petrov", "male", "AlexPetrov@gmail.com", "Saint Petersburg", 25, 89313262896L,
-                        "no", "one"),
+                        "teacher", "one"),
 
                 new Teacher(2L, "Anna", "Ermakova", "female", "AnnaErmakova@gmail.com", "Kaliningrad", 26, 89215895789L,
-                        "no", "two"),
+                        "teacher", "two"),
 
-                new Teacher(3L, "Roman", "Sidorov", "male", "RomanSidorov@gmail.com", "Moscow", 23, 89112568975L, "no",
+                new Teacher(3L, "Roman", "Sidorov", "male", "RomanSidorov@gmail.com", "Moscow", 23, 89112568975L, "teacher",
                         "three"),
 
-                new Teacher(4L, "Diana", "Gukova", "female", "DianaGukova@gmail.com", "Rostov", 21, 89225896325L, "no",
+                new Teacher(4L, "Diana", "Gukova", "female", "DianaGukova@gmail.com", "Rostov", 21, 89225896325L, "teacher",
                         "four"),
 
                 new Teacher(5L, "Dmitry", "Solodin", "male", "MikhailSolodin@gmail.com", "Andora", 35, 89052655985L,
-                        "student", "five"));
+                        "teacher", "five"));
 
         List<Teacher> toSave = Arrays.asList(
                 new Teacher(1L, "Alex", "Petrov", "male", "AlexPetrov@gmail.com", "Saint Petersburg", 25, 89313262896L,
-                        "no", "one"),
+                        "teacher", "one"),
 
                 new Teacher("Anna", "Ermakova", "female", "AnnaErmakova@gmail.com", "Kaliningrad", 26, 89215895789L,
-                        "no", "two"),
+                        "teacher", "two"),
 
-                new Teacher(3L, "Roman", "Sidorov", "male", "RomanSidorov@gmail.com", "Moscow", 23, 89112568975L, "no",
+                new Teacher(3L, "Roman", "Sidorov", "male", "RomanSidorov@gmail.com", "Moscow", 23, 89112568975L, "teacher",
                         "three"),
 
-                new Teacher(4L, "Diana", "Gukova", "female", "DianaGukova@gmail.com", "Rostov", 21, 89225896325L, "no",
+                new Teacher(4L, "Diana", "Gukova", "female", "DianaGukova@gmail.com", "Rostov", 21, 89225896325L, "teacher",
                         "four"),
 
                 new Teacher("Dmitry", "Solodin", "male", "MikhailSolodin@gmail.com", "Andora", 35, 89052655985L,
-                        "student", "five"));
+                        "teacher", "five"));
 
         List<Teacher> actual = dao.saveAll(toSave);
         assertThat(actual.size()).isEqualTo(toSave.size());

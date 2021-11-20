@@ -37,7 +37,7 @@ public class JdbcRoleDao extends AbstractCrudDao<Role> implements RoleDao {
 	private static final String INSERT_ROLE_TO_TEACHER = "INSERT INTO teachers_roles (teacher_id, role_id) VALUES (?,?)";
 	private static final String SELECT_ROLES_FROM_TEACHER = "SELECT * FROM roles  WHERE role_id IN (SELECT role_id FROM teachers_roles WHERE teacher_id = ?)";
 	private static final String DELETE_ROLE_FROM_TEACHER = "DELETE FROM teachers_roles WHERE teacher_id=? AND role_id=?";
-	
+
 	protected JdbcRoleDao(JdbcTemplate jdbsTemplate, RowMapper<Role> rowMapper) {
 		super(jdbsTemplate, rowMapper);
 	}
@@ -182,7 +182,7 @@ public class JdbcRoleDao extends AbstractCrudDao<Role> implements RoleDao {
 		if (updated != 1) {
 			throw new IllegalArgumentException("Unable to add role");
 		}
-		
+
 	}
 
 	@Override
@@ -195,7 +195,7 @@ public class JdbcRoleDao extends AbstractCrudDao<Role> implements RoleDao {
 		if (updated != 1) {
 			throw new IllegalArgumentException("Unable to delete role");
 		}
-		
+
 	}
 
 	@Override

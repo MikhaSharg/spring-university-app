@@ -6,7 +6,7 @@ INSERT INTO subjects (subject_id, subject_name) VALUES
 
 INSERT INTO teachers (teacher_id, first_name, last_name, gender, email, address, age, phone_number, role, profile)
 VALUES 
-(1L, 'Alex', 'Petrov', 'male', 'AlexPetrov@gmail.com', 'Saint Petersburg', 25, 89313262896, 'no', 'one');
+(1L, 'Alex', 'Petrov', 'male', 'AlexPetrov@gmail.com', 'Saint Petersburg', 25, 89313262896, 'teacher', 'one');
 
 INSERT INTO teachers_subjects (teacher_id, subject_id) VALUES 
 (1L, 1L),

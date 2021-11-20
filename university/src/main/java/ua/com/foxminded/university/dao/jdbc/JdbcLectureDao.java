@@ -4,6 +4,7 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Types;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -11,6 +12,8 @@ import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.PreparedStatementCreator;
+import org.springframework.jdbc.core.PreparedStatementSetter;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.SqlParameter;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
@@ -50,12 +53,22 @@ public class JdbcLectureDao extends AbstractCrudDao<Lecture> implements LectureD
 			+ "(:LECTURE_DATE, :SESSION_ID, :AUDIENCE_ID, :SUBJECT_ID, :TEACHER_ID, :GROUP_ID)";
 
 	private static final String UPDATE_ONE_NAMED = "UPDATE lectures SET lecture_date=:LECTURE_DATE, session_id=:SESSION_ID, audience_id=:AUDIENCE_ID, \n"
-			+"subject_id=:SUBJECT_ID, teacher_id=:TEACHER_ID, group_id=:GROUP_ID WHERE lecture_id=:ID";
+			+ "subject_id=:SUBJECT_ID, teacher_id=:TEACHER_ID, group_id=:GROUP_ID WHERE lecture_id=:ID";
 
 	private static final String UPDATE_ONE = "UPDATE lectures SET lecture_date=?, session_id=?, audience_id=?, subject_id=?, teacher_id=?, group_id=? \n"
 			+ "WHERE lecture_id=?";
 
 	private static final String DELETE_ONE_BY_ID = "DELETE FROM lectures  WHERE lecture_id=?";
+
+	private static final String SELECT_BY_DATE = "SELECT l.*, ls.*, a.*, s.*, t.*, g.* \n"
+			+ "FROM lectures l JOIN lecture_sessions ls USING (session_id) JOIN audiences a USING(audience_id) \n"
+			+ "JOIN subjects s USING (subject_id) JOIN teachers t USING (teacher_id) JOIN groups g USING (group_id) \n"
+			+ "WHERE lecture_date = ?";
+
+	private static final String SELECT_BY_DATE_RANGE = "SELECT l.*, ls.*, a.*, s.*, t.*, g.* \n"
+			+ "FROM lectures l JOIN lecture_sessions ls USING (session_id) JOIN audiences a USING(audience_id) \n"
+			+ "JOIN subjects s USING (subject_id) JOIN teachers t USING (teacher_id) JOIN groups g USING (group_id) \n"
+			+ "WHERE lecture_date  BETWEEN ? AND ?";
 
 	public JdbcLectureDao(JdbcTemplate jdbsTemplate, RowMapper<Lecture> rowMapper) {
 		super(jdbsTemplate, rowMapper);
@@ -235,5 +248,58 @@ public class JdbcLectureDao extends AbstractCrudDao<Lecture> implements LectureD
 			return lectures;
 		});
 
+	}
+
+	@Override
+	public List<Lecture> findLectureForOneDate(LocalDate date) {
+		return jdbcTemplate.query(SELECT_BY_DATE, ps -> {
+			ps.setDate(1, Date.valueOf(date));
+		}, rs -> {
+
+			List<Lecture> lectures = new ArrayList<>();
+			while (rs.next()) {
+				LectureSessions lectureSessions = new LectureSessions(rs.getLong("session_id"), rs.getString("period"),
+						rs.getString("start_time"), rs.getString("end_time"));
+				Audience audence = new Audience(rs.getLong("audience_id"), rs.getInt("room_number"));
+				Subject subject = new Subject(rs.getLong("subject_id"), rs.getString("subject_name"));
+				Teacher teacher = new Teacher(rs.getLong("teacher_id"), rs.getString("first_name"),
+						rs.getString("last_name"), rs.getString("gender"), rs.getString("email"),
+						rs.getString("address"), rs.getInt("age"), rs.getLong("phone_number"), rs.getString("role"),
+						rs.getString("profile"));
+				Group group = new Group(rs.getLong("group_id"), rs.getString("group_name"));
+
+				Lecture lecture = new Lecture(rs.getLong("lecture_id"), rs.getDate("lecture_date").toLocalDate(),
+						lectureSessions, audence, subject, teacher, group);
+				lectures.add(lecture);
+			}
+			return lectures;
+		});
+	}
+
+	@Override
+	public List<Lecture> findLectureForDateRange(LocalDate startDate, LocalDate endDate) {
+		return jdbcTemplate.query(SELECT_BY_DATE_RANGE, ps -> {
+			ps.setDate(1, Date.valueOf(startDate));
+			ps.setDate(2, Date.valueOf(endDate));
+		}, rs -> {
+
+			List<Lecture> lectures = new ArrayList<>();
+			while (rs.next()) {
+				LectureSessions lectureSessions = new LectureSessions(rs.getLong("session_id"), rs.getString("period"),
+						rs.getString("start_time"), rs.getString("end_time"));
+				Audience audence = new Audience(rs.getLong("audience_id"), rs.getInt("room_number"));
+				Subject subject = new Subject(rs.getLong("subject_id"), rs.getString("subject_name"));
+				Teacher teacher = new Teacher(rs.getLong("teacher_id"), rs.getString("first_name"),
+						rs.getString("last_name"), rs.getString("gender"), rs.getString("email"),
+						rs.getString("address"), rs.getInt("age"), rs.getLong("phone_number"), rs.getString("role"),
+						rs.getString("profile"));
+				Group group = new Group(rs.getLong("group_id"), rs.getString("group_name"));
+
+				Lecture lecture = new Lecture(rs.getLong("lecture_id"), rs.getDate("lecture_date").toLocalDate(),
+						lectureSessions, audence, subject, teacher, group);
+				lectures.add(lecture);
+			}
+			return lectures;
+		});
 	}
 }

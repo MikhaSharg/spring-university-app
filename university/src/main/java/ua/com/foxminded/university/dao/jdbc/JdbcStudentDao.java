@@ -35,11 +35,14 @@ public class JdbcStudentDao extends AbstractCrudDao<Student> implements StudentD
 	public static final String ROLE = "ROLE";
 	public static final String GROUP_ID = "GROUP_ID";
 
-	private static final String UPDATE_ONE = "UPDATE students SET first_name=?, last_name=?, gender=?, email=?, address=?, age=?, phone_number=?, role=?, group_id=?  WHERE student_id=?";
+	private static final String UPDATE_ONE = "UPDATE students SET first_name=?, last_name=?, gender=?, email=?, address=?, age=?, phone_number=?, role=?, \n"
+			+ "group_id=?  WHERE student_id=?";
 	private static final String SELECT_BY_ID = "SELECT * FROM students WHERE student_id=?";
 	private static final String DELETE_BY_ID = "DELETE FROM students WHERE student_id=?";
-	private static final String INSERT_ONE_NAMED = "INSERT INTO students (first_name, last_name, gender, email, address, age, phone_number, role, group_id) VALUES (:FIRST_NAME, :LAST_NAME, :GENDER, :EMAIL, :ADDRESS, :AGE, :PHONE_NUMBER, :ROLE, :GROUP_ID)";
-	private static final String UPDATE_ONE_NAMED = "UPDATE students SET first_name=:FIRST_NAME, last_name=:LAST_NAME, gender=:GENDER, email=:EMAIL, address=:ADDRESS, age=:AGE, phone_number=:PHONE_NUMBER, role=:ROLE, group_id=:GROUP_ID  WHERE student_id=:ID";
+	private static final String INSERT_ONE_NAMED = "INSERT INTO students (first_name, last_name, gender, email, address, age, phone_number, role, group_id) \n"
+			+ "VALUES (:FIRST_NAME, :LAST_NAME, :GENDER, :EMAIL, :ADDRESS, :AGE, :PHONE_NUMBER, :ROLE, :GROUP_ID)";
+	private static final String UPDATE_ONE_NAMED = "UPDATE students SET first_name=:FIRST_NAME, last_name=:LAST_NAME, gender=:GENDER, email=:EMAIL, \n"
+			+ "address=:ADDRESS, age=:AGE, phone_number=:PHONE_NUMBER, role=:ROLE, group_id=:GROUP_ID  WHERE student_id=:ID";
 	private static final String SELECT_ALL = "SELECT * FROM students";
 	private static final String SELECT_BY_GROUPID = "SELECT * FROM students WHERE group_id =?";
 

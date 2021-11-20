@@ -35,14 +35,18 @@ public class JdbcTeacherDao extends AbstractCrudDao<Teacher> implements TeacherD
 	public static final String ROLE = "ROLE";
 	public static final String PROFILE = "PROFILE";
 
-	private static final String UPDATE_ONE = "UPDATE teachers SET first_name=?, last_name=?, gender=?, email=?, address=?, age=?, phone_number=?, role=?, profile=?  WHERE teacher_id=?; DELETE FROM teachers_subjects WHERE teacher_id = ?;";
+	private static final String UPDATE_ONE = "UPDATE teachers SET first_name=?, last_name=?, gender=?, email=?, address=?, age=?, phone_number=?, role=?, profile=? \n"
+			+ "WHERE teacher_id=?; DELETE FROM teachers_subjects WHERE teacher_id = ?;";
 	private static final String SELECT_BY_ID = "SELECT * FROM teachers WHERE teacher_id=?";
 	private static final String DELETE_BY_ID = "DELETE FROM teachers WHERE teacher_id=?";
-	private static final String INSERT_ONE_NAMED = "INSERT INTO teachers (first_name, last_name, gender, email, address, age, phone_number, role, profile) VALUES (:FIRST_NAME, :LAST_NAME, :GENDER, :EMAIL, :ADDRESS, :AGE, :PHONE_NUMBER, :ROLE, :PROFILE)";
-	private static final String UPDATE_ONE_NAMED = "UPDATE teachers SET first_name=:FIRST_NAME, last_name=:LAST_NAME, gender=:GENDER, email=:EMAIL, address=:ADDRESS, age=:AGE, phone_number=:PHONE_NUMBER, role=:ROLE, profile=:PROFILE  WHERE teacher_id=:ID";
-	private static final String SELECT_ALL = "SELECT * FROM teachers";
-	private static final String SELECT_ONE_BY_ID = "SELECT t.*, s.* FROM teachers t LEFT JOIN teachers_subjects ts ON t.teacher_id = ts.teacher_id LEFT JOIN subjects s ON s.subject_id = ts.subject_id WHERE t.teacher_id = ?";
-	private static final String SELECT_All_SUBJECTS = "SELECT t.*, s.* FROM teachers t LEFT JOIN teachers_subjects ts ON t.teacher_id = ts.teacher_id LEFT JOIN subjects s ON s.subject_id = ts.subject_id";
+	private static final String INSERT_ONE_NAMED = "INSERT INTO teachers (first_name, last_name, gender, email, address, age, phone_number, role, profile) \n"
+			+ "VALUES (:FIRST_NAME, :LAST_NAME, :GENDER, :EMAIL, :ADDRESS, :AGE, :PHONE_NUMBER, :ROLE, :PROFILE)";
+	private static final String UPDATE_ONE_NAMED = "UPDATE teachers SET first_name=:FIRST_NAME, last_name=:LAST_NAME, gender=:GENDER, email=:EMAIL, address=:ADDRESS, \n"
+			+ "age=:AGE, phone_number=:PHONE_NUMBER, role=:ROLE, profile=:PROFILE  WHERE teacher_id=:ID";
+	private static final String SELECT_ONE_BY_ID = "SELECT t.*, s.* FROM teachers t LEFT JOIN teachers_subjects ts ON t.teacher_id = ts.teacher_id LEFT JOIN subjects s \n"
+			+ "ON s.subject_id = ts.subject_id WHERE t.teacher_id = ?";
+	private static final String SELECT_All_SUBJECTS = "SELECT t.*, s.* FROM teachers t LEFT JOIN teachers_subjects ts ON t.teacher_id = ts.teacher_id LEFT JOIN subjects s \n"
+			+ "ON s.subject_id = ts.subject_id";
 
 	public JdbcTeacherDao(JdbcTemplate jdbsTemplate, RowMapper<Teacher> rowMapper) {
 		super(jdbsTemplate, rowMapper);

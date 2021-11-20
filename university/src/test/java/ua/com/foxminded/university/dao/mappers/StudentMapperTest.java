@@ -25,7 +25,7 @@ class StudentMapperTest {
     StudentMapper studentMapper;
 
     @Test
-    void shouldMapRpw() throws SQLException {
+    void shouldMapRow() throws SQLException {
 
         when(resultSet.getLong("student_id")).thenReturn(1L, 2L);
         when(resultSet.getString("first_name")).thenReturn("Alex", "Olga");

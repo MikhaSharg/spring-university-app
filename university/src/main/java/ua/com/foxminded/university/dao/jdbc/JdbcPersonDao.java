@@ -30,13 +30,14 @@ public class JdbcPersonDao extends AbstractCrudDao<Person> implements PersonDao 
 	public static final String PHONE_NUMBER = "PHONE_NUMBER";
 	public static final String ROLE = "ROLE";
 
-	private static final String UPDATE_ONE = "UPDATE persons SET first_name=?, last_name=?, gender=?, email=?, address=?, age=?, phone_number=?, role=? WHERE person_id=?";
+	private static final String UPDATE_ONE = "UPDATE persons SET first_name=?, last_name=?, gender=?, email=?, address=?, age=?, phone_number=?, role=? \n"
+			+ "WHERE person_id=?";
 	private static final String SELECT_BY_ID = "SELECT * FROM persons WHERE person_id=?";
 	private static final String DELETE_BY_ID = "DELETE FROM persons WHERE person_id=?";
 	private static final String INSERT_ONE_NAMED = "INSERT INTO persons (first_name, last_name, gender, email, address, age, phone_number, role) \n"
 			+ "VALUES (:FIRST_NAME, :LAST_NAME, :GENDER, :EMAIL, :ADDRESS, :AGE, :PHONE_NUMBER, :ROLE)";
-	private static final String UPDATE_ONE_NAMED = "UPDATE persons SET first_name=:FIRST_NAME, last_name=:LAST_NAME, gender=:GENDER, email=:EMAIL, address=:ADDRESS, age=:AGE, \n"
-			+ "phone_number=:PHONE_NUMBER, role=:ROLE WHERE person_id=:ID";
+	private static final String UPDATE_ONE_NAMED = "UPDATE persons SET first_name=:FIRST_NAME, last_name=:LAST_NAME, gender=:GENDER, email=:EMAIL, \n"
+			+ "address=:ADDRESS, age=:AGE, \n" + "phone_number=:PHONE_NUMBER, role=:ROLE WHERE person_id=:ID";
 	private static final String SELECT_ALL = "SELECT * FROM persons";
 
 	public JdbcPersonDao(JdbcTemplate jdbsTemplate, RowMapper<Person> rowMapper) {

@@ -48,7 +48,7 @@ class JdbcLectureDaoTest {
 		Audience audience = new Audience(1L, 100);
 		Subject subject = new Subject(1L, "Theory of probability and mathematical statistics");
 		Teacher teacher = new Teacher(1L, "Alex", "Petrov", "male", "AlexPetrov@gmail.com", "Saint Petersburg", 68,
-				89313262896L, "Dean", "Professor");
+				89313262896L, "teacher", "Professor");
 		Group group = new Group(1L, "AB-12");
 		LocalDate date = LocalDate.of(2021, 11, 11);
 
@@ -87,16 +87,16 @@ class JdbcLectureDaoTest {
 		Subject subject5 = new Subject(5L, "SAPR");
 
 		Teacher teacher1 = new Teacher(1L, "Alex", "Petrov", "male", "AlexPetrov@gmail.com", "Saint Petersburg", 68,
-				89313262896L, "Dean", "Professor");
+				89313262896L, "teacher", "Professor");
 
 		Teacher teacher2 = new Teacher(2L, "Anna", "Ermakova", "female", "AnnaErmakova@gmail.com", "Kaliningrad", 48,
-				89215895789L, "no", "Assistant Lecturer");
+				89215895789L, "teacher", "Assistant Lecturer");
 		Teacher teacher3 = new Teacher(3L, "Roman", "Sidorov", "male", "RomanSidorov@gmail.com", "Moscow", 53,
-				89112568975L, "Deputy Dean", "Doctor of Technical Science");
+				89112568975L, "teacher", "Doctor of Technical Science");
 		Teacher teacher4 = new Teacher(4L, "Diana", "Gukova", "female", "DianaGukova@gmail.com", "Rostov", 52,
-				89225896325L, "no", "Senior Lecturer");
+				89225896325L, "teacher", "Senior Lecturer");
 		Teacher teacher5 = new Teacher(5L, "Dmitry", "Solodin", "male", "MikhailSolodin@gmail.com", "Andora", 56,
-				89052655985L, "no", "Candidate of Technical Science");
+				89052655985L, "teacher", "Candidate of Technical Science");
 
 		Group group1 = new Group(1L, "AB-12");
 		Group group2 = new Group(2L, "CD-34");
@@ -132,7 +132,7 @@ class JdbcLectureDaoTest {
 		Audience audience = new Audience(1L, 100);
 		Subject subject = new Subject(1L, "Theory of probability and mathematical statistics");
 		Teacher teacher = new Teacher(1L, "Alex", "Petrov", "male", "AlexPetrov@gmail.com", "Saint Petersburg", 68,
-				89313262896L, "Dean", "Professor");
+				89313262896L, "teacher", "Professor");
 		Group group = new Group(1L, "AB-12");
 		LocalDate date = LocalDate.of(2021, 11, 12);
 		Lecture expected = new Lecture(date, lectureSessions, audience, subject, teacher, group);
@@ -149,7 +149,7 @@ class JdbcLectureDaoTest {
 		Audience audience = new Audience(1L, 100);
 		Subject subject = new Subject(1L, "Theory of probability and mathematical statistics");
 		Teacher teacher = new Teacher(3L, "Roman", "Sidorov", "male", "RomanSidorov@gmail.com", "Moscow", 53,
-				89112568975L, "Deputy Dean", "Doctor of Technical Science");
+				89112568975L, "teacher", "Doctor of Technical Science");
 		Group group = new Group(1L, "AB-12");
 		LocalDate date = LocalDate.of(2021, 11, 11);
 		Lecture expected = new Lecture(1L, date, lectureSessions, audience, subject, teacher, group);
@@ -167,7 +167,7 @@ class JdbcLectureDaoTest {
 		Audience audience = new Audience(1L, 100);
 		Subject subject = new Subject(1L, "Theory of probability and mathematical statistics");
 		Teacher teacher = new Teacher(1L, "Alex", "Petrov", "male", "AlexPetrov@gmail.com", "Saint Petersburg", 68,
-				89313262896L, "Dean", "Professor");
+				89313262896L, "teacher", "Professor");
 		Group group = new Group(1L, "AB-12");
 		LocalDate date = LocalDate.of(2021, 11, 11);
 		Lecture expected = new Lecture(1L, date, lectureSessions, audience, subject, teacher, group);
@@ -211,16 +211,16 @@ class JdbcLectureDaoTest {
 		Subject subject5 = new Subject(5L, "SAPR");
 
 		Teacher teacher1 = new Teacher(1L, "Alex", "Petrov", "male", "AlexPetrov@gmail.com", "Saint Petersburg", 68,
-				89313262896L, "Dean", "Professor");
+				89313262896L, "teacher", "Professor");
 
 		Teacher teacher2 = new Teacher(2L, "Anna", "Ermakova", "female", "AnnaErmakova@gmail.com", "Kaliningrad", 48,
-				89215895789L, "no", "Assistant Lecturer");
+				89215895789L, "teacher", "Assistant Lecturer");
 		Teacher teacher3 = new Teacher(3L, "Roman", "Sidorov", "male", "RomanSidorov@gmail.com", "Moscow", 53,
-				89112568975L, "Deputy Dean", "Doctor of Technical Science");
+				89112568975L, "teacher", "Doctor of Technical Science");
 		Teacher teacher4 = new Teacher(4L, "Diana", "Gukova", "female", "DianaGukova@gmail.com", "Rostov", 52,
-				89225896325L, "no", "Senior Lecturer");
+				89225896325L, "teacher", "Senior Lecturer");
 		Teacher teacher5 = new Teacher(5L, "Dmitry", "Solodin", "male", "MikhailSolodin@gmail.com", "Andora", 56,
-				89052655985L, "no", "Candidate of Technical Science");
+				89052655985L, "teacher", "Candidate of Technical Science");
 
 		Group group1 = new Group(1L, "AB-12");
 		Group group2 = new Group(2L, "CD-34");
@@ -244,6 +244,21 @@ class JdbcLectureDaoTest {
 		assertThat(actual.size()).isEqualTo(10);
 		assertThat(dao.findAll().size()).isEqualTo(12);
 		assertThat(actual.stream().filter(item -> item.getId() == null).count()).isZero();
+	}
+
+	@Test
+	@Sql(scripts = { "/sql/clean_db.sql", "/sql/lectures_test_values2.sql" })
+	void shouldFindLecturesForOneDate() {
+		assertThat(dao.findLectureForOneDate(LocalDate.of(2021, 11, 11)).size()).isEqualTo(6);
+
+	}
+
+	@Test
+	@Sql(scripts = { "/sql/clean_db.sql", "/sql/lectures_test_values2.sql" })
+	void shouldFindLecturesForDateRange() {
+		assertThat(dao.findLectureForDateRange(LocalDate.of(2021, 11, 11), LocalDate.of(2021, 11, 16)).size())
+				.isEqualTo(36);
+
 	}
 
 }
