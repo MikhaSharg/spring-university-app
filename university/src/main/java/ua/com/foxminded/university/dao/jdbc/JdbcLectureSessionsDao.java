@@ -22,7 +22,7 @@ import ua.com.foxminded.university.model.LectureSessions;
 @Repository
 public class JdbcLectureSessionsDao extends AbstractCrudDao<LectureSessions> implements LectureSessionsDao {
 
-	protected JdbcLectureSessionsDao(JdbcTemplate jdbsTemplate, RowMapper<LectureSessions> rowMapper) {
+	public JdbcLectureSessionsDao(JdbcTemplate jdbsTemplate, RowMapper<LectureSessions> rowMapper) {
 		super(jdbsTemplate, rowMapper);
 	}
 

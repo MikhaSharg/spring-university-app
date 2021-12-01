@@ -69,6 +69,17 @@ public class JdbcLectureDao extends AbstractCrudDao<Lecture> implements LectureD
 			+ "FROM lectures l JOIN lecture_sessions ls USING (session_id) JOIN audiences a USING(audience_id) \n"
 			+ "JOIN subjects s USING (subject_id) JOIN teachers t USING (teacher_id) JOIN groups g USING (group_id) \n"
 			+ "WHERE lecture_date  BETWEEN ? AND ?";
+	
+	private static final String SELECT_FOR_GROUP_BY_DATE_RANGE = "SELECT l.*, ls.*, a.*, s.*, t.*, g.* \n"
+			+ "FROM lectures l JOIN lecture_sessions ls USING (session_id) JOIN audiences a USING(audience_id) \n"
+			+ "JOIN subjects s USING (subject_id) JOIN teachers t USING (teacher_id) JOIN groups g USING (group_id) \n"
+			+ "WHERE lecture_date = ? AND g.group_id=?";
+	
+	private static final String SELECT_FOR_TEACHER_BY_DATE_RANGE = "SELECT l.*, ls.*, a.*, s.*, t.*, g.* \n"
+			+ "FROM lectures l JOIN lecture_sessions ls USING (session_id) JOIN audiences a USING(audience_id) \n"
+			+ "JOIN subjects s USING (subject_id) JOIN teachers t USING (teacher_id) JOIN groups g USING (group_id) \n"
+			+ "WHERE lecture_date = ? AND t.teacher_id=?";
+	
 
 	public JdbcLectureDao(JdbcTemplate jdbsTemplate, RowMapper<Lecture> rowMapper) {
 		super(jdbsTemplate, rowMapper);
@@ -251,7 +262,7 @@ public class JdbcLectureDao extends AbstractCrudDao<Lecture> implements LectureD
 	}
 
 	@Override
-	public List<Lecture> findLectureForOneDate(LocalDate date) {
+	public List<Lecture> findLecturesOneDate(LocalDate date) {
 		return jdbcTemplate.query(SELECT_BY_DATE, ps -> {
 			ps.setDate(1, Date.valueOf(date));
 		}, rs -> {
@@ -281,6 +292,60 @@ public class JdbcLectureDao extends AbstractCrudDao<Lecture> implements LectureD
 		return jdbcTemplate.query(SELECT_BY_DATE_RANGE, ps -> {
 			ps.setDate(1, Date.valueOf(startDate));
 			ps.setDate(2, Date.valueOf(endDate));
+		}, rs -> {
+
+			List<Lecture> lectures = new ArrayList<>();
+			while (rs.next()) {
+				LectureSessions lectureSessions = new LectureSessions(rs.getLong("session_id"), rs.getString("period"),
+						rs.getString("start_time"), rs.getString("end_time"));
+				Audience audence = new Audience(rs.getLong("audience_id"), rs.getInt("room_number"));
+				Subject subject = new Subject(rs.getLong("subject_id"), rs.getString("subject_name"));
+				Teacher teacher = new Teacher(rs.getLong("teacher_id"), rs.getString("first_name"),
+						rs.getString("last_name"), rs.getString("gender"), rs.getString("email"),
+						rs.getString("address"), rs.getInt("age"), rs.getLong("phone_number"), rs.getString("role"),
+						rs.getString("profile"));
+				Group group = new Group(rs.getLong("group_id"), rs.getString("group_name"));
+
+				Lecture lecture = new Lecture(rs.getLong("lecture_id"), rs.getDate("lecture_date").toLocalDate(),
+						lectureSessions, audence, subject, teacher, group);
+				lectures.add(lecture);
+			}
+			return lectures;
+		});
+	}
+
+	@Override
+	public List<Lecture> findLecturesForGroupByDate(Long id, LocalDate date) {
+		return jdbcTemplate.query(SELECT_FOR_GROUP_BY_DATE_RANGE, ps -> {
+			ps.setDate(1, Date.valueOf(date));
+			ps.setLong(2, id);
+		}, rs -> {
+
+			List<Lecture> lectures = new ArrayList<>();
+			while (rs.next()) {
+				LectureSessions lectureSessions = new LectureSessions(rs.getLong("session_id"), rs.getString("period"),
+						rs.getString("start_time"), rs.getString("end_time"));
+				Audience audence = new Audience(rs.getLong("audience_id"), rs.getInt("room_number"));
+				Subject subject = new Subject(rs.getLong("subject_id"), rs.getString("subject_name"));
+				Teacher teacher = new Teacher(rs.getLong("teacher_id"), rs.getString("first_name"),
+						rs.getString("last_name"), rs.getString("gender"), rs.getString("email"),
+						rs.getString("address"), rs.getInt("age"), rs.getLong("phone_number"), rs.getString("role"),
+						rs.getString("profile"));
+				Group group = new Group(rs.getLong("group_id"), rs.getString("group_name"));
+
+				Lecture lecture = new Lecture(rs.getLong("lecture_id"), rs.getDate("lecture_date").toLocalDate(),
+						lectureSessions, audence, subject, teacher, group);
+				lectures.add(lecture);
+			}
+			return lectures;
+		});
+	}
+
+	@Override
+	public List<Lecture> findLecturesForTeacherByDate(Long teacherId, LocalDate date) {
+		return jdbcTemplate.query(SELECT_FOR_TEACHER_BY_DATE_RANGE, ps -> {
+			ps.setDate(1, Date.valueOf(date));
+			ps.setLong(2, teacherId);
 		}, rs -> {
 
 			List<Lecture> lectures = new ArrayList<>();

@@ -249,7 +249,7 @@ class JdbcLectureDaoTest {
 	@Test
 	@Sql(scripts = { "/sql/clean_db.sql", "/sql/lectures_test_values2.sql" })
 	void shouldFindLecturesForOneDate() {
-		assertThat(dao.findLectureForOneDate(LocalDate.of(2021, 11, 11)).size()).isEqualTo(6);
+		assertThat(dao.findLecturesOneDate(LocalDate.of(2021, 11, 11)).size()).isEqualTo(6);
 
 	}
 
@@ -260,5 +260,84 @@ class JdbcLectureDaoTest {
 				.isEqualTo(36);
 
 	}
+	
 
+	@Test
+	@Sql(scripts = { "/sql/clean_db.sql", "/sql/lectures_test_values2.sql" })
+	void shouldThrowExceptionIfSaveLectureWithDublicateFields() {
+
+		LectureSessions lectureSessions = new LectureSessions(1L, "1th", "8:00", "9:20");
+		Subject subject = new Subject(5L, "SAPR");
+
+		// Duplicate data-session-teacher
+
+		Audience audience = new Audience(3L, 102);
+		Teacher teacher = new Teacher(1L, "Alex", "Petrov", "male", "AlexPetrov@gmail.com", "Saint Petersburg", 68,
+				89313262896L, "teacher", "Professor");
+		Group group = new Group(4L, "GH-78");
+		Lecture newLection = new Lecture(LocalDate.of(2021, 11, 13), lectureSessions, audience, subject, teacher,
+				group);
+
+		assertThrows(Exception.class, () -> dao.save(newLection));
+
+		// Duplicate data-session-group
+
+		Audience audience2 = new Audience(3L, 102);
+		Teacher teacher2 = new Teacher(3L, "Roman", "Sidorov", "male", "RomanSidorov@gmail.com", "Moscow", 53,
+				89112568975L, "teacher", "Doctor of Technical Science");
+		Group group2 = new Group(1L, "AB-12");
+		Lecture newLection2 = new Lecture(LocalDate.of(2021, 11, 13), lectureSessions, audience2, subject, teacher2,
+				group2);
+
+		assertThrows(Exception.class, () -> dao.save(newLection2));
+
+		// Duplicate data-session-audience
+		
+		Audience audience3 = new Audience(1L, 100);
+		Teacher teacher3 = new Teacher(3L, "Roman", "Sidorov", "male", "RomanSidorov@gmail.com", "Moscow", 53,
+				89112568975L, "teacher", "Doctor of Technical Science");
+		Group group3 = new Group(4L, "GH-78");
+		Lecture newLection3 = new Lecture(LocalDate.of(2021, 11, 13), lectureSessions, audience3, subject, teacher3,
+				group3);
+
+		assertThrows(Exception.class, () -> dao.save(newLection3));
+
+}
+	@Test
+	@Sql(scripts = { "/sql/clean_db.sql", "/sql/lectures_test_values2.sql" })
+	void shouldFindLecturesForTeacherByDate() {
+		LectureSessions lectureSessions = new LectureSessions(1L, "1th", "8:00", "9:20");
+		Audience audience = new Audience(1L, 100);
+		Subject subject = new Subject(1L, "Theory of probability and mathematical statistics");
+		Teacher teacher = new Teacher(1L, "Alex", "Petrov", "male", "AlexPetrov@gmail.com", "Saint Petersburg", 68,
+				89313262896L, "teacher", "Professor");
+		Group group = new Group(1L, "AB-12");
+		LocalDate date = LocalDate.of(2021, 11, 12);
+		Lecture expected = new Lecture(7L, date, lectureSessions, audience, subject, teacher, group);
+		List<Lecture> expectedList = Arrays.asList(expected);
+		
+		List<Lecture> actual = dao.findLecturesForTeacherByDate(1L, LocalDate.of(2021, 11, 12));
+		assertThat(actual.size()).isEqualTo(1);
+		assertThat(actual).isEqualTo(expectedList);
+		
+	}
+	
+	@Test
+	@Sql(scripts = { "/sql/clean_db.sql", "/sql/lectures_test_values2.sql" })
+	void shouldFindLecturesForGroupByDate() {
+		LectureSessions lectureSessions = new LectureSessions(1L, "1th", "8:00", "9:20");
+		Audience audience = new Audience(1L, 100);
+		Subject subject = new Subject(1L, "Theory of probability and mathematical statistics");
+		Teacher teacher = new Teacher(1L, "Alex", "Petrov", "male", "AlexPetrov@gmail.com", "Saint Petersburg", 68,
+				89313262896L, "teacher", "Professor");
+		Group group = new Group(1L, "AB-12");
+		LocalDate date = LocalDate.of(2021, 11, 12);
+		Lecture expected = new Lecture(7L, date, lectureSessions, audience, subject, teacher, group);
+		List<Lecture> expectedList = Arrays.asList(expected);
+		
+		List<Lecture> actual = dao.findLecturesForTeacherByDate(1L, LocalDate.of(2021, 11, 12));
+		assertThat(actual.size()).isEqualTo(1);
+		assertThat(actual).isEqualTo(expectedList);
+		
+	}
 }

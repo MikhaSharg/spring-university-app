@@ -33,7 +33,11 @@ public class JdbcGroupDao extends AbstractCrudDao<Group> implements GroupDao {
 	private static final String UPDATE_ONE_NAMED = "UPDATE groups SET group_name=:GROUP_NAME WHERE group_id=:ID";
 	private static final String SELECT_ALL = "SELECT * FROM groups";
 	private static final String DELETE_BY_ID = "DELETE FROM groups WHERE group_id=?";
-
+	private static final String SELECT_BY_COUNT_STUDENTS = "SELECT g.*, COUNT(*) AS count FROM groups \n"
+			+"LEFT JOIN students s USING (group_id) GROUPING BY group_name HAVING COUNT >=?";
+	
+	
+	
 	public JdbcGroupDao(JdbcTemplate jdbsTemplate, RowMapper<Group> rowMapper) {
 		super(jdbsTemplate, rowMapper);
 	}
@@ -141,5 +145,6 @@ public class JdbcGroupDao extends AbstractCrudDao<Group> implements GroupDao {
 	protected List<Group> findAllEntities() {
 		return jdbcTemplate.query(SELECT_ALL, rowMapper);
 	}
+
 
 }

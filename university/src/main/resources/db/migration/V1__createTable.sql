@@ -9,12 +9,12 @@ CREATE TABLE students (
     first_name varchar(50) NOT NULL,
     last_name varchar (50) NOT NULL,
     gender varchar (50) NOT NULL,
-    email varchar (50) NOT NULL,
-    address varchar (50) NOT NULL,
+    email varchar (50) NOT NULL UNIQUE,
+    address varchar (50) NOT NULL UNIQUE,
     age int NOT NULL,
-    phone_number bigint NOT NULL,
+    phone_number bigint NOT NULL UNIQUE,
     role varchar (50),
-    group_id int NOT NULL,
+    group_id int,
     CONSTRAINT FK_students_groups FOREIGN KEY (group_id) REFERENCES groups (group_id)
     );
 
@@ -23,10 +23,10 @@ CREATE TABLE teachers (
     first_name varchar(50) NOT NULL,
     last_name varchar (50) NOT NULL,
     gender varchar (50) NOT NULL,
-    email varchar (50) NOT NULL,
-    address varchar (50) NOT NULL,
+    email varchar (50) NOT NULL UNIQUE,
+    address varchar (50) NOT NULL UNIQUE,
     age int NOT NULL,
-    phone_number bigint NOT NULL,
+    phone_number bigint NOT NULL UNIQUE,
     role varchar (50),
     profile varchar(50) NOT NULL
     );
@@ -36,17 +36,17 @@ CREATE TABLE persons (
     first_name varchar(50) NOT NULL,
     last_name varchar (50) NOT NULL,
     gender varchar (50) NOT NULL,
-    email varchar (50) NOT NULL,
-    address varchar (50) NOT NULL,
+    email varchar (50) NOT NULL UNIQUE,
+    address varchar (50) NOT NULL UNIQUE,
     age int NOT NULL,
-    phone_number bigint NOT NULL,
+    phone_number bigint NOT NULL UNIQUE,
     role varchar (50),
     CONSTRAINT PK_persons_person_id PRIMARY KEY (person_id) 
     );
     
 CREATE TABLE subjects (
     subject_id SERIAL PRIMARY KEY,
-    subject_name varchar(50) NOT NULL
+    subject_name varchar(50) NOT NULL UNIQUE
     );
     
 CREATE TABLE teachers_subjects (
@@ -62,8 +62,8 @@ CREATE TABLE audiences (
     
  CREATE TABLE lecture_sessions (
     session_id SERIAL PRIMARY KEY,
- 	period varchar(10) NOT NULL,
-    start_time varchar (10) NOT NULL UNIQUE,
+ 	period varchar(10) NOT NULL UNIQUE,
+    start_time varchar (10) NOT NULL UNIQUE ,
     end_time varchar (10) NOT NULL UNIQUE
     );   
 
@@ -82,6 +82,10 @@ CREATE TABLE lectures(
     CONSTRAINT FK_lectures_groups FOREIGN KEY (group_id) REFERENCES groups (group_id), 
     CONSTRAINT FK_lectures_subjects FOREIGN KEY (subject_id) REFERENCES subjects (subject_id)
     );
+    
+CREATE UNIQUE INDEX uidx_teacher_date_session ON lectures (lecture_date, session_id, teacher_id);
+CREATE UNIQUE INDEX uidx_group_date_session ON lectures (lecture_date, session_id, group_id);
+CREATE UNIQUE INDEX uidx_room_date_session ON lectures (lecture_date, session_id, audience_id);
 
 CREATE TABLE roles (
     role_id SERIAL PRIMARY KEY,

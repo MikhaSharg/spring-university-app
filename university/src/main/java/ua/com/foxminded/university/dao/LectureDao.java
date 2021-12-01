@@ -7,8 +7,12 @@ import ua.com.foxminded.university.model.Lecture;
 
 public interface LectureDao extends CrudDao<Lecture, Long> {
 
-	List<Lecture> findLectureForOneDate(LocalDate date);
+	List<Lecture> findLecturesOneDate(LocalDate date);
 
 	List<Lecture> findLectureForDateRange(LocalDate startDate, LocalDate endDate);
+	
+	List<Lecture> findLecturesForGroupByDate (Long id, LocalDate date);
+	
+	List<Lecture> findLecturesForTeacherByDate (Long teacherId, LocalDate date);
 
 }

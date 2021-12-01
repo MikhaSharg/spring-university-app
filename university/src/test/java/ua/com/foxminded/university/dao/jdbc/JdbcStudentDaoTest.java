@@ -16,6 +16,7 @@ import ua.com.foxminded.university.model.Student;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -37,11 +38,41 @@ class JdbcStudentDaoTest {
 	@Test
 	@Sql(scripts = { "/sql/clean_db.sql", "/sql/students_init_test_values.sql" })
 	void shouldInsertNew() {
-		Student student = new Student("Alex", "Sidorov", "Male", "AlexSidorov@gmail.com", "Kaliningrad", 25,
+		Student student = new Student("Alex", "Sidorov", "Male", "AlexSidorov@gmail.com", "Gdansk", 25,
 				89313256895L, "student", 1L);
 		Student created = dao.save(student);
 		student.setId(created.getId());
 		assertThat(created).isEqualTo(student);
+	}
+	
+	@Test
+	@Sql(scripts = { "/sql/clean_db.sql", "/sql/students_init_test_values.sql" })
+	void shouldReturnTrueIfStudentExist() {
+		// name and age
+		Student student = new Student("Alex", "Petrov", "male", "AlexPetrov@gmail.com", "Saint Petersburg", 25,
+				89523268951L);
+		List<Student> actual = dao.findExistingStudents(student);
+		assertThat(actual.size()).isEqualTo(1);
+		// email
+		Student student2 = new Student("Roman", "Solodin", "male", "AlexPetrov@gmail.com", "Krakow", 35, 89525897562L);
+		List<Student> actual2 = dao.findExistingStudents(student2);
+		assertThat(actual2.size()).isEqualTo(1);
+		// phone number
+		Student student3 = new Student("Roman", "Solodin", "male", "RomanSolodin@gmail.com", "Krakow", 35,
+				89583658547L);
+		List<Student> actual3 = dao.findExistingStudents(student3);
+		assertThat(actual3.size()).isEqualTo(1);
+		// address
+		Student student4 = new Student("Roman", "Solodin", "male", "RomanSolodin@gmail.com", "Rostov", 35,
+				895836588569L);
+		List<Student> actual4 = dao.findExistingStudents(student4);
+		assertThat(actual4.size()).isEqualTo(1);
+		// all fields
+		Student student5 = new Student("Alex", "Petrov", "male", "MikhailSolodin@gmail.com", "Moscow", 25,
+				89538792563L);
+		List<Student> actual5 = dao.findExistingStudents(student5);
+		assertThat(actual5.size()).isEqualTo(4);
+
 	}
 
 	@Test
@@ -89,7 +120,7 @@ class JdbcStudentDaoTest {
 	@Sql(scripts = { "/sql/clean_db.sql", "/sql/students_init_test_values.sql" })
 	void shouldUpdateStudent() {
 
-		Student expected = new Student(3L, "Alex", "Sidorov", "Male", "AlexSidorov@gmail.com", "Kaliningrad", 25,
+		Student expected = new Student(3L, "Alex", "Sidorov", "Male", "AlexSidorov@gmail.com", "Krakov", 25,
 				89313256895L, "student", 1L);
 		assertThat(dao.findById(3L).get()).isNotEqualTo(expected);
 		dao.save(expected);
@@ -182,7 +213,7 @@ class JdbcStudentDaoTest {
 						"student", 2L));
 
 		List<Student> actual = dao.saveAll(toSave);
-		assertThat(actual.size()).isEqualTo(toSave.size());
+		assertThat(actual.size()).isEqualTo(toSave.size()); 
 		assertThat(actual.stream().filter(item -> item.getId() == null).count()).isZero();
 		assertThat(actual.stream().filter(item -> item.getFirstName() == "Viktor").count() == 1);
 		assertThat(actual.stream().filter(item -> item.getFirstName() == "Andrey" && item.getLastName() == "Kunec")
@@ -205,5 +236,36 @@ class JdbcStudentDaoTest {
 		assertThat(actual).isEqualTo(expected);
 
 	}
-
+	
+	@Test
+	@Sql(scripts = { "/sql/clean_db.sql", "/sql/students_init_test_values.sql" })
+	void shouldNotInsertNewStudentIfEmailOrAddressOrPhonenumberExixtsInDB() {
+		Student student = new Student("Alex", "Sidorov", "Male", "AlexSidorov@gmail.com", "Kaliningrad", 25,
+				89313256895L, "student", 1L);
+		assertThrows(Exception.class, () -> dao.save(student));
+	}
+	
+	@Test
+	@Sql(scripts = { "/sql/clean_db.sql", "/sql/students_init_test_values.sql" })
+	void shouldInsertNewStudentWithoutGroup() {
+		Student student = new Student("Alex", "Sidorov", "Male", "AlexSidorov@gmail.com", "Krakov", 25,
+				89313256895L, "student");
+		Student created = dao.save(student);
+		student.setId(created.getId());
+		assertThat(created).isEqualTo(student);
+	}
+	
+	@Test
+	@Sql(scripts = { "/sql/clean_db.sql", "/sql/students_init_test_values.sql" })
+	void shouldSetGroupToStudent() {
+		Student studentWithoutGroup = new Student("Alex", "Sidorov", "Male", "AlexSidorov@gmail.com", "Krakov", 25,
+				89313256895L, "student");
+		Student expected = new Student("Alex", "Sidorov", "Male", "AlexSidorov@gmail.com", "Krakov", 25,
+				89313256895L, "student", 1L);
+		Student created = dao.save(studentWithoutGroup);
+		expected.setId(created.getId());
+		dao.setGroupToStudent(1L, created.getId());
+		Student actual = dao.findById(created.getId()).get();
+		assertThat(actual).isEqualTo(expected);
+	}
 }

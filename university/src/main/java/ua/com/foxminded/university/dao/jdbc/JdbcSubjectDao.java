@@ -37,7 +37,7 @@ public class JdbcSubjectDao extends AbstractCrudDao<Subject> implements SubjectD
 	private static final String INSERT_ONE_SUBJECT_TO_TEACHER = "INSERT INTO teachers_subjects (teacher_id, subject_id) VALUES (?, ?)";
 	private static final String DELETE_ONE_SUBJECT_FROM_TEACHER = "DELETE FROM teachers_subjects WHERE teacher_id =? AND subject_id =?";
 
-	protected JdbcSubjectDao(JdbcTemplate jdbsTemplate, RowMapper<Subject> rowMapper) {
+	public JdbcSubjectDao(JdbcTemplate jdbsTemplate, RowMapper<Subject> rowMapper) {
 		super(jdbsTemplate, rowMapper);
 	}
 

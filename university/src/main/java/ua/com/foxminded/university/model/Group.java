@@ -41,12 +41,12 @@ public class Group extends IdEntity {
         this.name = name;
     }
 
-    public List<Student> getSrudents() {
+    public List<Student> getStudents() {
         return students;
     }
 
-    public void setSrudents(List<Student> srudents) {
-        this.students = srudents;
+    public void setStudents(List<Student> students) {
+        this.students = students;
     }
 
     @Override

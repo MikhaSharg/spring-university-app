@@ -114,6 +114,8 @@ class JdbcLectureSessionsDaoTest {
 				new LectureSessions(2L, "2th+", "8:30", "9:50"), new LectureSessions(3L, "3th+", "10:00", "11:20"),
 				new LectureSessions("7th", "17:30", "18:50"), new LectureSessions("8th", "19:00", "20:20"));
 
+		List<LectureSessions> until = dao.findAll();
+		assertThat(until.size()).isEqualTo(6);
 		List<LectureSessions> actual = dao.saveAll(toSave);
 		assertThat(actual.size()).isEqualTo(5);
 		List<LectureSessions> fromDB = dao.findAll();

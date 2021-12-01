@@ -32,7 +32,7 @@ public class JdbcAudienceDao extends AbstractCrudDao<Audience> implements Audien
 	private static final String UPDATE_ONE_NAMED = "UPDATE audiences SET room_number=:ROOM_NUMBER  WHERE audience_id=:ID";
 	private static final String SELECT_ALL = "SELECT * FROM audiences";
 
-	protected JdbcAudienceDao(JdbcTemplate jdbsTemplate, RowMapper<Audience> rowMapper) {
+	public JdbcAudienceDao(JdbcTemplate jdbsTemplate, RowMapper<Audience> rowMapper) {
 		super(jdbsTemplate, rowMapper);
 	}
 

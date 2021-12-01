@@ -2,6 +2,7 @@ package ua.com.foxminded.university.dao.jdbc;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -45,6 +46,8 @@ public class JdbcStudentDao extends AbstractCrudDao<Student> implements StudentD
 			+ "address=:ADDRESS, age=:AGE, phone_number=:PHONE_NUMBER, role=:ROLE, group_id=:GROUP_ID  WHERE student_id=:ID";
 	private static final String SELECT_ALL = "SELECT * FROM students";
 	private static final String SELECT_BY_GROUPID = "SELECT * FROM students WHERE group_id =?";
+	private static final String SELECT_ALL_WITH_FIELDS = "SELECT * FROM students WHERE (first_name=? AND last_name=? AND gender=? AND age=?) OR (email=?) OR (address=?) OR (phone_number=?)";
+	private static final String INSERT_GROUP_TO_STUDENT = "UPDATE students SET group_id = ? WHERE student_id = ?";
 
 	public JdbcStudentDao(JdbcTemplate jdbsTemplate, RowMapper<Student> rowMapper) {
 		super(jdbsTemplate, rowMapper);
@@ -210,6 +213,44 @@ public class JdbcStudentDao extends AbstractCrudDao<Student> implements StudentD
 	@Override
 	protected List<Student> findAllEntities() {
 		return jdbcTemplate.query(SELECT_ALL, rowMapper);
+	}
+
+	@Override
+	public List<Student> findExistingStudents(Student student) {
+		return jdbcTemplate.query(SELECT_ALL_WITH_FIELDS,
+
+				ps -> {
+
+					ps.setString(1, student.getFirstName());
+					ps.setString(2, student.getLastName());
+					ps.setString(3, student.getGender());
+					ps.setInt(4, student.getAge());
+					ps.setString(5, student.getEmail());
+					ps.setString(6, student.getAddress());
+					ps.setLong(7, student.getPhoneNumber());
+				}, result -> {
+					List<Student> students = new ArrayList<>();
+
+					while (result.next()) {
+						students.add(new Student(result.getString("first_name"), result.getString("last_name"),
+								result.getString("gender"), result.getString("email"), result.getString("address"),
+								result.getInt("age"), result.getLong("phone_number")));
+					}
+					return students;
+				});
+	}
+
+	@Override
+	public void setGroupToStudent(Long groupId, Long studentId) {
+
+		int updated = jdbcTemplate.update(INSERT_GROUP_TO_STUDENT, ps -> {
+			ps.setLong(1, groupId);
+			ps.setLong(2, studentId);
+		});
+
+		if (updated != 1) {
+			throw new IllegalArgumentException("Unable to set group ");
+		}
 	}
 
 }
