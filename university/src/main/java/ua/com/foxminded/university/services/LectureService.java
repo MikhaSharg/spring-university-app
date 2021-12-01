@@ -31,6 +31,11 @@ public class LectureService {
 		return lectureDao.findLecturesForGroupByDate(groupId, date);
 		
 	}
+	
+	public List<Lecture> findLectureForTeacherByDate (Long teacherId, LocalDate date) {
+		return lectureDao.findLecturesForTeacherByDate(teacherId, date);
+		
+	}
 
 	public Lecture saveLecture(Lecture lecture) {
 		return lectureDao.save(lecture);
