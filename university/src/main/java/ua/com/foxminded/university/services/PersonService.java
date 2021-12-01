@@ -4,11 +4,13 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import ua.com.foxminded.university.dao.PersonDao;
 import ua.com.foxminded.university.model.Person;
 
 @Service
+@Transactional (readOnly=true)
 public class PersonService {
 
 	private final PersonDao personDao;

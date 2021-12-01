@@ -3,6 +3,7 @@ package ua.com.foxminded.university.misc;
 import org.apache.catalina.filters.ExpiresFilter.XServletOutputStream;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import ch.qos.logback.core.net.SyslogOutputStream;
 import ua.com.foxminded.university.dao.*;
@@ -47,7 +48,8 @@ public class DataGenerator {
 		this.lectureDao = lectureDao;
 		this.config = config;
 	}
-
+	
+	@Transactional
 	public void generate(GeneratorConfig config) {
 
 		List<Group> groups = groupDao.saveAll(generateUnique(DateGenerationUtils::group, config.getGroupsCount()));

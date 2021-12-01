@@ -4,11 +4,13 @@ import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import ua.com.foxminded.university.dao.LectureDao;
 import ua.com.foxminded.university.model.Lecture;
 
 @Service
+@Transactional (readOnly=true)
 public class LectureService {
 
 	private final LectureDao lectureDao;
