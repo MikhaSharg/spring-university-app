@@ -1,14 +1,11 @@
 package ua.com.foxminded.university.misc;
 
-import org.apache.catalina.filters.ExpiresFilter.XServletOutputStream;
-import org.springframework.jdbc.core.JdbcTemplate;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import ch.qos.logback.core.net.SyslogOutputStream;
 import ua.com.foxminded.university.dao.*;
-import ua.com.foxminded.university.dao.jdbc.*;
-import ua.com.foxminded.university.dao.mappers.GroupMapper;
 import ua.com.foxminded.university.model.*;
 
 import static java.util.stream.Collectors.toMap;
@@ -16,16 +13,14 @@ import static ua.com.foxminded.university.misc.DateGenerationUtils.*;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ThreadLocalRandom;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @Component
 public class DataGenerator {
+
+	private static final Logger log = LoggerFactory.getLogger(DataGenerator.class);
 
 	private final StudentDao studentDao;
 	private final GroupDao groupDao;
@@ -48,34 +43,50 @@ public class DataGenerator {
 		this.lectureDao = lectureDao;
 		this.config = config;
 	}
-	
+
+	@Transactional
+	public void generate() {
+		log.info("Generating data using config {}", config);
+		generate(config);
+	}
+
 	@Transactional
 	public void generate(GeneratorConfig config) {
 
 		List<Group> groups = groupDao.saveAll(generateUnique(DateGenerationUtils::group, config.getGroupsCount()));
+		log.info("Generated {} groups", groups.size());
 
 		List<Student> students = generateUnique(DateGenerationUtils::student, config.getStudentCount());
-
 		students = studentDao.saveAll(
 				allocateStudents(groups, students, config.getGroupsMinStudents(), config.getGroupsMaxStudnets()));
+		log.info("Generated {} students", students.size());
 
 		List<Teacher> teachers = teacherDao
 				.saveAll(generateUnique(DateGenerationUtils::teacher, config.getTeacherCount()));
+		log.info("Generated {} teachers", teachers.size());
 
 		List<Subject> subjects = subjectDao
 				.saveAll(generateUnique(DateGenerationUtils::subject, config.getTeacherCount()
 						* config.getMaxSubjectCountForOneTeacher() / config.getMaxTeacherCountForOneSubject()));
+		log.info("Generated {} teacherss", teachers.size());
 
 		allocateSubjetsToTeachers(teachers, subjects, config.getMaxSubjectCountForOneTeacher(),
 				config.getMaxTeacherCountForOneSubject());
 
 		List<Audience> audiences = audienceDao.saveAll(generateAudiences(config.getAudienceCount()));
+		log.info("Generated {} audiences", audiences.size());
+
 		List<LectureSessions> sessions = lectureSessionsDao.saveAll(lectureSessions());
+		log.info("Generated {} sessions", sessions.size());
+
 		List<Teacher> teachersWithSubjects = teacherDao.findAll();
-		List<LocalDate> studyDates = generateStudyDates(config.getHolidays());
+
+		List<LocalDate> studyDays = generateStudyDates(config.getHolidays());
+		log.info("Generated {} study days", studyDays.size());
+
 		List<Lecture> lectures = new ArrayList<>();
 
-		studyDates.stream().forEach(date -> {
+		studyDays.stream().forEach(date -> {
 
 			for (LectureSessions session : sessions) {
 
@@ -106,6 +117,7 @@ public class DataGenerator {
 
 		});
 		lectureDao.saveAll(lectures);
+		log.info("Generated {} lectures", lectures.size());
 	}
 
 	private List<Teacher> allocateSubjetsToTeachers(List<Teacher> teachers, List<Subject> subjects,
