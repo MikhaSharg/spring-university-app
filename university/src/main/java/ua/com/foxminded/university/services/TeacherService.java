@@ -3,6 +3,8 @@ package ua.com.foxminded.university.services;
 import java.util.List;
 import java.util.Optional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -10,33 +12,50 @@ import ua.com.foxminded.university.dao.TeacherDao;
 import ua.com.foxminded.university.model.Teacher;
 
 @Service
-@Transactional (readOnly=true)
+@Transactional(readOnly = true)
 public class TeacherService {
 
 	private final TeacherDao teachertDao;
+	private static final Logger log = LoggerFactory.getLogger(TeacherService.class);
 
 	public TeacherService(TeacherDao teachertDao) {
 		this.teachertDao = teachertDao;
 	}
 
-	Teacher saveStudent(Teacher newTeacher) {
-		return teachertDao.save(newTeacher);
+	Teacher saveTeacher(Teacher newTeacher) {
+		Teacher teacher = teachertDao.save(newTeacher);
+		if (newTeacher.getId() != null) {
+			log.info("Saved teacher {}, {}, {}", teacher.getId(), teacher.getFirstName(), teacher.getLastName());
+		} else {
+			log.info("Updated teacher {}, {}, {}", teacher.getId(), teacher.getFirstName(), teacher.getLastName());
+		}
+		return teacher;
 	}
 
 	public void deleteTeacherById(Long id) {
 		teachertDao.deleteById(id);
+		log.info("Deleted teacher with ID {}", id);
 	}
 
 	public List<Teacher> findAllExistTeachers() {
-		return teachertDao.findAll();
+		List<Teacher> teachers = teachertDao.findAll();
+		if (!teachers.isEmpty()) {
+			log.info("Finded {} teachers", teachers.size());
+		} else {
+			log.warn("Could not find any teachers");
+		}
+		return teachers;
 	}
 
 	public Optional<Teacher> findTeacherById(Long teacherId) {
-		return teachertDao.findById(teacherId);
-	}
-
-	public List<Teacher> saveAllTeachers(List<Teacher> teachers) {
-		return teachertDao.saveAll(teachers);
+		Optional<Teacher> teacher = teachertDao.findById(teacherId);
+		if (teacher.isPresent()) {
+			log.info("Finded teacher {}, {}, {}", teacher.get().getId(), teacher.get().getFirstName(),
+					teacher.get().getLastName());
+		} else {
+			log.warn("Could not find teacher with ID {}", teacherId);
+		}
+		return teacher;
 	}
 
 }
