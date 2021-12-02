@@ -26,9 +26,9 @@ public class GroupService {
 	Group saveGroup(Group newGroup) {
 		Group group = groupDao.save(newGroup);
 		if (newGroup.getId() == null) {
-			log.info("Saved group {}", newGroup.getName());
+			log.info("Saved group {}", group.getName());
 		} else {
-			log.info("Updated group {}", newGroup.getName());
+			log.info("Updated group {}", group.getName());
 		}
 		return group;
 	}
@@ -40,18 +40,22 @@ public class GroupService {
 
 	public List<Group> findAllExistGroups() {
 		List<Group> groups = groupDao.findAll();
-		log.info("Finded {} groups", findAllExistGroups().size());
+		if (!groups.isEmpty()) {
+			log.info("Finded {} groups", groups.size());
+		} else {
+		}
+		log.warn("Could not find any groups");
 		return groups;
 	}
 
-	public Optional<Group> findGroupsById(Long studentId) {
-		Optional<Group> group = groupDao.findById(studentId);
+	public Optional<Group> findGroupsById(Long groupId) {
+		Optional<Group> group = groupDao.findById(groupId);
 		if (!group.isEmpty()) {
-			log.info("Finded group {}", findAllExistGroups().size());
+			log.info("Finded group with Id {}", groupId);
 		} else {
-			log.warn("Could not find group {}", findAllExistGroups().size());
+			log.warn("Could not find group {}", group);
 		}
-		return groupDao.findById(studentId);
+		return group;
 	}
 
 }
