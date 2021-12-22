@@ -49,7 +49,7 @@ public class Subject extends IdEntity {
 
     @Override
     public String toString() {
-        return "Subject [Id= " + super.getId() + " name=" + name + "]";
+        return name;
     }
 
 

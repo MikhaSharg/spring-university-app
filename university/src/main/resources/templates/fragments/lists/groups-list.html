@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+</head>
+<body>
+	<row class="row" id="groups" th:fragment="groups-list">
+	<table class="table table-striped table-bordered table-hover"
+		style="text-align: center">
+		<thead>
+			<tr>
+				<th scope="col">#</th>
+				<th scope="col">Name</th>
+				<th scope="col">Students Count</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr th:if="${groups.isEmpty()}">
+				<td colspan="3">No Students Available</td>
+			</tr>
+			<tr th:each="group,iter : ${groups}"
+				th:onclick="'window.location.href=\'/groups/' + ${group.getId()} + '\''">
+				<td><span th:text="${iter.count}"> Group </span></td>
+				<td><span th:text="${group.getName()}" /></td>
+				<td><span th:text="${group.getStudents().size()}" /></td>
+			</tr>
+		</tbody>
+	</table>
+	</row>
+</body>
+</html>

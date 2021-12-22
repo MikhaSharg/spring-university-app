@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:include="fragments/headerPart :: headerFragment" />
+<body>
+	<header th:replace="fragments/headerPart :: header" />
+	<div class="container">
+		<nav>
+			<div class="container">
+				<ol class="breadcrumb">
+					<li aria-current="page" class="breadcrumb-item"><a href="/">
+							Home</a></li>
+					<li aria-current="page" class="breadcrumb-item"><a
+						th:href="@{/lectures}">Lectures</a></li>
+						<li aria-current="page" class="breadcrumb-item" th:text="'Lecture: '+${lecture.getSession().getPeriod()}+' - '+${lecture.getDate()}"/>
+						
+			</div>
+		</nav>
+		<div>
+		<row
+			th:replace="fragments/forms/lecture-form :: lecture-form(editMode=false, canEdit=false)"/>
+</div>
+</body>
+</html>

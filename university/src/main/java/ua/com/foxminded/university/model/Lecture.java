@@ -4,7 +4,7 @@ import java.sql.Date;
 import java.time.LocalDate;
 import java.util.Objects;
 
-public class Lecture extends IdEntity {
+public class Lecture extends IdEntity implements Comparable<Lecture> {
 
 	private LocalDate date;
 	private LectureSessions session;
@@ -122,6 +122,11 @@ public class Lecture extends IdEntity {
 	public String toString() {
 		return "Lecture [date=" + date + "\n, session=" + session + "\n, audience=" + audience + "\n, subject=" + subject
 				+ "\n, teacher=" + teacher + "\n, group=" + group + "\n, getId()=" + getId() + "]";
+	}
+
+	@Override
+	public int compareTo(Lecture o) {
+		return this.session.getPeriod().compareTo(o.getSession().getPeriod());
 	}
 
 }

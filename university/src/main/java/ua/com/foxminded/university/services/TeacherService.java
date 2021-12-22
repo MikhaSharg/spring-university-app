@@ -47,7 +47,7 @@ public class TeacherService {
 		return teachers;
 	}
 
-	public Optional<Teacher> findTeacherById(Long teacherId) {
+	public Teacher findTeacherById(Long teacherId) {
 		Optional<Teacher> teacher = teachertDao.findById(teacherId);
 		if (teacher.isPresent()) {
 			log.info("Finded teacher {}, {}, {}", teacher.get().getId(), teacher.get().getFirstName(),
@@ -55,7 +55,17 @@ public class TeacherService {
 		} else {
 			log.warn("Could not find teacher with ID {}", teacherId);
 		}
-		return teacher;
+		return teacher.get();
+	}
+	
+	public List<Teacher> findAllTeachersBySubjectId (Long subjectId) {
+		List<Teacher> teachers = teachertDao.findAllTeachersBySubjectId(subjectId);
+		if(!teachers.isEmpty()) {
+			log.info("Finded {} teachers for subject_id {}", teachers.size(), subjectId);
+		} else {log.warn("Could not find any teachers for subject_id {}", subjectId);}
+		
+		return teachers;
+		
 	}
 
 }

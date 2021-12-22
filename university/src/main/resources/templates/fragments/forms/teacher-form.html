@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+</head>
+<body>
+	<row class="row" id="teacher"
+		th:fragment="teacher-form(editMode, canEdit)">
+
+	<div class="d-grid">
+		<a class="btn btn-primary btn-sm h5" role="button"
+			th:href="@{/lectures/teacher/{id}(id=${teacher.getId()})}">Shedule</a>
+	</div>
+
+	<form method="post"
+		th:action="@{/teachers/{id}/edit(id=${teacher.getId()})}"
+		th:object="${teacher}">
+
+		<div class="mb-3">
+			<label for="firstName">First Name</label> <input class="form-control"
+				id="firstName" th:field="*{firstName}"
+				th:value="${teacher.getFirstName()}" type="text">
+		</div>
+
+		<div class="mb-3">
+			<label for="lastName">Last Name</label> <input class="form-control"
+				id="lastName" th:field="*{lastName}"
+				th:value="${teacher.getLastName()}" type="text">
+		</div>
+		<div class="mb-3">
+			<label for="gender">Gender</label> <input class="form-control"
+				id="gender" th:field="*{gender}" th:value="${teacher.getGender()}"
+				type="text">
+		</div>
+		<div class="mb-3">
+			<label for="email">Email</label> <input class="form-control"
+				id="email" th:field="*{email}" th:value="${teacher.getEmail()}"
+				type="text">
+		</div>
+		<div class="mb-3">
+			<label for="address">Address</label> <input class="form-control"
+				id="address" th:field="*{address}"
+				th:value="${teacher.getAddress()}" type="text">
+		</div>
+		<div class="mb-3">
+			<label for="age">Age</label> <input class="form-control" id="age"
+				th:field="*{age}" th:value="${teacher.getAge()}" type="text">
+		</div>
+		<div class="mb-3">
+			<label for="phoneNumber">Phone Number</label> <input
+				class="form-control" id="phoneNumber" th:field="*{phoneNumber}"
+				th:value="${teacher.getPhoneNumber()}" type="text">
+		</div>
+		<div class="mb-3">
+			<label for="profile">Profile</label> <input class="form-control"
+				id="profile" th:field="*{profile}"
+				th:value="${teacher.getProfile()}" type="text">
+		</div>
+	</form>
+
+	<div class="mb-3">
+		<form method="post"
+			th:action="@{/teachers/{id}/delete(id=${teacher.getId()})}">
+			<a class="btn btn-primary btn-sm" role="button"
+				th:href="@{/teachers/{id}/edit(id=${teacher.getId()})}">Edit</a>
+			<button class="btn btn-danger btn-sm"
+				onclick="return confirm('Are you sure?')" type="submit">Delete
+			</button>
+		</form>
+	</div>
+	</row>
+</body>
+</html>

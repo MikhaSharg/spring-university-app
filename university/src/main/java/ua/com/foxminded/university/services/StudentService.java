@@ -60,7 +60,7 @@ public class StudentService {
 		return students;
 	}
 
-	public Optional<Student> findStudentById(Long studentId) {
+	public Student findStudentById(Long studentId) {
 		Optional<Student> student = studentDao.findById(studentId);
 		if (student.isPresent()) {
 			log.info("Finded student {}, {}, {}", student.get().getId(), student.get().getFirstName(),
@@ -68,7 +68,7 @@ public class StudentService {
 		} else {
 			log.warn("Could not find student with ID {}", student);
 		}
-		return student;
+		return student.get();
 	}
 
 	public void setGroupToStudent(Long groupId, Long studentId) {

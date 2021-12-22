@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+</head>
+<body>
+	<row class="row" id="lectures" th:fragment="lectures-list-audience">
+
+	<div class="container">
+
+		<div class="container">
+			<form method="post"
+				th:action="@{/lectures/dateRangeAudience/{id}(id=${lectures.getId()})}"
+				th:object="${dateRange}">
+				<div class="row">
+					<div class="col">
+						<label for="date" class="form-label">Start date:</label> <input
+							type="date" class="form-control" th:field="*{start}" name="start"
+							id="start">
+					</div>
+					<div class="col">
+						<label for="email" class="form-label">End date:</label> <input
+							type="date" class="form-control" name="end" id="end"
+							th:field="*{end}">
+					</div>
+					<div class="d-grid pt-2">
+						<button type="submit" class="btn btn-primary">Show</button>
+					</div>
+				</div>
+			</form>
+		</div>
+
+		<div class="container pt-3" style="text-align: center">
+			<table class="table table-striped table-bordered table-hover">
+				<tr>
+					<th scope="col">Session</th>
+					<th scope="col">Subject</th>
+					<th scope="col">Group</th>
+					<th scope="col">Teacher</th>
+				</tr>
+				<tr th:if="${lectures.getLectures() == null}">
+					<td colspan="5">No Lectures Available</td>
+				</tr>
+				<th:block th:each="instance : ${lectures.getLectures()}">
+					<tr>
+						<td colspan="5" style="text-align: center"
+							class="bg-secondary text-white h5"
+							th:text="'Lectures :' + ' ' + ${instance.key}">...</td>
+					</tr>
+
+					<tr th:each="lecture : ${instance.value}" th:onclick="'window.location.href=\'/lectures/' + ${lecture.getId()} + '\''">
+						<td th:text="${lecture.getSession().getPeriod()}">...</td>
+						<td th:text="${lecture.getSubject().getName()}">...</td>
+						<td th:text="${lecture.getGroup().getName()}">...</td>
+						<td
+							th:text="${lecture.getTeacher().getFirstName()} +' ' + ${lecture.getTeacher().getLastName()}+ ', ' + ${lecture.getTeacher().getProfile()}">...</td>
+					</tr>
+				</th:block>
+			</table>
+		</div>
+	</div>
+	<row />
+</body>
+</html>

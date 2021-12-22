@@ -85,4 +85,9 @@ public class Teacher extends AbstractPerson {
         return true;
     }
 
+	@Override
+	public String toString() {
+		return getFirstName() + " " + getLastName() + ", " + profile;
+	}
+
 }

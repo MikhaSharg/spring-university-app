@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+</head>
+<body>
+	<row class="row" id="students" th:fragment="students-list(showGroup)">
+	<table class="table table-striped table-bordered table-hover" style="text-align: center">
+		<thead>
+			<tr>
+				<th scope="col">#</th>
+				<th scope="col">First Name</th>
+				<th scope="col">Last Name</th>
+				<th scope="col" th:if="${showGroup}">Group</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr th:each="student,iter : ${studentsView.getStudents()}"
+				th:onclick="'window.location.href=\'/students/' + ${student.getId()} + '\''">
+
+				<td><span th:text="${iter.count}">Index</span>
+				<td><span th:text="${student.getFirstName()}" /></td>
+				<td><span th:text="${student.getLastName()}" /></td>
+
+				<td th:if="${showGroup}"><a
+					th:href="@{/groups/{id}(id=${student.getGroupId()})}"
+					th:text="${studentsView.getGroups().get(student.getGroupId()).name}" }/>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+	<row />
+</body>
+</html>

@@ -79,7 +79,6 @@ public class JdbcLectureDao extends AbstractCrudDao<Lecture> implements LectureD
 			+ "FROM lectures l JOIN lecture_sessions ls USING (session_id) JOIN audiences a USING(audience_id) \n"
 			+ "JOIN subjects s USING (subject_id) JOIN teachers t USING (teacher_id) JOIN groups g USING (group_id) \n"
 			+ "WHERE lecture_date = ? AND t.teacher_id=?";
-	
 
 	public JdbcLectureDao(JdbcTemplate jdbsTemplate, RowMapper<Lecture> rowMapper) {
 		super(jdbsTemplate, rowMapper);
@@ -367,4 +366,5 @@ public class JdbcLectureDao extends AbstractCrudDao<Lecture> implements LectureD
 			return lectures;
 		});
 	}
+	
 }

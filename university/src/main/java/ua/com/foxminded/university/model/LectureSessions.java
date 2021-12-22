@@ -69,8 +69,7 @@ public class LectureSessions extends IdEntity {
 
 	@Override
 	public String toString() {
-		return "LectureSessions [period=" + period + ", startTime=" + startTime + ", endTime=" + endTime + ", getId()="
-				+ getId() + "]";
+		return period + ": " + startTime + " - " + endTime;
 	}
 
 }

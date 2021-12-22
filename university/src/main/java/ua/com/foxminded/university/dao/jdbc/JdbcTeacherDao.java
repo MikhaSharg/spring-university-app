@@ -47,7 +47,9 @@ public class JdbcTeacherDao extends AbstractCrudDao<Teacher> implements TeacherD
 			+ "ON s.subject_id = ts.subject_id WHERE t.teacher_id = ?";
 	private static final String SELECT_All_SUBJECTS = "SELECT t.*, s.* FROM teachers t LEFT JOIN teachers_subjects ts ON t.teacher_id = ts.teacher_id LEFT JOIN subjects s \n"
 			+ "ON s.subject_id = ts.subject_id";
+	private static final String SELECT_All_TEACHERS_BY_SUBJECT_ID = "SELECT t.* FROM teachers t JOIN teachers_subjects ts USING (teacher_id) WHERE ts.subject_id = ?";
 
+	
 	public JdbcTeacherDao(JdbcTemplate jdbsTemplate, RowMapper<Teacher> rowMapper) {
 		super(jdbsTemplate, rowMapper);
 	}
@@ -306,4 +308,19 @@ public class JdbcTeacherDao extends AbstractCrudDao<Teacher> implements TeacherD
 			return teachers;
 		});
 	}
+
+	@Override
+	public List<Teacher> findAllTeachersBySubjectId(Long subjectId) {
+		return jdbcTemplate.query(SELECT_All_TEACHERS_BY_SUBJECT_ID, ps -> ps.setLong(1, subjectId), rs -> {
+			List <Teacher> teachers = new ArrayList<>();
+			while(rs.next()) {
+				teachers.add(new Teacher(rs.getLong("teacher_id"), rs.getString("first_name"),
+						rs.getString("last_name"), rs.getString("gender"), rs.getString("email"),
+						rs.getString("address"), rs.getInt("age"), rs.getLong("phone_number"),
+						rs.getString("role"), rs.getString("profile")));
+			}
+			return teachers;
+		});
+	}
 }
+	

@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:include="fragments/headerPart :: headerFragment" />
+
+<body>
+	<header th:include="fragments/headerPart :: header" />
+
+	<div class="container">
+		<nav>
+			<div>
+				<ol class="breadcrumb">
+					<li aria-current="page" class="breadcrumb-item"><a href="/">Home</a></li>
+					<li aria-current="page" class="breadcrumb-item active">Groups</a></li>
+				</ol>
+			</div>
+		</nav>
+		<row
+			th:replace="fragments/lists/groups-list :: groups-list" />
+		<div />
+</body>
+</html>

@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+</head>
+<body>
+	<row class="row" id="lectures" th:fragment="lectures-list">
+
+	<div class="container" th:with="dates=${dateRange}">
+
+		<div class="container">
+			<form method="post" th:action="@{/lectures/dateRange}"
+				th:object="${dateRange}">
+				<div class="row">
+					<div class="col">
+						<label for="date" class="form-label">Start date:</label> <input
+							type="date" class="form-control" th:field="*{start}" name="start"
+							id="start">
+					</div>
+					<div class="col">
+						<label for="email" class="form-label">End date:</label> <input
+							type="date" class="form-control" name="end" id="end"
+							th:field="*{end}">
+					</div>
+					<div class="d-grid pt-2">
+						<button type="submit" class="btn btn-primary">Show</button>
+					</div>
+				</div>
+			</form>
+		</div>
+
+		<div class="container pt-3" style="text-align: center">
+			<table class="table table-striped table-bordered table-hover">
+				<tr>
+					<th scope="col">Session</th>
+					<th scope="col">Group</th>
+					<th scope="col">Subject</th>
+					<th scope="col">Teacher</th>
+					<th scope="col">Audience</th>
+				</tr>
+				<tr th:if="${lectures.isEmpty()}">
+					<td colspan="5">No lectures avaliable for dates from <b
+						th:text="*{dates.start}"></b> to <b th:text="*{dates.end}"></b></td>
+				</tr>
+				<th:block th:each="lecturesView : ${lectures}">
+
+					<tr>
+						<td colspan="5" style="text-align: center"
+							class="bg-secondary text-white h5"
+							th:text="'Lectures :' + ' ' + ${lecturesView.getLectures().get(0).getDate()}">...</td>
+					</tr>
+
+					<tr th:each="lecture : ${lecturesView.getLectures()}"
+						th:onclick="'window.location.href=\'/lectures/' + ${lecture.getId()} + '\''">
+						<td th:text="${lecture.getSession().getPeriod()}">...</td>
+
+						<td><a th:text="${lecture.getGroup().getName()}"
+							th:href="@{/lectures/groups/{id}(id=${lecture.getGroup().getId()})}"></a></td>
+
+						<td><a th:text="${lecture.getSubject().getName()}"
+							th:href="@{/lectures/subject/{id}(id=${lecture.getSubject().getId()})}"></a></td>
+
+						<td><a
+							th:text="${lecture.getTeacher().getFirstName()} +' ' + ${lecture.getTeacher().getLastName()}+ ', ' + ${lecture.getTeacher().getProfile()}"
+							th:href="@{/lectures/teacher/{id}(id=${lecture.getTeacher().getId()})}"></a></td>
+
+						<td><a th:text="${lecture.getAudience().getRoomNumber()}"
+							th:href="@{/lectures/audience/{id}(id=${lecture.getAudience().getId()})}"></a></td>
+					</tr>
+				</th:block>
+			</table>
+		</div>
+	</div>
+	<row />
+</body>
+</html>

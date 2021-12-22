@@ -82,7 +82,7 @@ public class Group extends IdEntity {
 
     @Override
     public String toString() {
-        return "Group [name=" + name + ", students=" + students + ", getId()=" + getId() + "]";
+        return name;
     }
 
    

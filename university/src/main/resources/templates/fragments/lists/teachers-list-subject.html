@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+</head>
+<body>
+	<row class="row" id="teachers" th:fragment="teachers-list-subject">
+	<div class="container">
+		<table class="table table-striped table-bordered table-hover"
+			style="text-align: center">
+			<thead>
+				<tr>
+					<th class="h5 bg-secondary text-white" colspan="5">Teachers</th>
+				</tr>
+				<tr>
+					<th scope="col">#</th>
+					<th scope="col">First Name</th>
+					<th scope="col">Last Name</th>
+					<th scope="col">Profile</th>
+					<th scope="col">Action</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr th:each="teacher,iter : ${subject.getTeachers()}"
+					th:onclick="'window.location.href=\'/subjects/' + ${subject.getId()} + '\''">
+
+					<td><span th:text="${iter.count}">Index</span>
+					<td><span th:text="${teacher.getFirstName()}" /></td>
+					<td><span th:text="${teacher.getLastName()}" /></td>
+					<td><span th:text="${teacher.getProfile()}" /></td>
+					<td><a class="btn btn-danger btn-sm" role="button">Unenroll</a>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+	<row />
+</body>
+</html>
+>
