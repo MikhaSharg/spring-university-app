@@ -77,7 +77,7 @@ public class ControllersFacadeImpl implements ControllersFacade {
 	}
 
 	@Override
-	public List<LecturesView> collectLecturesForDateRange(LocalDate start, LocalDate end) {
+	public List<LecturesView> collectLecturesByDateRange(LocalDate start, LocalDate end) {
 		List<Lecture> lectures = lectureService.findLectureForDateRange(start, end);
 		List<LecturesView> lecturesViews = new ArrayList<>();
 		List<LocalDate> dates = lectures.stream().map(e->e.getDate()).distinct().collect(Collectors.toList());

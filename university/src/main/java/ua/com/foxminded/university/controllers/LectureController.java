@@ -26,19 +26,17 @@ import ua.com.foxminded.university.services.LectureService;
 @RequestMapping("/lectures")
 public class LectureController {
 
-	private final LectureService lectureService;
-	private final ControllersFacade controllersFacadeImpl;
+	private final ControllersFacade facade;
 
 	private LocalDate currentDate = LocalDate.now();
 
-	public LectureController(LectureService lectureService, ControllersFacadeImpl controllersFacadeImpl) {
-		this.lectureService = lectureService;
-		this.controllersFacadeImpl = controllersFacadeImpl;
+	public LectureController(ControllersFacade facade) {
+		this.facade = facade;
 	}
 
 	@GetMapping
-	String lectureList(Model model) {
-		List<LecturesView> lecturesViews = controllersFacadeImpl.collectLecturesForDateRange(currentDate, currentDate);
+	String showLecturesList(Model model) {
+		List<LecturesView> lecturesViews = facade.collectLecturesByDateRange(currentDate, currentDate);
 		model.addAttribute("lectures", lecturesViews);
 		model.addAttribute("dateRange", new DateRange());
 		return "lectures/list";
@@ -46,7 +44,7 @@ public class LectureController {
 
 	@PostMapping(path = "/dateRange")
 	String findLecturesByDateRange(Model model, DateRange dateRange) {
-		List<LecturesView> lecturesViews = controllersFacadeImpl.collectLecturesForDateRange(
+		List<LecturesView> lecturesViews = facade.collectLecturesByDateRange(
 				LocalDate.parse(dateRange.getStart()), LocalDate.parse(dateRange.getEnd()));
 		model.addAttribute("lectures", lecturesViews);
 		return "lectures/list";
@@ -55,7 +53,7 @@ public class LectureController {
 	@GetMapping(path = "/groups/{id}")
 	String lectureListForGroup(@PathVariable(name = "id", required = true) Long id, Model model) {
 
-		List<LecturesView> lecturesViews = controllersFacadeImpl.collectLecturesForGroupByDateRange(currentDate,
+		List<LecturesView> lecturesViews = facade.collectLecturesForGroupByDateRange(currentDate,
 				currentDate, id);
 		model.addAttribute("lectures", lecturesViews);
 		model.addAttribute("dateRange", new DateRange());
@@ -65,7 +63,7 @@ public class LectureController {
 	@PostMapping(path = "/dateRangeGroup/{id}")
 	String findLecturesForGroupByDateRange(@PathVariable(name = "id", required = true) Long id, Model model,
 			DateRange dateRange) {
-		List<LecturesView> lecturesViews = controllersFacadeImpl.collectLecturesForGroupByDateRange(
+		List<LecturesView> lecturesViews = facade.collectLecturesForGroupByDateRange(
 				LocalDate.parse(dateRange.getStart()), LocalDate.parse(dateRange.getEnd()), id);
 		model.addAttribute("lectures", lecturesViews);
 		return "lectures/list-group";
@@ -73,7 +71,7 @@ public class LectureController {
 
 	@GetMapping(path = "/teacher/{id}")
 	String showLecturesForTeacher(@PathVariable(name = "id", required = true) Long id, Model model) {
-		LecturesTeacher lecturesTeacher = controllersFacadeImpl.collectLecturesForTeacherByDateRange(currentDate,
+		LecturesTeacher lecturesTeacher = facade.collectLecturesForTeacherByDateRange(currentDate,
 				currentDate, id);
 		model.addAttribute("lectures", lecturesTeacher);
 		model.addAttribute("dateRange", new DateRange());
@@ -83,7 +81,7 @@ public class LectureController {
 	@PostMapping(path = "/dateRangeTeacher/{id}")
 	String findLecturesForTeacherByDateRange(@PathVariable(name = "id", required = true) Long id, Model model,
 			DateRange dateRange) {
-		LecturesTeacher lecturesTeacher = controllersFacadeImpl.collectLecturesForTeacherByDateRange(
+		LecturesTeacher lecturesTeacher = facade.collectLecturesForTeacherByDateRange(
 				LocalDate.parse(dateRange.getStart()), LocalDate.parse(dateRange.getEnd()), id);
 		model.addAttribute("lectures", lecturesTeacher);
 		return "lectures/list-teacher";
@@ -91,7 +89,7 @@ public class LectureController {
 
 	@GetMapping(path = "/subject/{id}")
 	String showLecturesForSubject(@PathVariable(name = "id", required = true) Long id, Model model) {
-		LecturesSubject lecturesSubject = controllersFacadeImpl.collectLecturesForSubjectByDateRange(currentDate,
+		LecturesSubject lecturesSubject = facade.collectLecturesForSubjectByDateRange(currentDate,
 				currentDate, id);
 		model.addAttribute("lectures", lecturesSubject);
 		model.addAttribute("dateRange", new DateRange());
@@ -102,7 +100,7 @@ public class LectureController {
 	@PostMapping(path = "/dateRangeSubject/{id}")
 	String findLecturesForSubjectByDateRange(@PathVariable(name = "id", required = true) Long id, Model model,
 			DateRange dateRange) {
-		LecturesSubject lecturesSubject = controllersFacadeImpl.collectLecturesForSubjectByDateRange(
+		LecturesSubject lecturesSubject = facade.collectLecturesForSubjectByDateRange(
 				LocalDate.parse(dateRange.getStart()), LocalDate.parse(dateRange.getEnd()), id);
 		model.addAttribute("lectures", lecturesSubject);
 		return "lectures/list-subject";
@@ -110,7 +108,7 @@ public class LectureController {
 	
 	@GetMapping(path = "/audience/{id}")
 	String showLecturesForAudience(@PathVariable(name = "id", required = true) Long id, Model model) {
-		LecturesAudience lecturesAudience = controllersFacadeImpl.collectLecturesForAudienceByDateRange(currentDate,
+		LecturesAudience lecturesAudience = facade.collectLecturesForAudienceByDateRange(currentDate,
 				currentDate, id);
 		model.addAttribute("lectures", lecturesAudience);
 		model.addAttribute("dateRange", new DateRange());
@@ -121,7 +119,7 @@ public class LectureController {
 	@PostMapping(path = "/dateRangeAudience/{id}")
 	String findLecturesForAudienceByDateRange(@PathVariable(name = "id", required = true) Long id, Model model,
 			DateRange dateRange) {
-		LecturesAudience lecturesAudience = controllersFacadeImpl.collectLecturesForAudienceByDateRange(
+		LecturesAudience lecturesAudience = facade.collectLecturesForAudienceByDateRange(
 				LocalDate.parse(dateRange.getStart()), LocalDate.parse(dateRange.getEnd()), id);
 		model.addAttribute("lectures", lecturesAudience);
 		return "lectures/list-audience";
@@ -129,7 +127,7 @@ public class LectureController {
 	
 	@GetMapping(path = "/{id}")
 	String showViewLecture(@PathVariable(name = "id", required = true) Long id, Model model) {
-		Lecture lecture = controllersFacadeImpl.findStudentById(id);
+		Lecture lecture = facade.findStudentById(id);
 		model.addAttribute("lecture", lecture);
 		return "lectures/view";
 

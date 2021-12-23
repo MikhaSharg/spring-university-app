@@ -17,7 +17,7 @@ public interface ControllersFacade {
     
     LecturesView collectLecturesForCurrentDate();
     
-    List<LecturesView> collectLecturesForDateRange(LocalDate start, LocalDate end);
+    List<LecturesView> collectLecturesByDateRange(LocalDate start, LocalDate end);
     
     List<LecturesView> collectLecturesForGroupByDateRange(LocalDate start, LocalDate end, Long groupId);
 
