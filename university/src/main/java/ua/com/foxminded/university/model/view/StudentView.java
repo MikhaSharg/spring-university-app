@@ -10,13 +10,11 @@ public class StudentView {
 
 	private final Student student;
 	private final Group group;
-	private final List<Lecture> lectures;
 
-	public StudentView(Student student, Group group, List<Lecture> lectures) {
+	public StudentView(Student student, Group group) {
 		super();
 		this.student = student;
 		this.group = group;
-		this.lectures = lectures;
 	}
 
 	public Student getStudent() {
@@ -25,10 +23,6 @@ public class StudentView {
 
 	public Group getGroup() {
 		return group;
-	}
-
-	public List<Lecture> getLectures() {
-		return lectures;
 	}
 
 }

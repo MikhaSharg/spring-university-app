@@ -18,10 +18,7 @@ class IndexControllerTest {
 
 	@Test
 	void shouldPresentIndexPage() throws Exception {
-		mockMvc.perform(get("/"))
-		.andExpect(status().isOk())
-		.andExpect(content()
-		.string(containsString("University")));
+		mockMvc.perform(get("/")).andExpect(status().isOk()).andExpect(content().string(containsString("University")));
 	}
 
 }

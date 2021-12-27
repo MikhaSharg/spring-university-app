@@ -2,11 +2,11 @@ package ua.com.foxminded.university.model.view;
 
 public class TeacherView {
 
-	private String firstName;
-	private String lastName;
-	private String profile;
-	private Integer SubjectsCount;
-	private Integer GroupsCount;
+	private final String firstName;
+	private final String lastName;
+	private final String profile;
+	private final Integer SubjectsCount;
+	private final Integer GroupsCount;
 
 	public TeacherView(String firstName, String lastName, String profile, Integer subjectsCount, Integer groupsCount) {
 		this.firstName = firstName;
@@ -20,39 +20,20 @@ public class TeacherView {
 		return firstName;
 	}
 
-	public void setFirstName(String firstName) {
-		this.firstName = firstName;
-	}
-
 	public String getLastName() {
 		return lastName;
-	}
-
-	public void setLastName(String lastName) {
-		this.lastName = lastName;
 	}
 
 	public String getProfile() {
 		return profile;
 	}
 
-	public void setProfile(String profile) {
-		this.profile = profile;
-	}
-
 	public Integer getSubjectsCount() {
 		return SubjectsCount;
-	}
-
-	public void setSubjectsCount(Integer subjectsCount) {
-		SubjectsCount = subjectsCount;
 	}
 
 	public Integer getGroupsCount() {
 		return GroupsCount;
 	}
 
-	public void setGroupsCount(Integer groupsCount) {
-		GroupsCount = groupsCount;
-	}
 }

@@ -18,41 +18,54 @@
 		<div class="mb-3">
 			<label for="firstName">First Name</label> <input class="form-control"
 				id="firstName" th:field="*{firstName}"
-				th:value="${student.getFirstName()}" type="text">
+				th:readonly="${!editMode}"
+				th:value="
+				${student.getFirstName()}" type="text">
 		</div>
 
 		<div class="mb-3">
 			<label for="lastName">Last Name</label> <input class="form-control"
 				id="lastName" th:field="*{lastName}"
-				th:value="${student.getLastName()}" type="text">
+				th:readonly="${!editMode}"
+				th:value="
+				${student.getLastName()}" type="text">
 		</div>
 		<div class="mb-3">
 			<label for="gender">Gender</label> <input class="form-control"
-				id="gender" th:field="*{gender}" th:value="${student.getGender()}"
+				id="gender" th:field="*{gender}"
+				th:readonly="${!editMode}" th:value="
+				${student.getGender()}"
 				type="text">
 		</div>
 		<div class="mb-3">
 			<label for="email">Email</label> <input class="form-control"
-				id="email" th:field="*{email}" th:value="${student.getEmail()}"
+				id="email" th:field="*{email}" th:readonly="${!editMode}" th:value="
+				${student.getEmail()}"
 				type="text">
 		</div>
 		<div class="mb-3">
 			<label for="address">Address</label> <input class="form-control"
 				id="address" th:field="*{address}"
-				th:value="${student.getAddress()}" type="text">
+				th:readonly="${!editMode}"
+				th:value="
+				${student.getAddress()}" type="text">
 		</div>
 		<div class="mb-3">
 			<label for="age">Age</label> <input class="form-control" id="age"
-				th:field="*{age}" th:value="${student.getAge()}" type="text">
+				th:field="*{age}" th:readonly="${!editMode}" th:value="
+				${student.getAge()}" type="text">
 		</div>
 		<div class="mb-3">
 			<label for="phoneNumber">Phone Number</label> <input
 				class="form-control" id="phoneNumber" th:field="*{phoneNumber}"
-				th:value="${student.getPhoneNumber()}" type="text">
+				th:readonly="${!editMode}"
+				th:value="
+				${student.getPhoneNumber()}" type="text">
 		</div>
 		<div class="mb-3">
 			<label for="groupName">Group</label> <input class="form-control"
-				id="groupName" th:value="${group.name}" type="text">
+				id="groupName" th:value="${group.name}"
+				th:readonly="${!editMode}" type="text">
 		</div>
 	</form>
 
@@ -66,7 +79,7 @@
 			</button>
 		</form>
 	</div>
-	
+
 	</row>
 </body>
 </html>

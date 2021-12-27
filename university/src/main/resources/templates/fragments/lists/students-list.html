@@ -23,7 +23,7 @@
 
 				<td th:if="${showGroup}"><a
 					th:href="@{/groups/{id}(id=${student.getGroupId()})}"
-					th:text="${studentsView.getGroups().get(student.getGroupId()).name}" }/>
+					th:text="${studentsView.getGroups().get(student.getGroupId()).name}"></a>
 				</td>
 			</tr>
 		</tbody>

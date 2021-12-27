@@ -3,6 +3,7 @@ package ua.com.foxminded.university.facade;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -66,8 +67,7 @@ public class ControllersFacadeImpl implements ControllersFacade {
 	public StudentView collectStudentForView(Long id) {
 		Student student = studentService.findStudentById(id);
 		Group group = groupService.findGroupsById(student.getGroupId());
-		List<Lecture> lectures = lectureService.findLectureForGroupForCurrentDay(group.getId());
-		return new StudentView(student, group, lectures);
+		return new StudentView(student, group);
 	}
 
 	@Override
@@ -141,7 +141,7 @@ public class ControllersFacadeImpl implements ControllersFacade {
 	}
 
 	@Override
-	public Lecture findStudentById(Long studentId) {
+	public Lecture findLectureById(Long studentId) {
 		return lectureService.findLectureById(studentId);
 	}
 
@@ -172,5 +172,12 @@ public class ControllersFacadeImpl implements ControllersFacade {
 		List<Teacher> teachers = teacherService.findAllTeachersBySubjectId(subjectId);
 		return new SubjectView(subjectId, subjectService.findSubjectById(subjectId).getName(), teachers);
 	}
+
+	@Override
+	public List<Group> collectAllGroupsForList() {
+		return groupService.findAllExistGroups();
+	}
+	
 	
 }
+

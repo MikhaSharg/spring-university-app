@@ -9,9 +9,9 @@ import ua.com.foxminded.university.model.Lecture;
 
 public class LecturesSubject {
 
-	private Long id;
-	private String name;
-	private Map<LocalDate, List<Lecture>> lectures;
+	private final Long id;
+	private final String name;
+	private final Map<LocalDate, List<Lecture>> lectures;
 
 	public LecturesSubject(Long id, String name, Map<LocalDate, List<Lecture>> lectures) {
 		super();
@@ -24,24 +24,12 @@ public class LecturesSubject {
 		return id;
 	}
 
-	public void setId(Long id) {
-		this.id = id;
-	}
-
 	public String getName() {
 		return name;
 	}
 
-	public void setName(String name) {
-		this.name = name;
-	}
-
 	public Map<LocalDate, List<Lecture>> getLectures() {
 		return lectures;
-	}
-
-	public void setLectures(Map<LocalDate, List<Lecture>> lectures) {
-		this.lectures = lectures;
 	}
 
 	@Override

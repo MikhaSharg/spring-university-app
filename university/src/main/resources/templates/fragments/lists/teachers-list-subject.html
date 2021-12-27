@@ -21,7 +21,7 @@
 			</thead>
 			<tbody>
 				<tr th:each="teacher,iter : ${subject.getTeachers()}"
-					th:onclick="'window.location.href=\'/subjects/' + ${subject.getId()} + '\''">
+					th:onclick="'window.location.href=\'/teachers/' + ${teacher.getId()} + '\''">
 
 					<td><span th:text="${iter.count}">Index</span>
 					<td><span th:text="${teacher.getFirstName()}" /></td>

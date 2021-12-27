@@ -27,7 +27,7 @@ public interface ControllersFacade {
     
     LecturesAudience collectLecturesForAudienceByDateRange (LocalDate start, LocalDate end, Long audienceId);
     
-    Lecture findStudentById (Long studentId);
+    Lecture findLectureById (Long lectureId);
     
     Group findGroupById (Long groupId);
     
@@ -38,5 +38,7 @@ public interface ControllersFacade {
     List <Subject> collectAllSubjectsForView();
 
 	SubjectView collectSubjectForView(Long subjectId);
+	
+	List <Group> collectAllGroupsForList();
 	
 }

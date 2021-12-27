@@ -16,7 +16,7 @@
 		th:object="${subject}">
 		<div class="mb-3">
 			<label for="name">Name</label> <input class="form-control"
-				id="name" th:field="*{name}"
+				id="name" th:field="*{name}" th:readonly="${!editMode}"
 				th:value="${subject.getName()}" type="text">
 		</div>
 	</form>

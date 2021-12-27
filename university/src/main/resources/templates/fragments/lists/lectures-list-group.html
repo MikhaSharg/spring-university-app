@@ -8,7 +8,7 @@
 	<div class="container" >
 
 		<div class="container">
-			<form method="post" th:action="@{/lectures/dateRange/{id}(id=${lectures.get(0).getLectures().get(0).getGroup().getId()})}"
+			<form method="post" th:action="@{/lectures/dateRangeGroup/{id}(id=${lectures.get(0).getLectures().get(0).getGroup().getId()})}"
 				th:object="${dateRange}">
 				<div class="row">
 					<div class="col">

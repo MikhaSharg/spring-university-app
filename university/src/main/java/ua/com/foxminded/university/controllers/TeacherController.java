@@ -22,9 +22,9 @@ public class TeacherController {
 	}
 	
 	@GetMapping
-	String teachersList (Model model) {
+	String showTeachersList (Model model) {
 		model.addAttribute("teachers", facade.collectAllTeachersForList());
-		setTitle(model, "teachers");
+		setTitle(model, "Teachers");
 		return "teachers/list";
 	}
 	

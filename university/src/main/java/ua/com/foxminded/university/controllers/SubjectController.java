@@ -11,7 +11,6 @@ import ua.com.foxminded.university.model.view.SubjectView;
 
 import static ua.com.foxminded.university.controllers.ControllerUtils.*;
 
-
 @Controller
 @RequestMapping("/subjects")
 public class SubjectController {
@@ -23,17 +22,17 @@ public class SubjectController {
 	}
 
 	@GetMapping
-	String subjectsList(Model model) {
+	String showSubjectsList(Model model) {
 		model.addAttribute("subjects", facade.collectAllSubjectsForView());
 		setTitle(model, "Subjects");
 		return "subjects/list";
 	}
 
-	@GetMapping (path = "/{id}")
-	String subjectView (@PathVariable (name = "id", required = true) Long id, Model model) {
-	SubjectView subjectView = facade.collectSubjectForView(id);	
-	model.addAttribute("subject", subjectView);
-	setTitle(model, "Subjects/", String.format("%s", subjectView.getName()));
-	return "subjects/view";	
+	@GetMapping(path = "/{id}")
+	String subjectView(@PathVariable(name = "id", required = true) Long id, Model model) {
+		SubjectView subjectView = facade.collectSubjectForView(id);
+		model.addAttribute("subject", subjectView);
+		setTitle(model, "Subjects", subjectView.getName());
+		return "subjects/view";
 	}
 }

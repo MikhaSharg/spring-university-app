@@ -6,33 +6,26 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import ua.com.foxminded.university.facade.ControllersFacadeImpl;
+import ua.com.foxminded.university.facade.ControllersFacade;
 import ua.com.foxminded.university.model.Group;
-import ua.com.foxminded.university.services.GroupService;
 
 import static ua.com.foxminded.university.controllers.ControllerUtils.*;
 
-import java.util.List;
 
 @Controller
 @RequestMapping("/groups")
 public class GroupController {
 	
-	private final ControllersFacadeImpl facade;
-	
-	private final GroupService groupService;
+	private final ControllersFacade facade;
 
-	public GroupController(ControllersFacadeImpl facade, GroupService groupService) {
+	public GroupController(ControllersFacade facade) {
 		this.facade = facade;
-		this.groupService=groupService;
 	}
 
 	@GetMapping
-	String groupList(Model model) {
-		
-		List<Group> groups =  groupService.findAllExistGroups();
-		model.addAttribute(GROUPS, groups);
-		setTitle(model, "groups");
+	String showGroupList(Model model) {
+		model.addAttribute("groups", facade.collectAllGroupsForList());
+		setTitle(model, "Groups");
 		return "groups/list";
 	}
 
@@ -40,6 +33,7 @@ public class GroupController {
 	String showGroupView(@PathVariable(name = "id", required = true) Long id, Model model) {
 		Group group = facade.findGroupById(id);
 		model.addAttribute("group", group);
+		setTitle(model, "Group", group.getName());
 		return "groups/view";
 	}
 

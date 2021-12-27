@@ -12,13 +12,15 @@
 				th:object="${dateRange}">
 				<div class="row">
 					<div class="col">
-						<label for="date" class="form-label">Start date:</label> <input
-							type="date" class="form-control" th:field="*{start}" name="start"
+					
+						<label for="date" class="form-label">Start date:</label>
+						 <input
+							type="date"   class="form-control" th:field="*{start}" name="start"
 							id="start">
 					</div>
 					<div class="col">
 						<label for="email" class="form-label">End date:</label> <input
-							type="date" class="form-control" name="end" id="end"
+							type="date" value="2018-07-22" class="form-control" name="end" id="end"
 							th:field="*{end}">
 					</div>
 					<div class="d-grid pt-2">
@@ -70,6 +72,14 @@
 			</table>
 		</div>
 	</div>
+<script th:src="@{assets/bootstrap-datepicker/js/bootstrap-datepicker.js}"></script>
+
+<script>
+    $('.input-group.date').datepicker({
+        autoclose: true,
+        todayHighlight: true
+    });
+</script>
 	<row />
 </body>
 </html>

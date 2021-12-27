@@ -6,9 +6,9 @@ import ua.com.foxminded.university.model.Teacher;
 
 public class SubjectView {
 
-	private Long id;
-	private String name;
-	private List<Teacher> teachers;
+	private final Long id;
+	private final String name;
+	private final List<Teacher> teachers;
 
 	public SubjectView(Long id, String name, List<Teacher> teachers) {
 		this.id = id;
@@ -20,24 +20,12 @@ public class SubjectView {
 		return id;
 	}
 
-	public void setId(Long id) {
-		this.id = id;
-	}
-
 	public String getName() {
 		return name;
 	}
 
-	public void setName(String name) {
-		this.name = name;
-	}
-
 	public List<Teacher> getTeachers() {
 		return teachers;
-	}
-
-	public void setTeachers(List<Teacher> teachers) {
-		this.teachers = teachers;
 	}
 
 }
