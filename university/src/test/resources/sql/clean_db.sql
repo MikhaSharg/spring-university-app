@@ -1,3 +1,15 @@
 DELETE FROM students;
+DELETE FROM lectures;
 DELETE FROM groups;
+DELETE FROM persons;
 DELETE FROM subjects;
+DELETE FROM teachers;
+DELETE FROM teachers_subjects;
+DELETE FROM audiences;
+DELETE FROM lecture_sessions;
+DELETE FROM roles;
+DELETE FROM teachers_roles;
+DELETE FROM teachers_roles;
+DELETE FROM students_roles;
+DELETE FROM persons_roles;
+DELETE FROM archive_lectures;

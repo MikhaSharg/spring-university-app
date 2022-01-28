@@ -12,16 +12,15 @@
 				th:object="${dateRange}">
 				<div class="row">
 					<div class="col">
-					
-						<label for="date" class="form-label">Start date:</label>
-						 <input
-							type="date"   class="form-control" th:field="*{start}" name="start"
+
+						<label for="date" class="form-label">Start date:</label> <input
+							type="date" class="form-control" th:field="*{start}" name="start"
 							id="start">
 					</div>
 					<div class="col">
 						<label for="email" class="form-label">End date:</label> <input
-							type="date" value="2018-07-22" class="form-control" name="end" id="end"
-							th:field="*{end}">
+							type="date" value="2018-07-22" class="form-control" name="end"
+							id="end" th:field="*{end}">
 					</div>
 					<div class="d-grid pt-2">
 						<button type="submit" class="btn btn-primary">Show</button>
@@ -40,9 +39,9 @@
 					<th scope="col">Audience</th>
 				</tr>
 				<tr th:if="${lectures.isEmpty()}">
-					<td colspan="5">No lectures avaliable for dates from <b
-						th:text="*{dates.start}"></b> to <b th:text="*{dates.end}"></b></td>
+					<td class="bg-warning" colspan="5">No lectures available</td>
 				</tr>
+
 				<th:block th:each="lecturesView : ${lectures}">
 
 					<tr>
@@ -51,35 +50,101 @@
 							th:text="'Lectures :' + ' ' + ${lecturesView.getLectures().get(0).getDate()}">...</td>
 					</tr>
 
-					<tr th:each="lecture : ${lecturesView.getLectures()}"
-						th:onclick="'window.location.href=\'/lectures/' + ${lecture.getId()} + '\''">
-						<td th:text="${lecture.getSession().getPeriod()}">...</td>
+					<div th:each="lecture : ${lecturesView.getLectures()}">
 
-						<td><a th:text="${lecture.getGroup().getName()}"
-							th:href="@{/lectures/groups/{id}(id=${lecture.getGroup().getId()})}"></a></td>
+						<div th:switch="${lecture.isArchived()}">
 
-						<td><a th:text="${lecture.getSubject().getName()}"
-							th:href="@{/lectures/subject/{id}(id=${lecture.getSubject().getId()})}"></a></td>
+							<div th:case="false">
 
-						<td><a
-							th:text="${lecture.getTeacher().getFirstName()} +' ' + ${lecture.getTeacher().getLastName()}+ ', ' + ${lecture.getTeacher().getProfile()}"
-							th:href="@{/lectures/teacher/{id}(id=${lecture.getTeacher().getId()})}"></a></td>
+								<div th:switch="${lecture.isModified()}">
 
-						<td><a th:text="${lecture.getAudience().getRoomNumber()}"
-							th:href="@{/lectures/audience/{id}(id=${lecture.getAudience().getId()})}"></a></td>
-					</tr>
+									<div th:case="false">
+								<tr
+									th:onclick="'window.location.href=\'/lectures/' + ${lecture.getId()} + '\''">
+
+									<td th:text="${lecture.getSession().getPeriod()}">...</td>
+
+									<td><a th:text="${lecture.getGroup().getName()}"
+										th:href="@{/lectures/groups/{id}(id=${lecture.getGroup().getId()})}"></a></td>
+
+									<td><a th:text="${lecture.getSubject().getName()}"
+										th:href="@{/lectures/subject/{id}(id=${lecture.getSubject().getId()})}"></a></td>
+
+									<td><a
+										th:text="${lecture.getTeacher().getFirstName()} +' ' + ${lecture.getTeacher().getLastName()}+ ', ' + ${lecture.getTeacher().getProfile()}"
+										th:href="@{/lectures/teacher/{id}(id=${lecture.getTeacher().getId()})}"></a></td>
+
+									<td><a th:text="${lecture.getAudience().getRoomNumber()}"
+										th:href="@{/lectures/audience/{id}(id=${lecture.getAudience().getId()})}"></a>
+									</td>
+								</tr>
+							</div>
+							<div th:case="true">
+								<tr>
+									<td colspan="5" style="text-align: center"
+										class="bg-warning text-dark" th:text="${lecture.getStatus()}">...</td>
+								</tr>
+								<tr class="bg-warning text-dark">
+									<td th:text="${lecture.getSession().getPeriod()}"
+										class="text-dark">...</td>
+
+									<td><a th:text="${lecture.getGroup().getName()}"
+										class="text-dark"
+										th:href="@{/lectures/groups/{id}(id=${lecture.getGroup().getId()})}"></a></td>
+
+									<td><a th:text="${lecture.getSubject().getName()}"
+										class="text-dark"
+										th:href="@{/lectures/subject/{id}(id=${lecture.getSubject().getId()})}"></a></td>
+
+									<td><a class="text-dark"
+										th:text="${lecture.getTeacher().getFirstName()} +' ' + ${lecture.getTeacher().getLastName()}+ ', ' + ${lecture.getTeacher().getProfile()}"
+										th:href="@{/lectures/teacher/{id}(id=${lecture.getTeacher().getId()})}"></a></td>
+
+									<td><a class="text-dark"
+										th:text="${lecture.getAudience().getRoomNumber()}"
+										th:href="@{/lectures/audience/{id}(id=${lecture.getAudience().getId()})}"></a>
+									</td>
+								</tr>
+							</div>
+						</div>
+					</div>
+
+
+					<div th:case="true">
+
+						<tr>
+							<td colspan="5" style="text-align: center"
+								class="bg-danger text-light" th:text="${lecture.getStatus()}">...</td>
+						</tr>
+						<tr class="bg-danger">
+
+							<td th:text="${lecture.getSession().getPeriod()}"
+								class="text-light">...</td>
+
+							<td><a th:text="${lecture.getGroup().getName()}"
+								class="text-light"
+								th:href="@{/lectures/groups/{id}(id=${lecture.getGroup().getId()})}"></a></td>
+
+							<td><a th:text="${lecture.getSubject().getName()}"
+								class="text-light"
+								th:href="@{/lectures/subject/{id}(id=${lecture.getSubject().getId()})}"></a></td>
+
+							<td><a class="text-light"
+								th:text="${lecture.getTeacher().getFirstName()} +' ' + ${lecture.getTeacher().getLastName()}+ ', ' + ${lecture.getTeacher().getProfile()}"
+								th:href="@{/lectures/teacher/{id}(id=${lecture.getTeacher().getId()})}"></a></td>
+
+							<td><a class="text-light"
+								th:text="${lecture.getAudience().getRoomNumber()}"
+								th:href="@{/lectures/audience/{id}(id=${lecture.getAudience().getId()})}"></a>
+							</td>
+						</tr>
+					</div>
+
+					</div>
 				</th:block>
 			</table>
 		</div>
 	</div>
-<script th:src="@{assets/bootstrap-datepicker/js/bootstrap-datepicker.js}"></script>
-
-<script>
-    $('.input-group.date').datepicker({
-        autoclose: true,
-        todayHighlight: true
-    });
-</script>
 	<row />
 </body>
 </html>

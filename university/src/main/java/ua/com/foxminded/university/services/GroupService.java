@@ -56,7 +56,7 @@ public class GroupService {
 		return groups;
 	}
 
-	public Group findGroupsById(Long groupId) {
+	public Group findGroupById(Long groupId) {
 		Optional<Group> group = groupDao.findById(groupId);
 		if (!group.isEmpty()) {
 			log.info("Finded group with Id {}", groupId);

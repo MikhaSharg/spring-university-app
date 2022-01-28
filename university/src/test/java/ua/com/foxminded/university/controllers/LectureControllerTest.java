@@ -18,6 +18,7 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 
 import ua.com.foxminded.university.facade.ControllersFacade;
+import ua.com.foxminded.university.facade.ControllersFacadeImpl;
 import ua.com.foxminded.university.model.*;
 import ua.com.foxminded.university.model.Group;
 import ua.com.foxminded.university.model.Lecture;
@@ -25,6 +26,7 @@ import ua.com.foxminded.university.model.LectureSessions;
 import ua.com.foxminded.university.model.Subject;
 import ua.com.foxminded.university.model.Teacher;
 import ua.com.foxminded.university.model.view.LecturesAudience;
+import ua.com.foxminded.university.model.view.LecturesGroup;
 import ua.com.foxminded.university.model.view.LecturesSubject;
 import ua.com.foxminded.university.model.view.LecturesTeacher;
 import ua.com.foxminded.university.model.view.LecturesView;
@@ -146,8 +148,10 @@ class LectureControllerTest {
 				new Lecture(5L, currentDate, lectureSessions5, audience5, subject5, teacher5, group1),
 				new Lecture(6L, currentDate, lectureSessions6, audience6, subject6, teacher6, group1));
 
+		Map<LocalDate, List<Lecture>> lectures = Map.of(currentDate, lectures1);
+		
 		when(controllersFacade.collectLecturesForGroupByDateRange(currentDate, currentDate, 1L))
-				.thenReturn(Arrays.asList(new LecturesView(lectures1)));
+				.thenReturn(new LecturesGroup(group1.getId(), group1.getName(), lectures));
 		mockMvc.perform(get("/lectures/groups/1"))
 
 				.andExpect(status().isOk())
@@ -352,7 +356,7 @@ class LectureControllerTest {
 				.andExpect(status().isOk())
 				.andExpect(content().string(containsString(
 						"Lectures/lecture/1th/2021-10-10/Theory of probability and mathematical statistics/AB-12")))
-				.andExpect(content().string(containsString("Lecture: 1th - 2021-10-10")))
+				.andExpect(content().string(containsString("Lecture: 1th/2021-10-10")))
 
 				.andExpect(content().string(containsString("10/10/21")))
 				.andExpect(content().string(containsString("1th: 8:00 - 9:20")))
@@ -361,4 +365,5 @@ class LectureControllerTest {
 				.andExpect(content().string(containsString("Alex Petrov, Professor")))
 				.andExpect(content().string(containsString("AB-12")));
 	}
+	
 }

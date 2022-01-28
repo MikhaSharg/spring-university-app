@@ -3,51 +3,57 @@
 <head>
 </head>
 <body>
-	<row class="row" id="lecture"
-		th:fragment="lecture-form(editMode, canEdit)">
+	<row class="row" id="lecture" th:fragment="lecture-form(editMode, canEdit)">
 
-	<form method="post"
-		th:action="@{/lectures/{id}/edit(id=${lecture.getId()})}"
-		th:object="${lecture}">
-		<div class="mb-3">
-			<label for="date">Date</label> <input class="form-control" id="date"
-				th:field="*{date}" th:readonly="${!editMode}"
-				th:value="${lecture.date}" type="text" />
+	<form method="post" th:action="@{/lectures/{id}/edit(id=${lecture.getId()})}" th:object="${lecture}">
+		
+		<div class="input-group pb-3">
+			 <span class="input-group-text bg-secondary text-white col-sm-1">Date     </span>
+			 <input class="form-control" id="date" th:field="*{date}" th:readonly="${!editMode}" th:value="${lecture.date}" type="text" aria-label="First name"/>
+			 <a class="btn btn-primary btn-sm " role="button" th:href="@{/lectures/{id}/edit/date(id=${lecture.getId()})}">Edit</a>
 		</div>
-		<div class="mb-3">
-			<label for="session">Session</label> <input class="form-control"
-				id="session" th:field="*{session}" th:readonly="${!editMode}"
-				th:value="${lecture.getSession().getPeriod()}" type="text" />
+		
+		<div class="input-group pb-3">
+			<span class="input-group-text bg-secondary text-white col-sm-1">Session</span>
+			<input class="form-control" id="session" th:field="*{session}" th:readonly="${!editMode}" th:value="${lecture.getSession().getPeriod()}" type="text"/>
+			<a class="btn btn-primary btn-sm " role="button" th:href="@{/lectures/{id}/edit(id=${lecture.getId()})}">Edit</a>
 		</div>
-		<div class="mb-3">
-			<label for="audience">Audience</label> <input class="form-control"
-				id="audience" th:field="*{audience}" th:readonly="${!editMode}"
-				th:value="${lecture.getAudience().getRoomNumber()}" type="text" />
+		
+		<div class="input-group pb-3">
+			<span class="input-group-text bg-secondary text-white col-sm-1">Audience</span>
+			<input class="form-control" id="audience" th:field="*{audience}" th:readonly="${!editMode}" th:value="${lecture.getAudience().getRoomNumber()}" type="text"/>
+			<a class="btn btn-primary btn-sm " role="button" th:href="@{/lectures/{id}/edit(id=${lecture.getId()})}">Edit</a>
 		</div>
-		<div class="mb-3">
-			<label for="subject">Subject</label> <input class="form-control"
-				id="subject" th:field="*{subject}" th:readonly="${!editMode}"
-				th:value="${lecture.getSubject().getName()}" type="text" />
+		
+		<div class="input-group pb-3">
+			<span class="input-group-text bg-secondary text-white col-sm-1">Subject</span>
+			<input class="form-control" id="subject" th:field="*{subject}" th:readonly="${!editMode}" th:value="${lecture.getSubject().getName()}" type="text"/>
+			<a class="btn btn-primary btn-sm " role="button" th:href="@{/lectures/{id}/edit(id=${lecture.getId()})}">Edit</a>
 		</div>
-		<div class="mb-3">
-			<label for="teacher">Teacher</label> <input class="form-control"
-				id="teacher" th:field="*{teacher}" th:readonly="${!editMode}"
-				th:value="${lecture.getTeacher().getFirstName()} + ' ' + ${lecture.getTeacher().getLastName()}"
-				type="text" />
+		
+		<div class="input-group pb-3">
+			<span class="input-group-text bg-secondary text-white col-sm-1">Teacher</span>
+			<input class="form-control" id="teacher" th:field="*{teacher}" th:readonly="${!editMode}" th:value="${lecture.getTeacher().getFirstName()} + ' ' + ${lecture.getTeacher().getLastName()}" type="text"/>
+			<a class="btn btn-primary btn-sm " role="button" th:href="@{/lectures/{id}/edit(id=${lecture.getId()})}">Edit</a>
 		</div>
-		<div class="mb-3">
-			<label for="group">Group</label> <input class="form-control"
-				id="group" th:field="*{group}" th:readonly="${!editMode}"
-				th:value="${lecture.getGroup().getName()}" type="text" />
+		
+		<div class="input-group pb-3">
+			<span class="input-group-text bg-secondary text-white col-sm-1">Group</span>
+			<input class="form-control" id="group" th:field="*{group}" th:readonly="${!editMode}" th:value="${lecture.getGroup().getName()}" type="text"/>
+			<a class="btn btn-primary btn-sm " role="button" th:href="@{/lectures/{id}/edit(id=${lecture.getId()})}">Edit</a>
 		</div>
+		
+		 <div class="mb-3" th:if="${editMode}">
+            <a class="btn btn-secondary btn-sm" role="button" th:href="@{/students/{id}(id=${student.getId()})}">Cancel</a>
+            <button class="btn btn-primary btn-sm" type="submit">Save</button>
+        </div>
+		
 	</form>
 	
-	<div class="mb-3">
-        <form method="post" th:action="@{/lectures/{id}/delete(id=${lecture.getId()})}">
-            <a class="btn btn-primary btn-sm" role="button"
-               th:href="@{/lectures/{id}/edit(id=${lecture.getId()})}">Edit</a>
-            <button class="btn btn-danger btn-sm" onclick="return confirm('Are you sure?')" type="submit">Delete
-            </button>
+	<div class="mb-3" th:if="${!editMode && canEdit}">
+        <form method="post" th:action="@{/lectures/{id}/cancel(id=${lecture.getId()})}">
+            <button class="btn btn-danger btn-lg" onclick="return confirm('Are you sure?')" type="submit">Cancel lecture</button>
+            <a class="btn btn-warning btn-lg" role="button" th:href="@{/lectures/{id}/reschedule(id=${lecture.getId()})}">Reschedule lecture</a>
         </form>
     </div>
     

@@ -109,5 +109,23 @@ CREATE TABLE persons_roles (
     role_id int REFERENCES roles (role_id) ON UPDATE CASCADE ON DELETE CASCADE,
     CONSTRAINT PK_persons_roles PRIMARY KEY (person_id, role_id)
     );
-
+    
+CREATE TABLE archive_lectures (
+	lecture_id int NOT NULL UNIQUE,
+    lecture_date date NOT NULL,
+    session_id int NOT NULL,
+    audience_id int NOT NULL,
+    subject_id int NOT NULL,
+    teacher_id int NOT NULL,
+    group_id int NOT NULL,
+    status varchar(30) NOT NULL,
+    new_lecture_id int,
+    
+    CONSTRAINT FK_archive_lectures_sessions FOREIGN KEY (session_id) REFERENCES lecture_sessions (session_id), 
+    CONSTRAINT FK_archive_lectures_teachers FOREIGN KEY (teacher_id) REFERENCES teachers (teacher_id), 
+    CONSTRAINT FK_archive_lectures_audiences FOREIGN KEY (audience_id) REFERENCES audiences (audience_id), 
+    CONSTRAINT FK_archive_lectures_groups FOREIGN KEY (group_id) REFERENCES groups (group_id), 
+    CONSTRAINT FK_archive_lectures_subjects FOREIGN KEY (subject_id) REFERENCES subjects (subject_id),
+    CONSTRAINT FK_archive_lectures_lecture FOREIGN KEY (new_lecture_id) REFERENCES lectures (lecture_id) 
+    );
 

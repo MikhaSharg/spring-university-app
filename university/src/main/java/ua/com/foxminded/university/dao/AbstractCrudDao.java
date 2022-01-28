@@ -69,7 +69,6 @@ public abstract class AbstractCrudDao<T extends IdEntity> implements CrudDao<T, 
 	public void deleteById(Long id) {
 		if (jdbcTemplate.update(getDeleteByIdQuery(), id) != 1) {
 			throw new IllegalArgumentException("Unable to delete item with id " + id);
-
 		}
 	}
 

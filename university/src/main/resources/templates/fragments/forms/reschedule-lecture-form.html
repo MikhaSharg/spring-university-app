@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+</head>
+<body>
+	<row class="row" id="lecture" th:fragment="reschedule-lecture-form(editMode, canEdit)">
+
+	<form  th:action="@{/lectures/saveResheduledLecture}" th:object="${lecture}">
+		
+		<div class="input-group pb-3">
+			 <span class="input-group-text bg-secondary text-white col-sm-1">Date</span>
+			 <input class="form-control"  id="date" th:field="*{date}" th:readonly="true" type="text"/>
+		</div>
+		
+		<div class="input-group pb-3">
+			<span class="input-group-text bg-secondary text-white col-sm-1">Session</span>
+			<input class="form-control" id="session" th:field="*{session}" th:readonly="true"  type="text"/>
+		</div>
+		
+		
+		<div class="input-group pb-3">
+			<span class="input-group-text bg-secondary text-white col-sm-1">Subject</span>
+			<input class="form-control" id="subject"  th:readonly="true" th:field="*{subject}" type="text"/>
+		</div>
+		
+		<div class="input-group pb-3">
+			<span class="input-group-text bg-secondary text-white col-sm-1">Teacher</span>
+			<input class="form-control" id="teacher"  th:readonly="true" th:field="*{teacher}" type="text"/>
+		</div>
+		
+		<div class="input-group pb-3">
+			<span class="input-group-text bg-secondary text-white col-sm-1">Group</span>
+			<input class="form-control" id="group"  th:readonly="true" th:field="*{group}" type="text"/>
+		</div>
+		
+	</form>
+
+<form method="post" th:action="@{/lectures/saveResheduledLecture}" th:object="${audiences}">
+		
+		<div class="input-group pb-3">
+			<span class="input-group-text bg-secondary text-white col-sm-1">Audience</span>
+			<span class="input-group-text bg-secondary col-sm-3 bg-warning fw-bold fs-6">Please, choose audience</span>
+			<select class="form-select bg-warning" id="audience" th:field="*{roomNumber}" >
+				<option th:each="room : *{audiences}"
+					th:selected="${audiences!=null}" th:text="${room}"
+					th:value="${room}"></option>
+			</select>
+		</div>
+		<div class="mb-3" th:if="${editMode}">
+            <a class="btn btn-danger btn-lg" role="button" th:href="@{/lectures/{id}(id=${lecture.getOldLectureId()})}">Cancel</a>
+            <button class="btn btn-success btn-lg" type="submit">Save</button>
+        </div>
+		</form>
+
+    
+	</row>
+</body>
+</html>

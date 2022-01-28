@@ -3,8 +3,10 @@ package ua.com.foxminded.university.facade;
 import java.time.LocalDate;
 import java.util.List;
 
+import ua.com.foxminded.university.model.Audience;
 import ua.com.foxminded.university.model.Group;
 import ua.com.foxminded.university.model.Lecture;
+import ua.com.foxminded.university.model.LectureSessions;
 import ua.com.foxminded.university.model.Subject;
 import ua.com.foxminded.university.model.Teacher;
 import ua.com.foxminded.university.model.view.*;
@@ -15,11 +17,9 @@ public interface ControllersFacade {
     
     StudentView collectStudentForView(Long id);
     
-    LecturesView collectLecturesForCurrentDate();
-    
     List<LecturesView> collectLecturesByDateRange(LocalDate start, LocalDate end);
     
-    List<LecturesView> collectLecturesForGroupByDateRange(LocalDate start, LocalDate end, Long groupId);
+    LecturesGroup collectLecturesForGroupByDateRange(LocalDate start, LocalDate end, Long groupId);
 
     LecturesTeacher collectLecturesForTeacherByDateRange (LocalDate start, LocalDate end, Long teacherId);
     
@@ -40,5 +40,20 @@ public interface ControllersFacade {
 	SubjectView collectSubjectForView(Long subjectId);
 	
 	List <Group> collectAllGroupsForList();
+	
+	void cancelLecture (Long lectureId);
+	
+	FreeItemsView collectFreeItemsInSchedule (Long lectureId);
+	
+	LectureSessions findSessionById(Long sessionId);
+
+	List<Audience> collectAvailableAudiences(LocalDate date, Long sessionId);
+
+	Lecture saveRescheduleLecture(Lecture lecture);
+
+	
+	
+	
+	
 	
 }

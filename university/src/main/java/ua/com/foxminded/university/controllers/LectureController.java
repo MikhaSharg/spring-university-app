@@ -1,7 +1,5 @@
 package ua.com.foxminded.university.controllers;
 
-
-
 import java.time.LocalDate;
 import java.util.List;
 
@@ -13,12 +11,18 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import ua.com.foxminded.university.facade.ControllersFacade;
+import ua.com.foxminded.university.model.FreeItem;
 import ua.com.foxminded.university.model.Lecture;
+import ua.com.foxminded.university.model.view.AudienceForm;
 import ua.com.foxminded.university.model.view.DateRange;
+import ua.com.foxminded.university.model.view.FreeItemsView;
 import ua.com.foxminded.university.model.view.LecturesAudience;
+import ua.com.foxminded.university.model.view.LecturesGroup;
 import ua.com.foxminded.university.model.view.LecturesSubject;
 import ua.com.foxminded.university.model.view.LecturesTeacher;
 import ua.com.foxminded.university.model.view.LecturesView;
+import ua.com.foxminded.university.model.view.RescheduleLecture;
+import ua.com.foxminded.university.misc.Status;
 
 import static ua.com.foxminded.university.controllers.ControllerUtils.setTitle;
 
@@ -27,9 +31,10 @@ import static ua.com.foxminded.university.controllers.ControllerUtils.setTitle;
 public class LectureController {
 
 	private final ControllersFacade facade;
-
 	private LocalDate currentDate = LocalDate.now();
-
+	
+	private RescheduleLecture rescheduleLecture = new RescheduleLecture();
+	
 	public LectureController(ControllersFacade facade) {
 		this.facade = facade;
 	}
@@ -54,12 +59,12 @@ public class LectureController {
 
 	@GetMapping(path = "/groups/{id}")
 	String showLecturesForGroupForToday(@PathVariable(name = "id", required = true) Long id, Model model) {
-		List<LecturesView> lecturesViews = facade.collectLecturesForGroupByDateRange(currentDate,
+		LecturesGroup lecturesGroup = facade.collectLecturesForGroupByDateRange(currentDate,
 				currentDate, id);
-		model.addAttribute("lectures", lecturesViews);
+		model.addAttribute("lectures", lecturesGroup);
 		model.addAttribute("dateRange", new DateRange());
 		setTitle(model, "Lectures", 
-				String.format("group %s", lecturesViews.get(0).getLectures().get(0).getGroup().getName()),
+				String.format("group %s", lecturesGroup.getName()),
 				String.format("date %s", currentDate.toString()));
 		return "lectures/list-group";
 	}
@@ -67,11 +72,11 @@ public class LectureController {
 	@PostMapping(path = "/dateRangeGroup/{id}")
 	String showLecturesForGroupByDateRange(@PathVariable(name = "id", required = true) Long id, Model model,
 			DateRange dateRange) {
-		List<LecturesView> lecturesViews = facade.collectLecturesForGroupByDateRange(
+		LecturesGroup lecturesGroup = facade.collectLecturesForGroupByDateRange(
 				LocalDate.parse(dateRange.getStart()), LocalDate.parse(dateRange.getEnd()), id);
-		model.addAttribute("lectures", lecturesViews);
+		model.addAttribute("lectures", lecturesGroup);
 		setTitle(model, "Lectures", 
-				String.format("group %s", lecturesViews.get(0).getLectures().get(0).getGroup().getName()),
+				String.format("group %s", lecturesGroup.getName()),
 				String.format("dates %s_%s", dateRange.getStart(), dateRange.getEnd()));
 		return "lectures/list-group";
 	}
@@ -160,4 +165,64 @@ public class LectureController {
 				lecture.getGroup().getName());
 		return "lectures/view";
 	}
+	
+	@PostMapping(path = "/{id}/cancel")
+	String cancelLecture (@PathVariable (name = "id", required = true) Long id) {
+		facade.cancelLecture(id);
+		return "redirect:/lectures";
+	}
+	
+	@GetMapping(path = "/{id}/reschedule")
+	String resheduleLecture(@PathVariable(name = "id", required = true) Long id, Model model) {
+		FreeItemsView freeItemsView = facade.collectFreeItemsInSchedule(id);
+		model.addAttribute("freeItems", freeItemsView);
+		return "lectures/reschedule-lecture";
+	}
+	
+	@GetMapping(path = "/reschedule/lecture{lectureId}/item{hashCode}")
+	String showRescheduleLectureView(@PathVariable(name = "lectureId", required = true) Long lectureId, @PathVariable(name  = "hashCode") Integer hashCode, Model model) {
+		FreeItemsView freeItemsView = facade.collectFreeItemsInSchedule(lectureId);
+		FreeItem freeItem = freeItemsView.getFreeItems().stream().filter(item->item.hashCode()==hashCode).findAny().get();
+		
+		Lecture lecture = new Lecture(
+				freeItem.getDate(), 
+				facade.findSessionById(freeItem.getSessionId()), 
+				freeItemsView.getLecture().getSubject(),
+				freeItemsView.getLecture().getTeacher(), 
+				freeItemsView.getLecture().getGroup(),
+				true,
+				Status.RESCHEDULED,
+				freeItemsView.getLecture().getId());
+		
+		AudienceForm audienceForm = new AudienceForm(facade.collectAvailableAudiences(freeItem.getDate(), freeItem.getSessionId()));
+		System.out.println(freeItemsView);
+		rescheduleLecture.setNewLecture(lecture);
+		rescheduleLecture.setAudiences(audienceForm.getAudiences());
+		
+		if (freeItem.getLectureId()!=null) {
+			rescheduleLecture.getNewLecture().setId(freeItem.getLectureId());
+			rescheduleLecture.getNewLecture().setUpdate(true);
+		}
+		model.addAttribute("lecture", lecture);
+		model.addAttribute("audiences", audienceForm);
+		return "lectures/view-reschedule-lecture";
+	}
+	
+	@PostMapping (path = "/saveResheduledLecture")
+	String saveResheduledLecture(AudienceForm audienceForm, Model model) {
+		
+		Lecture lecture = rescheduleLecture.getNewLecture();
+		lecture.setAudience(rescheduleLecture.getAudiences().stream().filter(e->e.getRoomNumber().equals(audienceForm.getRoomNumber())).findAny().orElseThrow());
+		
+		Lecture savedLecture = facade.saveRescheduleLecture(lecture);
+		
+		model.addAttribute("lecture", savedLecture);
+		
+//		System.out.println("Was started");
+//		Lecture newLecture = facade.saveRescheduleLecture (lecture);
+//		model.addAttribute("newLecture", newLecture);
+		return "lectures/view";
+	}
+	
 }
+	

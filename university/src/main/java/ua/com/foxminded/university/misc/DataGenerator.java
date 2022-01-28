@@ -58,7 +58,7 @@ public class DataGenerator {
 
 		List<Student> students = generateUnique(DateGenerationUtils::student, config.getStudentCount());
 		students = studentDao.saveAll(
-				allocateStudents(groups, students, config.getGroupsMinStudents(), config.getGroupsMaxStudnets()));
+				allocateStudents(groups, students, config.getGroupsMinStudents(), config.getGroupsMaxStudenets()));
 		log.info("Generated {} students", students.size());
 
 		List<Teacher> teachers = teacherDao
@@ -68,7 +68,7 @@ public class DataGenerator {
 		List<Subject> subjects = subjectDao
 				.saveAll(generateUnique(DateGenerationUtils::subject, config.getTeacherCount()
 						* config.getMaxSubjectCountForOneTeacher() / config.getMaxTeacherCountForOneSubject()));
-		log.info("Generated {} teacherss", teachers.size());
+		log.info("Generated {} subjects", teachers.size());
 
 		allocateSubjetsToTeachers(teachers, subjects, config.getMaxSubjectCountForOneTeacher(),
 				config.getMaxTeacherCountForOneSubject());
@@ -81,7 +81,7 @@ public class DataGenerator {
 
 		List<Teacher> teachersWithSubjects = teacherDao.findAll();
 
-		List<LocalDate> studyDays = generateStudyDates(config.getHolidays());
+		List<LocalDate> studyDays = generateStudyDates(config.getHolidays(), config.getStartDate(), config.getEndDate());
 		log.info("Generated {} study days", studyDays.size());
 
 		List<Lecture> lectures = new ArrayList<>();

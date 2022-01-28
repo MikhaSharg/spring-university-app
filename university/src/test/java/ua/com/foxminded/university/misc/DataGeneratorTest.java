@@ -64,6 +64,8 @@ class DataGeneratorTest {
 		int expectedGroupsMinStudnets = 10;
 		int expectedAudienceCount = 20;
 		String expectedHolidays = "2021-06-01/2021-08-30, 2021-01-01/2021-01-10"; 
+		String expectedStartDate = "2021-01-01";
+		String expectedEndDate = "2021-12-31";
 		
 	config = new GeneratorConfig(expectedStudentCount, 
 			expectedGroupCount, 
@@ -73,7 +75,9 @@ class DataGeneratorTest {
 			expectedMaxSubjectCountForOneTeacher,
 			expectedMaxTeacherCountForOneSubject,
 			expectedAudienceCount,
-			expectedHolidays);	
+			expectedHolidays,
+			expectedStartDate,
+			expectedEndDate);	
 	
 	dataGenerator.generate(config);
 	List<Group> groups = groupDao.findAll();
@@ -103,7 +107,7 @@ class DataGeneratorTest {
 	List<LectureSessions> sessions = lectureSessionsDao.findAll();
 	assertThat(sessions.size()).isEqualTo(6);
 	
-	List<LocalDate> dates = DateGenerationUtils.generateStudyDates(expectedHolidays);
+	List<LocalDate> dates = DateGenerationUtils.generateStudyDates(expectedHolidays, expectedStartDate, expectedEndDate);
 	assertThat(dates.size()).isNotEqualTo(0);
 
 	List<Lecture> lectures = lectureDao.findAll();

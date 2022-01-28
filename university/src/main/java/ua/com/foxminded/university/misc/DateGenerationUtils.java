@@ -2,7 +2,6 @@ package ua.com.foxminded.university.misc;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
-import java.time.Period;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -18,7 +17,6 @@ import org.springframework.stereotype.Component;
 import ua.com.foxminded.university.model.Audience;
 import ua.com.foxminded.university.model.Group;
 import ua.com.foxminded.university.model.LectureSessions;
-import ua.com.foxminded.university.model.Person;
 import ua.com.foxminded.university.model.Student;
 import ua.com.foxminded.university.model.Subject;
 import ua.com.foxminded.university.model.Teacher;
@@ -121,9 +119,9 @@ public class DateGenerationUtils {
 		return Long.valueOf(89 + String.valueOf(ThreadLocalRandom.current().nextInt(100000000, 999999999)));
 	}
 
-	public static List<LocalDate> generateStudyDates(String holidays) {
+	public static List<LocalDate> generateStudyDates(String holidays, String startDate, String endDate) {
 		List<LocalDate[]> holidayDays = parseHolidays(holidays);
-		List<LocalDate> totalDays = generateDaysByRange(LocalDate.of(2020, 12, 31), LocalDate.of(2021, 12, 31));
+		List<LocalDate> totalDays = generateDaysByRange(LocalDate.parse(startDate), LocalDate.parse(endDate));
 		List<List<LocalDate>> listOfHolidays = new ArrayList<>();
 		for (LocalDate[] holiday : holidayDays) {
 			listOfHolidays.add(generateDaysByRange(holiday[0], holiday[1]));
@@ -140,7 +138,6 @@ public class DateGenerationUtils {
 		List<LocalDate[]> holidayRanges = new ArrayList<>();
 		for (String string : splitedDateRanges) {
 			String[] dates = string.split("/");
-
 			LocalDate[] arrayOfDates = new LocalDate[2];
 			arrayOfDates[0] = LocalDate.parse(dates[0]);
 			arrayOfDates[1] = LocalDate.parse(dates[1]);
@@ -157,7 +154,7 @@ public class DateGenerationUtils {
 		while (addedDays < daysInYear) {
 			day = day.plusDays(1);
 
-			if (day.getDayOfWeek() == DayOfWeek.SATURDAY) {
+			if (day.getDayOfWeek() == DayOfWeek.SUNDAY) {
 				day = day.plusDays(1);
 				addedDays++;
 			}

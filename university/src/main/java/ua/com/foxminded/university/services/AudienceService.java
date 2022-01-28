@@ -1,5 +1,7 @@
 package ua.com.foxminded.university.services;
 
+import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 
 import org.slf4j.Logger;
@@ -15,24 +17,31 @@ import ua.com.foxminded.university.model.Subject;
 @Transactional(readOnly = true)
 public class AudienceService {
 
-private final AudienceDao audienceDao;	
-	
-private static final Logger log = LoggerFactory.getLogger(LectureService.class);
+	private final AudienceDao audienceDao;
 
-public AudienceService(AudienceDao audienceDao) {
-	super();
-	this.audienceDao = audienceDao;
-}
+	private static final Logger log = LoggerFactory.getLogger(LectureService.class);
 
-public Audience findAudienceById (Long id) {
-	Optional<Audience> audience = audienceDao.findById(id);
-	
+	public AudienceService(AudienceDao audienceDao) {
+		super();
+		this.audienceDao = audienceDao;
+	}
+
+	public Audience findAudienceById(Long id) {
+		Optional<Audience> audience = audienceDao.findById(id);
+
 		if (audience.isPresent()) {
 			log.info("Finded audience {}, {}", audience.get().getId(), audience.get().getRoomNumber());
 		} else {
 			log.warn("Could not find audiece with ID {}", id);
 		}
 		return audience.get();
+	}
+
+	public List<Audience> findAllFreeAudiencesByDateAndSession(LocalDate date, Long SessinId) {
+		List<Audience> audiences = audienceDao.findAllFreeAudiencesByDateAndSession(date, SessinId);
+		log.info("Finded {} free audiences for date {} and sessio ID {}", audiences.size(), date, SessinId);
+		return audiences;
+
 	}
 
 }

@@ -12,8 +12,9 @@
 					<li aria-current="page" class="breadcrumb-item"><a href="/">Home</a></li>
 					<li aria-current="page" class="breadcrumb-item"><a
 						href="/lectures">Lectures</a></li>
-					<li aria-current="page" class="breadcrumb-item active"
-						th:text="'Group : ' + ${lectures.get(0).getLectures().get(0).getGroup().getName()}">Group</a></li>
+						<li aria-current="page" class="breadcrumb-item active"
+						th:text="'Group: ' + ${lectures.getName()}">Group</a></li>
+						
 				</ol>
 			</div>
 		</nav>

@@ -1,7 +1,7 @@
 package ua.com.foxminded.university.model;
 
-import java.sql.Date;
 import java.time.LocalDate;
+import java.util.Map;
 import java.util.Objects;
 
 public class Lecture extends IdEntity implements Comparable<Lecture> {
@@ -13,16 +13,25 @@ public class Lecture extends IdEntity implements Comparable<Lecture> {
 	private Teacher teacher;
 	private Group group;
 
+	private boolean modified; // if lecture was edited (but wasn't canceled)
+	private boolean archived; // if lecture was canceled or rescheduled and position became free
+	private boolean update; //
+	private String status;
+	private Map<String, Boolean> modifiedField;
+	private Long newLectureId;
+	private Long oldLectureId;
+
+	public Lecture() {
+	}
+
 	public Lecture(LocalDate date) {
 		super(null);
 		this.date = date;
-
 	}
 
 	public Lecture(Long id, LocalDate date) {
 		super(id);
 		this.date = date;
-
 	}
 
 	public Lecture(LocalDate date, LectureSessions session, Audience audience, Subject subject, Teacher teacher,
@@ -35,9 +44,9 @@ public class Lecture extends IdEntity implements Comparable<Lecture> {
 		this.teacher = teacher;
 		this.group = group;
 	}
-	
-	public Lecture(Long id, LocalDate date, LectureSessions session, Audience audience, Subject subject, Teacher teacher,
-			Group group) {
+
+	public Lecture(Long id, LocalDate date, LectureSessions session, Audience audience, Subject subject,
+			Teacher teacher, Group group) {
 		super(id);
 		this.date = date;
 		this.session = session;
@@ -46,9 +55,35 @@ public class Lecture extends IdEntity implements Comparable<Lecture> {
 		this.teacher = teacher;
 		this.group = group;
 	}
-  
 
-	public LocalDate getDate() {			
+	public Lecture(Long id, LocalDate date, LectureSessions session, Audience audience, Subject subject,
+			Teacher teacher, Group group, boolean archived, String status, Long newLectureId) {
+		super(id);
+		this.date = date;
+		this.session = session;
+		this.audience = audience;
+		this.subject = subject;
+		this.teacher = teacher;
+		this.group = group;
+		this.archived = archived;
+		this.status = status;
+		this.newLectureId = newLectureId;
+	}
+
+	public Lecture(LocalDate date, LectureSessions session, Subject subject, Teacher teacher, Group group,
+			boolean modified, String status, Long oldLectureId) {
+		super(null);
+		this.date = date;
+		this.session = session;
+		this.subject = subject;
+		this.teacher = teacher;
+		this.group = group;
+		this.modified = modified;
+		this.status = status;
+		this.oldLectureId = oldLectureId;
+	}
+
+	public LocalDate getDate() {
 		return date;
 	}
 
@@ -96,11 +131,68 @@ public class Lecture extends IdEntity implements Comparable<Lecture> {
 		this.group = group;
 	}
 
+	public boolean isModified() {
+		return modified;
+	}
+
+	public void setModified(boolean modified) {
+		this.modified = modified;
+	}
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
+	}
+
+	public boolean isArchived() {
+		return archived;
+	}
+
+	public void setArchived(boolean archived) {
+		this.archived = archived;
+	}
+
+	public Map<String, Boolean> getModifiedField() {
+		return modifiedField;
+	}
+
+	public void setModifiedField(Map<String, Boolean> modifiedField) {
+		this.modifiedField = modifiedField;
+	}
+
+	public Long getNewLectureId() {
+		return newLectureId;
+	}
+
+	public void setNewLectureId(Long newLectureId) {
+		this.newLectureId = newLectureId;
+	}
+
+	public Long getOldLectureId() {
+		return oldLectureId;
+	}
+
+	public void setOldLectureId(Long oldLectureId) {
+		this.oldLectureId = oldLectureId;
+	}
+
+	public boolean isUpdate() {
+		return update;
+	}
+
+	public void setUpdate(boolean update) {
+		this.update = update;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = super.hashCode();
-		result = prime * result + Objects.hash(audience, date, group, session, subject, teacher);
+		result = prime * result + Objects.hash(archived, audience, date, group, modified, modifiedField, newLectureId,
+				oldLectureId, session, status, subject, teacher, update);
 		return result;
 	}
 
@@ -113,15 +205,22 @@ public class Lecture extends IdEntity implements Comparable<Lecture> {
 		if (getClass() != obj.getClass())
 			return false;
 		Lecture other = (Lecture) obj;
-		return Objects.equals(audience, other.audience) && Objects.equals(date, other.date)
-				&& Objects.equals(group, other.group) && Objects.equals(session, other.session)
-				&& Objects.equals(subject, other.subject) && Objects.equals(teacher, other.teacher);
+		return archived == other.archived && Objects.equals(audience, other.audience)
+				&& Objects.equals(date, other.date) && Objects.equals(group, other.group) && modified == other.modified
+				&& Objects.equals(modifiedField, other.modifiedField)
+				&& Objects.equals(newLectureId, other.newLectureId) && Objects.equals(oldLectureId, other.oldLectureId)
+				&& Objects.equals(session, other.session) && Objects.equals(status, other.status)
+				&& Objects.equals(subject, other.subject) && Objects.equals(teacher, other.teacher)
+				&& update == other.update;
 	}
 
 	@Override
 	public String toString() {
-		return "Lecture [date=" + date + "\n, session=" + session + "\n, audience=" + audience + "\n, subject=" + subject
-				+ "\n, teacher=" + teacher + "\n, group=" + group + "\n, getId()=" + getId() + "]";
+		return "\n Lecture [\n date=" + date + "\n, session=" + session + "\n, audience=" + audience + "\n, subject="
+				+ subject + "\n, teacher=" + teacher + "\n, group=" + group + "\n, getId()=" + getId()
+				+ "\n, isModified()=" + isModified() + "\n, isArchived()=" + isArchived() + "\n, getStatus()="
+				+ getStatus() + "\n, oldLecureId=" + getOldLectureId() + "\n, newLecureId=" + getNewLectureId() + "] \n"
+				+ "\n";
 	}
 
 	@Override

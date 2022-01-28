@@ -9,6 +9,8 @@ import java.util.List;
 import javax.annotation.PostConstruct;
 
 import java.util.Arrays;
+import java.util.Collections;
+
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
@@ -115,6 +117,7 @@ class JdbcLectureDaoTest {
 				new Lecture(6L, date, lectureSessions6, audience3, subject2, teacher4, group3));
 
 		List<Lecture> actual = dao.findAll();
+		actual.sort((l1, l2) -> l1.getId().compareTo(l2.getId()));
 		assertThat(actual).isEqualTo(expected);
 	}
 
@@ -260,7 +263,6 @@ class JdbcLectureDaoTest {
 				.isEqualTo(36);
 
 	}
-	
 
 	@Test
 	@Sql(scripts = { "/sql/clean_db.sql", "/sql/lectures_test_values2.sql" })
@@ -292,7 +294,7 @@ class JdbcLectureDaoTest {
 		assertThrows(Exception.class, () -> dao.save(newLection2));
 
 		// Duplicate data-session-audience
-		
+
 		Audience audience3 = new Audience(1L, 100);
 		Teacher teacher3 = new Teacher(3L, "Roman", "Sidorov", "male", "RomanSidorov@gmail.com", "Moscow", 53,
 				89112568975L, "teacher", "Doctor of Technical Science");
@@ -302,7 +304,8 @@ class JdbcLectureDaoTest {
 
 		assertThrows(Exception.class, () -> dao.save(newLection3));
 
-}
+	}
+
 	@Test
 	@Sql(scripts = { "/sql/clean_db.sql", "/sql/lectures_test_values2.sql" })
 	void shouldFindLecturesForTeacherByDate() {
@@ -315,13 +318,13 @@ class JdbcLectureDaoTest {
 		LocalDate date = LocalDate.of(2021, 11, 12);
 		Lecture expected = new Lecture(7L, date, lectureSessions, audience, subject, teacher, group);
 		List<Lecture> expectedList = Arrays.asList(expected);
-		
+
 		List<Lecture> actual = dao.findLecturesForTeacherByDate(1L, LocalDate.of(2021, 11, 12));
 		assertThat(actual.size()).isEqualTo(1);
 		assertThat(actual).isEqualTo(expectedList);
-		
+
 	}
-	
+
 	@Test
 	@Sql(scripts = { "/sql/clean_db.sql", "/sql/lectures_test_values2.sql" })
 	void shouldFindLecturesForGroupByDate() {
@@ -334,10 +337,232 @@ class JdbcLectureDaoTest {
 		LocalDate date = LocalDate.of(2021, 11, 12);
 		Lecture expected = new Lecture(7L, date, lectureSessions, audience, subject, teacher, group);
 		List<Lecture> expectedList = Arrays.asList(expected);
-		
+
 		List<Lecture> actual = dao.findLecturesForTeacherByDate(1L, LocalDate.of(2021, 11, 12));
 		assertThat(actual.size()).isEqualTo(1);
 		assertThat(actual).isEqualTo(expectedList);
-		
+
 	}
+
+	@Test
+	@Sql(scripts = { "/sql/clean_db.sql", "/sql/lectures_test_values2.sql" })
+	void shouldFindLecturesBySessionAndGroupId() {
+
+		LectureSessions lectureSessions1 = new LectureSessions(1L, "1th", "8:00", "9:20");
+		LectureSessions lectureSessions2 = new LectureSessions(2L, "2th", "9:30", "10:50");
+		LectureSessions lectureSessions3 = new LectureSessions(3L, "3th", "11:00", "12:20");
+		LectureSessions lectureSessions4 = new LectureSessions(4L, "4th", "13:00", "14:20");
+		LectureSessions lectureSessions5 = new LectureSessions(5L, "5th", "14:30", "15:50");
+		LectureSessions lectureSessions6 = new LectureSessions(6L, "6th", "16:00", "17:20");
+
+		Audience audience1 = new Audience(1L, 100);
+		Audience audience2 = new Audience(2L, 101);
+		Audience audience3 = new Audience(3L, 102);
+		Audience audience4 = new Audience(4L, 103);
+		Audience audience5 = new Audience(5L, 104);
+
+		Subject subject1 = new Subject(1L, "Theory of probability and mathematical statistics");
+		Subject subject2 = new Subject(2L, "Theoretical mechanics");
+		Subject subject3 = new Subject(3L, "Architecture");
+		Subject subject4 = new Subject(4L, "Strength of materials");
+		Subject subject5 = new Subject(5L, "SAPR");
+
+		Teacher teacher1 = new Teacher(1L, "Alex", "Petrov", "male", "AlexPetrov@gmail.com", "Saint Petersburg", 68,
+				89313262896L, "teacher", "Professor");
+
+		Group group1 = new Group(1L, "AB-12");
+
+		LocalDate date1 = LocalDate.of(2021, 11, 11);
+		LocalDate date2 = LocalDate.of(2021, 11, 12);
+		LocalDate date3 = LocalDate.of(2021, 11, 13);
+		LocalDate date4 = LocalDate.of(2021, 11, 14);
+		LocalDate date5 = LocalDate.of(2021, 11, 15);
+		LocalDate date6 = LocalDate.of(2021, 11, 16);
+
+		List<Lecture> expected = Arrays.asList(
+				new Lecture(1L, date1, lectureSessions1, audience1, subject1, teacher1, group1),
+				new Lecture(7L, date2, lectureSessions1, audience1, subject1, teacher1, group1),
+				new Lecture(13L, date3, lectureSessions1, audience1, subject1, teacher1, group1),
+				new Lecture(19L, date4, lectureSessions1, audience1, subject1, teacher1, group1),
+				new Lecture(25L, date5, lectureSessions1, audience1, subject1, teacher1, group1),
+				new Lecture(31L, date6, lectureSessions1, audience1, subject1, teacher1, group1));
+
+		List<Lecture> actual = dao.findLecturesByTeacherAndGroupId(1L, 1L);
+		assertThat(expected).isEqualTo(actual);
+	}
+
+	@Test
+	@Sql(scripts = { "/sql/clean_db.sql", "/sql/archive_test_values.sql" })
+	void shouldFindAllLecturesFromArchiveByDateRange() {
+
+		LectureSessions lectureSessions1 = new LectureSessions(1L, "1th", "8:00", "9:20");
+		LectureSessions lectureSessions2 = new LectureSessions(2L, "2th", "9:30", "10:50");
+		LectureSessions lectureSessions3 = new LectureSessions(3L, "3th", "11:00", "12:20");
+		LectureSessions lectureSessions4 = new LectureSessions(4L, "4th", "13:00", "14:20");
+		LectureSessions lectureSessions5 = new LectureSessions(5L, "5th", "14:30", "15:50");
+		LectureSessions lectureSessions6 = new LectureSessions(6L, "6th", "16:00", "17:20");
+
+		Audience audience1 = new Audience(1L, 100);
+		Audience audience2 = new Audience(2L, 101);
+		Audience audience3 = new Audience(3L, 102);
+		Audience audience4 = new Audience(4L, 103);
+		Audience audience5 = new Audience(5L, 104);
+
+		Subject subject1 = new Subject(1L, "Theory of probability and mathematical statistics");
+		Subject subject2 = new Subject(2L, "Theoretical mechanics");
+		Subject subject3 = new Subject(3L, "Architecture");
+		Subject subject4 = new Subject(4L, "Strength of materials");
+		Subject subject5 = new Subject(5L, "SAPR");
+
+		Teacher teacher1 = new Teacher(1L, "Alex", "Petrov", "male", "AlexPetrov@gmail.com", "Saint Petersburg", 68,
+				89313262896L, "teacher", "Professor");
+
+		Teacher teacher2 = new Teacher(2L, "Anna", "Ermakova", "female", "AnnaErmakova@gmail.com", "Kaliningrad", 48,
+				89215895789L, "teacher", "Assistant Lecturer");
+		Teacher teacher3 = new Teacher(3L, "Roman", "Sidorov", "male", "RomanSidorov@gmail.com", "Moscow", 53,
+				89112568975L, "teacher", "Doctor of Technical Science");
+		Teacher teacher4 = new Teacher(4L, "Diana", "Gukova", "female", "DianaGukova@gmail.com", "Rostov", 52,
+				89225896325L, "teacher", "Senior Lecturer");
+		Teacher teacher5 = new Teacher(5L, "Dmitry", "Solodin", "male", "MikhailSolodin@gmail.com", "Andora", 56,
+				89052655985L, "teacher", "Candidate of Technical Science");
+
+		Group group1 = new Group(1L, "AB-12");
+		Group group2 = new Group(2L, "CD-34");
+		Group group3 = new Group(3L, "EF-56");
+		Group group4 = new Group(4L, "GH-78");
+		Group group5 = new Group(5L, "IJ-90");
+
+		LocalDate date1 = LocalDate.of(2021, 11, 11);
+		LocalDate date2 = LocalDate.of(2021, 11, 12);
+		LocalDate date3 = LocalDate.of(2021, 11, 13);
+		LocalDate date4 = LocalDate.of(2021, 11, 14);
+		LocalDate date5 = LocalDate.of(2021, 11, 15);
+		LocalDate date6 = LocalDate.of(2021, 11, 16);
+
+		List<Lecture> expected = Arrays.asList(
+				new Lecture(2L, date2, lectureSessions2, audience2, subject2, teacher2, group2, true,
+						"rescheduled to 20.11.2021", 6L),
+				new Lecture(1L, date1, lectureSessions1, audience1, subject1, teacher1, group1, true, "Lecture was canceled ",
+						null),
+				new Lecture(3L, date3, lectureSessions3, audience3, subject3, teacher3, group3, true,
+						"edited audience to", null));
+
+		List<Lecture> archivedLectures = dao.findArchivedLecturesForDateRange(LocalDate.of(2021, 11, 11),
+				LocalDate.of(2021, 11, 13));
+		assertThat(archivedLectures).isEqualTo(expected);
+	}
+
+	@Test
+	@Sql(scripts = { "/sql/clean_db.sql", "/sql/archive_test_values.sql" })
+	void shouldArchiveLecture() {
+		LectureSessions lectureSessions1 = new LectureSessions(1L, "1th", "8:00", "9:20");
+		LectureSessions lectureSessions2 = new LectureSessions(2L, "2th", "9:30", "10:50");
+		LectureSessions lectureSessions3 = new LectureSessions(3L, "3th", "11:00", "12:20");
+		LectureSessions lectureSessions4 = new LectureSessions(4L, "4th", "13:00", "14:20");
+		LectureSessions lectureSessions5 = new LectureSessions(5L, "5th", "14:30", "15:50");
+		LectureSessions lectureSessions6 = new LectureSessions(6L, "6th", "16:00", "17:20");
+
+		Audience audience1 = new Audience(1L, 100);
+		Audience audience2 = new Audience(2L, 101);
+		Audience audience3 = new Audience(3L, 102);
+		Audience audience4 = new Audience(4L, 103);
+		Audience audience5 = new Audience(5L, 104);
+
+		Subject subject1 = new Subject(1L, "Theory of probability and mathematical statistics");
+		Subject subject2 = new Subject(2L, "Theoretical mechanics");
+		Subject subject3 = new Subject(3L, "Architecture");
+		Subject subject4 = new Subject(4L, "Strength of materials");
+		Subject subject5 = new Subject(5L, "SAPR");
+
+		Teacher teacher1 = new Teacher(1L, "Alex", "Petrov", "male", "AlexPetrov@gmail.com", "Saint Petersburg", 68,
+				89313262896L, "teacher", "Professor");
+
+		Teacher teacher2 = new Teacher(2L, "Anna", "Ermakova", "female", "AnnaErmakova@gmail.com", "Kaliningrad", 48,
+				89215895789L, "teacher", "Assistant Lecturer");
+		Teacher teacher3 = new Teacher(3L, "Roman", "Sidorov", "male", "RomanSidorov@gmail.com", "Moscow", 53,
+				89112568975L, "teacher", "Doctor of Technical Science");
+		Teacher teacher4 = new Teacher(4L, "Diana", "Gukova", "female", "DianaGukova@gmail.com", "Rostov", 52,
+				89225896325L, "teacher", "Senior Lecturer");
+		Teacher teacher5 = new Teacher(5L, "Dmitry", "Solodin", "male", "MikhailSolodin@gmail.com", "Andora", 56,
+				89052655985L, "teacher", "Candidate of Technical Science");
+
+		Group group1 = new Group(1L, "AB-12");
+		Group group2 = new Group(2L, "CD-34");
+		Group group3 = new Group(3L, "EF-56");
+		Group group4 = new Group(4L, "GH-78");
+		Group group5 = new Group(5L, "IJ-90");
+
+		LocalDate date1 = LocalDate.of(2021, 11, 11);
+		LocalDate date2 = LocalDate.of(2021, 11, 12);
+		LocalDate date3 = LocalDate.of(2021, 11, 13);
+		LocalDate date4 = LocalDate.of(2021, 11, 14);
+		LocalDate date5 = LocalDate.of(2021, 11, 15);
+		LocalDate date6 = LocalDate.of(2021, 11, 16);
+
+		List<Lecture> expectedBeforeArchiveLecture = Arrays.asList(
+				new Lecture(2L, date2, lectureSessions2, audience2, subject2, teacher2, group2, false,
+						"rescheduled to 20.11.2021", 6L),
+				new Lecture(1L, date1, lectureSessions1, audience1, subject1, teacher1, group1, false, "Lecture was canceled ",
+						null),
+				new Lecture(3L, date3, lectureSessions3, audience3, subject3, teacher3, group3, false,
+						"edited audience to", null));
+
+		List<Lecture> expectedAfterArchiveLecture = Arrays.asList(
+				new Lecture(2L, date2, lectureSessions2, audience2, subject2, teacher2, group2, false,
+						"rescheduled to 20.11.2021", 6L),
+				new Lecture(1L, date1, lectureSessions1, audience1, subject1, teacher1, group1, false, "Lecture was canceled ",
+						null),
+				new Lecture(3L, date3, lectureSessions3, audience3, subject3, teacher3, group3, false,
+						"edited audience to", null),
+				new Lecture(4L, date4, lectureSessions4, audience4, subject4, teacher4, group4, false, "Lecture was canceled ",
+						null));
+		List<Lecture> expectedAfterArchiveLecture2 = Arrays.asList(
+				new Lecture(2L, date2, lectureSessions2, audience2, subject2, teacher2, group2, false,
+						"rescheduled to 20.11.2021", 6L),
+				new Lecture(1L, date1, lectureSessions1, audience1, subject1, teacher1, group1, false, "Lecture was canceled ",
+						null),
+				new Lecture(3L, date3, lectureSessions3, audience3, subject3, teacher3, group3, false,
+						"edited audience to", null),
+				new Lecture(4L, date4, lectureSessions4, audience4, subject4, teacher4, group4, false, "Lecture was canceled ",
+						null),
+				new Lecture(5L, date1, lectureSessions5, audience5, subject5, teacher5, group5, false,
+						"rescheduled to 15.11.2021", 7L));
+
+		List<Lecture> expectedAfterArchiveLecture3 = Arrays.asList(
+				new Lecture(2L, date2, lectureSessions2, audience2, subject2, teacher2, group2, false,
+						"rescheduled to 20.11.2021", 6L),
+				new Lecture(1L, date1, lectureSessions1, audience1, subject1, teacher1, group1, false, "Lecture was canceled ",
+						null),
+				new Lecture(3L, date3, lectureSessions3, audience3, subject3, teacher3, group3, false,
+						"edited audience to", null),
+				new Lecture(4L, date4, lectureSessions4, audience4, subject4, teacher4, group4, false, "Lecture was canceled ",
+						null),
+				new Lecture(5L, date1, lectureSessions5, audience5, subject5, teacher5, group5, false,
+						"rescheduled to 15.11.2021", 7L),
+				new Lecture(8L, date3, lectureSessions3, audience3, subject3, teacher3, group3, false,
+						"edited audience to 104", null));
+
+		Lecture canceledLecture = new Lecture(4L, date4, lectureSessions4, audience4, subject4, teacher4, group4, false,
+				"canceled", null);
+		Lecture rescheduledLecture = new Lecture(5L, date1, lectureSessions5, audience5, subject5, teacher5, group5,
+				false, "rescheduled to 15.11.2021", 7L);
+		Lecture editedLecture = new Lecture(8L, date3, lectureSessions3, audience3, subject3, teacher3, group3, false,
+				"edited audience to 104", null);
+
+		List<Lecture> actualBeforeArchive = dao.findArchivedLectures();
+		assertThat(actualBeforeArchive).isEqualTo(expectedBeforeArchiveLecture);
+
+		dao.archiveLecture(canceledLecture);
+		List<Lecture> actualAfterArchive = dao.findArchivedLectures();
+		assertThat(actualAfterArchive).isEqualTo(expectedAfterArchiveLecture);
+
+		dao.archiveLecture(rescheduledLecture);
+		List<Lecture> actualAfterArchive2 = dao.findArchivedLectures();
+		assertThat(actualAfterArchive2).isEqualTo(expectedAfterArchiveLecture2);
+
+		dao.archiveLecture(editedLecture);
+		List<Lecture> actualAfterArchive3 = dao.findArchivedLectures();
+		assertThat(actualAfterArchive3).isEqualTo(expectedAfterArchiveLecture3);
+	}
+
 }

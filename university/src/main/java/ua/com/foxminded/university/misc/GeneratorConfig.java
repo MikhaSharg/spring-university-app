@@ -35,22 +35,31 @@ public class GeneratorConfig {
 	@Value("${holidays}")
 	private String holidays;
 	
+	@Value("${startDate}")
+	private String startDate;
+	
+	@Value ("${endDate}")
+	private String endDate;
+	
 	public GeneratorConfig() {
 	}
 
 	public GeneratorConfig(Integer studentCount, Integer groupsCount, Integer groupsMinStudents,
 			Integer groupsMaxStudenets, Integer teacherCount, Integer maxSubjectCountForOneTeacher,
-			Integer maxTeacherCountForOneSubject, Integer audienceCount, String holidays) {
+			Integer maxTeacherCountForOneSubject, Integer audienceCount, String holidays, String startDate,
+			String endDate) {
 		super();
 		this.studentCount = studentCount;
 		this.groupsCount = groupsCount;
 		this.groupsMinStudents = groupsMinStudents;
 		this.groupsMaxStudenets = groupsMaxStudenets;
-		this.maxSubjectCountForOneTeacher=maxSubjectCountForOneTeacher;
-		this.maxTeacherCountForOneSubject=maxTeacherCountForOneSubject;
-		this.teacherCount=teacherCount;
-		this.audienceCount=audienceCount;
-		this.holidays=holidays;
+		this.teacherCount = teacherCount;
+		this.maxSubjectCountForOneTeacher = maxSubjectCountForOneTeacher;
+		this.maxTeacherCountForOneSubject = maxTeacherCountForOneSubject;
+		this.audienceCount = audienceCount;
+		this.holidays = holidays;
+		this.startDate = startDate;
+		this.endDate = endDate;
 	}
 
 	public Integer getStudentCount() {
@@ -77,12 +86,8 @@ public class GeneratorConfig {
 		this.groupsMinStudents = groupsMinStudents;
 	}
 
-	public Integer getGroupsMaxStudnets() {
+	public Integer getGroupsMaxStudenets() {
 		return groupsMaxStudenets;
-	}
-
-	public void setGroupsMaxStudnets(Integer groupsMaxStudnets) {
-		this.groupsMaxStudenets = groupsMaxStudnets;
 	}
 
 	public void setGroupsMaxStudenets(Integer groupsMaxStudenets) {
@@ -101,6 +106,10 @@ public class GeneratorConfig {
 		return maxSubjectCountForOneTeacher;
 	}
 
+	public void setMaxSubjectCountForOneTeacher(Integer maxSubjectCountForOneTeacher) {
+		this.maxSubjectCountForOneTeacher = maxSubjectCountForOneTeacher;
+	}
+
 	public Integer getMaxTeacherCountForOneSubject() {
 		return maxTeacherCountForOneSubject;
 	}
@@ -117,16 +126,28 @@ public class GeneratorConfig {
 		this.audienceCount = audienceCount;
 	}
 
-	public void setMaxSubjectCountForOneTeacher(Integer maxSubjectCountForOneTeacher) {
-		this.maxSubjectCountForOneTeacher = maxSubjectCountForOneTeacher;
-	}
-
 	public String getHolidays() {
 		return holidays;
 	}
 
 	public void setHolidays(String holidays) {
 		this.holidays = holidays;
+	}
+
+	public String getStartDate() {
+		return startDate;
+	}
+
+	public void setStartDate(String startDate) {
+		this.startDate = startDate;
+	}
+
+	public String getEndDate() {
+		return endDate;
+	}
+
+	public void setEndDate(String endDate) {
+		this.endDate = endDate;
 	}
 	
 }

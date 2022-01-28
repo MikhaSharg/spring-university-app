@@ -1,8 +1,10 @@
 package ua.com.foxminded.university.dao.jdbc;
 
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Types;
+import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -31,6 +33,7 @@ public class JdbcAudienceDao extends AbstractCrudDao<Audience> implements Audien
 	private static final String INSERT_ONE_NAMED = "INSERT INTO audiences (room_number) VALUES (:ROOM_NUMBER)";
 	private static final String UPDATE_ONE_NAMED = "UPDATE audiences SET room_number=:ROOM_NUMBER  WHERE audience_id=:ID";
 	private static final String SELECT_ALL = "SELECT * FROM audiences";
+	private static final String SELECT_ALL_FREE_AUDIENCES = "SELECT * FROM audiences WHERE audience_id NOT IN (SELECT audience_id FROM lectures WHERE lecture_date=? AND session_id =?)";
 
 	public JdbcAudienceDao(JdbcTemplate jdbsTemplate, RowMapper<Audience> rowMapper) {
 		super(jdbsTemplate, rowMapper);
@@ -134,4 +137,9 @@ public class JdbcAudienceDao extends AbstractCrudDao<Audience> implements Audien
 		}
 	}
 
+	@Override
+	public List<Audience> findAllFreeAudiencesByDateAndSession(LocalDate date, Long sessinId) {
+		return jdbcTemplate.query(SELECT_ALL_FREE_AUDIENCES, ps->{ps.setDate(1, Date.valueOf(date)); ps.setLong(2, sessinId);}, rowMapper);
+	}
+	
 }
