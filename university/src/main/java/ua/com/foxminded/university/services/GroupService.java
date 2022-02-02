@@ -2,6 +2,7 @@ package ua.com.foxminded.university.services;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -10,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import ua.com.foxminded.university.dao.GroupDao;
 import ua.com.foxminded.university.misc.DataGenerator;
+import ua.com.foxminded.university.misc.GeneratorConfig;
 import ua.com.foxminded.university.model.Group;
 import ua.com.foxminded.university.model.Student;
 
@@ -20,10 +22,12 @@ public class GroupService {
 	private static final Logger log = LoggerFactory.getLogger(GroupService.class);
 	private final GroupDao groupDao;
 	private final StudentService studentService;
+	private final GeneratorConfig config;
 
-	public GroupService(GroupDao groupDao, StudentService studentService) {
+	public GroupService(GroupDao groupDao, StudentService studentService, GeneratorConfig config) {
 		this.groupDao = groupDao;
 		this.studentService = studentService;
+		this.config=config;
 	}
 
 	Group saveGroup(Group newGroup) {
@@ -49,21 +53,33 @@ public class GroupService {
 		});
 
 		if (!groups.isEmpty()) {
-			log.info("Finded {} groups", groups.size());
+			log.info("Found {} groups", groups.size());
 		} else {
+			log.warn("Could not find any groups");
 		}
-		log.warn("Could not find any groups");
+		
 		return groups;
 	}
 
 	public Group findGroupById(Long groupId) {
 		Optional<Group> group = groupDao.findById(groupId);
 		if (!group.isEmpty()) {
-			log.info("Finded group with Id {}", groupId);
+			log.info("Found group with Id {}", groupId);
 		} else {
 			log.warn("Could not find group {}", group);
 		}
 		return group.get();
 	}
 
+	public List<Group> findAllNotFullGroups() {
+		List<Group> allGroups =	this.findAllExistGroups();
+		int maxSizeStudentInOneGroup = config.getGroupsMaxStudenets();
+		List<Group> notFullGroups = allGroups.stream().filter(gr->gr.getStudents().size()<maxSizeStudentInOneGroup).collect(Collectors.toList());
+		if (!notFullGroups.isEmpty()) {
+			log.info("Found {} not full groups. Max count of students in one group is {}", notFullGroups.size(), config.getGroupsMaxStudenets());
+		} else {
+			log.warn("All groups are full");
+		}
+		return notFullGroups; 
+	}
 }

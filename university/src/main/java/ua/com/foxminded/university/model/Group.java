@@ -8,6 +8,10 @@ public class Group extends IdEntity {
 	private String name;
 	private List<Student> students;
 
+	public Group() {
+		super();
+	}
+
 	public Group(Long id, String name, List<Student> students) {
 		super(id);
 		this.name = name;
@@ -30,7 +34,6 @@ public class Group extends IdEntity {
 		super(id);
 		this.name = name;
 		this.students = new ArrayList<>();
-
 	}
 
 	public String getName() {

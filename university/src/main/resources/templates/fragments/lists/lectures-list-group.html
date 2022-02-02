@@ -40,13 +40,14 @@
 					<th scope="col">Teacher</th>
 					<th scope="col">Audience</th>
 				</tr>
+				
 				<tr th:if="${lectures.getLectures().isEmpty()}">
 					<td class="bg-warning" colspan="5">No Lectures Available</td>
 				</tr>
 				<th:block th:each="instance : ${lectures.getLectures()}">
 					<tr>
 						<td colspan="5" style="text-align: center"
-							class="bg-secondary text-white h5" th:text="${instance.key}">...</td>
+							class="bg-secondary text-white h5" th:text="'Lectures :' + ' ' + ${instance.key}">...</td>
 					</tr>
 
 					<div th:each="lecture : ${instance.value}">
@@ -106,6 +107,6 @@
 			</table>
 		</div>
 	</div>
-	<row />
+	</row>
 </body>
 </html>

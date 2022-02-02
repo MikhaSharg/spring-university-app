@@ -14,6 +14,7 @@ import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Controller;
 
+import ua.com.foxminded.university.misc.GeneratorConfig;
 import ua.com.foxminded.university.model.*;
 import ua.com.foxminded.university.model.view.*;
 import ua.com.foxminded.university.services.*;
@@ -28,10 +29,11 @@ public class ControllersFacadeImpl implements ControllersFacade {
 	private final SubjectService subjectService;
 	private final AudienceService audienceService;
 	private final SessionService sessionService;
+	private final GeneratorConfig generatorConfig;
 
 	public ControllersFacadeImpl(StudentService studentService, GroupService groupService,
 			LectureService lectureService, TeacherService teacherService, SubjectService subjectService,
-			AudienceService audieenceService, SessionService sessionService) {
+			AudienceService audieenceService, SessionService sessionService, GeneratorConfig generatorConfig) {
 		this.studentService = studentService;
 		this.groupService = groupService;
 		this.lectureService = lectureService;
@@ -39,6 +41,7 @@ public class ControllersFacadeImpl implements ControllersFacade {
 		this.subjectService = subjectService;
 		this.audienceService = audieenceService;
 		this.sessionService = sessionService;
+		this.generatorConfig=generatorConfig;
 	}
 
 	private Map<Long, Group> collectGroupsFromStudents(Collection<Student> students) {
@@ -198,4 +201,15 @@ public class ControllersFacadeImpl implements ControllersFacade {
 		return new TreeMap<>(unsortedMap);
 	}
 
+	@Override
+	public List<Group> collectAllNotFullGroups() {
+		return groupService.findAllNotFullGroups();
+	}
+
+	@Override
+	public Long saveNewStudent(Student student) {
+		return studentService.saveStudent(student).getId();
+	}
+	
+	
 }

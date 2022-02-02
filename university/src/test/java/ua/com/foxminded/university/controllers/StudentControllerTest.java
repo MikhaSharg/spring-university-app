@@ -21,6 +21,7 @@ import ua.com.foxminded.university.model.Group;
 import ua.com.foxminded.university.model.Student;
 import ua.com.foxminded.university.model.view.StudentView;
 import ua.com.foxminded.university.model.view.StudentsView;
+import ua.com.foxminded.university.wrappers.StudentRegistration;
 
 @WebMvcTest(StudentController.class)
 class StudentControllerTest {
@@ -96,4 +97,15 @@ class StudentControllerTest {
 				.andExpect(content().string(containsString(student.getPhoneNumber().toString())))
 				.andExpect(content().string(containsString(group.getName())));
 	}
+	
+	@Test
+	void shouldShowNewStudentRegistrationForm() throws Exception {
+		Group group = groups.get(1L);
+		
+		when(controllersFacade.collectAllNotFullGroups()).thenReturn(Arrays.asList(group));
+		mockMvc.perform(get("/students/registerNewStudent"))
+		.andExpect(status().isOk()).andExpect(content().string(containsString("Students/new student registration")));
+		
+	}
+	
 }

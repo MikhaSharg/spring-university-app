@@ -1,9 +1,11 @@
 package ua.com.foxminded.university.model;
 
 import java.util.Set;
+import javax.validation.constraints.*;
 
 public abstract class AbstractPerson extends IdEntity {
 
+	
 	private String firstName;
 	private String lastName;
 	private String gender;

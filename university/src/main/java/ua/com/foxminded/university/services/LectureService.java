@@ -5,14 +5,11 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
 import java.util.stream.Collectors;
 
-import org.apache.catalina.filters.ExpiresFilter.XServletOutputStream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -20,16 +17,12 @@ import org.springframework.transaction.annotation.Transactional;
 
 import ua.com.foxminded.university.dao.LectureDao;
 import ua.com.foxminded.university.dao.LectureSessionsDao;
-import ua.com.foxminded.university.misc.DataGenerator;
 import ua.com.foxminded.university.misc.DateGenerationUtils;
 import ua.com.foxminded.university.misc.GeneratorConfig;
 import ua.com.foxminded.university.misc.Status;
 import ua.com.foxminded.university.model.Lecture;
 import ua.com.foxminded.university.model.LectureSessions;
-import ua.com.foxminded.university.model.ArchivedLecture;
 import ua.com.foxminded.university.model.FreeItem;
-import ua.com.foxminded.university.model.Student;
-import ua.com.foxminded.university.model.Teacher;
 
 @Service
 @Transactional

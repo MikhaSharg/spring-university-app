@@ -140,9 +140,10 @@ class LectureServiceTest {
 		when(generatorConfig.getStartDate()).thenReturn(startDate);
 		when(generatorConfig.getEndDate()).thenReturn(endDate);
 
-		List<FreeItem> expected = Arrays.asList(new FreeItem(date1, 1l, 1l));
+		List<FreeItem> expected = new ArrayList<>();
+		expected.add(new FreeItem(date1, 1L, 1L));
 		if (date3.getDayOfWeek() != DayOfWeek.SUNDAY) {
-			expected.add(new FreeItem(date3, 1l));
+			expected.add(new FreeItem(date3, 1L));
 		}
 		List<FreeItem> actual = lectureService.findAllFreeItemsInSchedule(teacherId, groupId);
 		assertThat(actual).isEqualTo(expected);

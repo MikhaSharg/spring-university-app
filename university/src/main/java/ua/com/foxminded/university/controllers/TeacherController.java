@@ -36,8 +36,5 @@ public class TeacherController {
 				teacher.getLastName(), teacher.getProfile()));
 		return "teachers/view";
 	}
-	
-	
-	
 
 }

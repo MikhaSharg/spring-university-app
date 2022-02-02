@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+</head>
+<body>
+	<row class="row" id="student" th:fragment="student-form-registration">
+
+	<form method="post" th:action="@{/students/newStudentRegistration}"
+		th:object="${student}">
+
+		<div class="mb-3">
+			<label for="firstName">First Name</label> <input class="form-control"
+				id="firstName" th:field="*{firstName}" type="text">
+		</div>
+		<div class="mb-3">
+			<label for="lastName">Last Name</label> <input class="form-control"
+				id="lastName" th:field="*{lastName}" type="text">
+			<div class="mb-3">
+				<label for="gender">Gender</label> <select
+					class="form-select bg-warning" id="gender" th:field="*{gender}">
+					<option th:each="gender : *{genders}"
+						th:selected="*{genders!=null}" th:text="${gender}"
+						th:value="${gender}"></option>
+				</select>
+			</div>
+			<div class="mb-3">
+				<label for="email">Email</label> <input class="form-control"
+					id="email" th:field="*{email}" type="text">
+			</div>
+			<div class="mb-3">
+				<label for="address">Address</label> <input class="form-control"
+					id="address" th:field="*{address}" type="text">
+			</div>
+			<div class="mb-3">
+				<label for="age">Age</label> <input class="form-control" id="age"
+					th:field="*{age}" type="text">
+			</div>
+			<div class="mb-3">
+				<label for="phoneNumber">Phone Number</label> <input
+					class="form-control" id="phoneNumber" th:field="*{phoneNumber}"
+					type="text">
+			</div>
+			<div class="mb-3">
+				<label for="group">Group</label> <select
+					class="form-select bg-warning" id="groupName"
+					th:field="*{groupName}">
+					<option th:each="group : *{avaliableGroups}"
+						th:selected="*{avaliableGroups!=null}"
+						th:text="${group.getName()}" th:value="${group}"></option>
+				</select>
+			</div>
+			<div class="mb-3">
+				<a class="btn btn-secondary btn-sm" role="button"
+					th:href="@{/students}">Cancel</a>
+				<button class="btn btn-danger btn-sm" type="submit">Save</button>
+			</div>
+	</form>
+	</row>
+</body>
+</html>

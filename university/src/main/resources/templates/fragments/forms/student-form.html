@@ -8,7 +8,7 @@
 
 	<div class="d-grid">
 		<a class="btn btn-primary btn-sm h5" role="button"
-			th:href="@{/lectures/groups/{id}(id=${student.getGroupId()})}">Shedule</a>
+			th:href="@{/lectures/groups/{id}(id=${student.getGroupId()})}">Schedule</a>
 	</div>
 
 	<form method="post"
@@ -17,42 +17,39 @@
 
 		<div class="mb-3">
 			<label for="firstName">First Name</label> <input class="form-control"
-				id="firstName" th:field="*{firstName}"
-				th:readonly="${!editMode}"
+				id="firstName" th:field="*{firstName}" th:readonly="${!editMode}"
 				th:value="
 				${student.getFirstName()}" type="text">
 		</div>
 
 		<div class="mb-3">
 			<label for="lastName">Last Name</label> <input class="form-control"
-				id="lastName" th:field="*{lastName}"
-				th:readonly="${!editMode}"
+				id="lastName" th:field="*{lastName}" th:readonly="${!editMode}"
 				th:value="
 				${student.getLastName()}" type="text">
 		</div>
 		<div class="mb-3">
 			<label for="gender">Gender</label> <input class="form-control"
-				id="gender" th:field="*{gender}"
-				th:readonly="${!editMode}" th:value="
-				${student.getGender()}"
-				type="text">
+				id="gender" th:field="*{gender}" th:readonly="${!editMode}"
+				th:value="
+				${student.getGender()}" type="text">
 		</div>
 		<div class="mb-3">
 			<label for="email">Email</label> <input class="form-control"
-				id="email" th:field="*{email}" th:readonly="${!editMode}" th:value="
-				${student.getEmail()}"
-				type="text">
+				id="email" th:field="*{email}" th:readonly="${!editMode}"
+				th:value="
+				${student.getEmail()}" type="text">
 		</div>
 		<div class="mb-3">
 			<label for="address">Address</label> <input class="form-control"
-				id="address" th:field="*{address}"
-				th:readonly="${!editMode}"
+				id="address" th:field="*{address}" th:readonly="${!editMode}"
 				th:value="
 				${student.getAddress()}" type="text">
 		</div>
 		<div class="mb-3">
 			<label for="age">Age</label> <input class="form-control" id="age"
-				th:field="*{age}" th:readonly="${!editMode}" th:value="
+				th:field="*{age}" th:readonly="${!editMode}"
+				th:value="
 				${student.getAge()}" type="text">
 		</div>
 		<div class="mb-3">
@@ -64,11 +61,15 @@
 		</div>
 		<div class="mb-3">
 			<label for="groupName">Group</label> <input class="form-control"
-				id="groupName" th:value="${group.name}"
-				th:readonly="${!editMode}" type="text">
+				id="groupName" th:value="${group.name}" th:readonly="${!editMode}"
+				type="text">
+		</div>
+		<div class="mb-3" th:if="${editMode}">
+			<a class="btn btn-secondary btn-sm" role="button"
+				th:href="@{/students/list}">Cancel</a>
+			<button class="btn btn-danger btn-sm" type="submit">Save</button>
 		</div>
 	</form>
-
 	<div class="mb-3" th:if="${!editMode && canEdit}">
 		<form method="post"
 			th:action="@{/students/{id}/cancel(id=${student.getId()})}">

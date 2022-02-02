@@ -12,7 +12,7 @@ import ua.com.foxminded.university.dao.StudentDao;
 import ua.com.foxminded.university.model.Student;
 
 @Service
-@Transactional(readOnly = true)
+@Transactional
 public class StudentService {
 
 	private final StudentDao studentDao;
@@ -23,7 +23,7 @@ public class StudentService {
 		this.studentDao = studentDao;
 	}
 
-	Student saveStudent(Student newStudent) {
+	public Student saveStudent(Student newStudent) {
 		Student student = studentDao.save(newStudent);
 		if (newStudent.getId() != null) {
 			log.info("Updated student {}, {}, {}", student.getId(), student.getFirstName(), student.getLastName());
@@ -75,4 +75,5 @@ public class StudentService {
 		studentDao.setGroupToStudent(groupId, studentId);
 		log.info("Set group with ID {} for Student ID {}", groupId, studentId);
 	}
+	
 }

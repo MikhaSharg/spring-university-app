@@ -4,16 +4,17 @@
 </head>
 <body>
 	<row class="row" id="lectures" th:fragment="lectures-list-teacher">
-	
-	<div class="container" >
+
+	<div class="container">
 
 		<div class="container">
-			<form method="post" th:action="@{/lectures/dateRangeTeacher/{id}(id=${lectures.getId()})}"
+			<form method="post"
+				th:action="@{/lectures/dateRangeTeacher/{id}(id=${lectures.getId()})}"
 				th:object="${dateRange}">
 				<div class="row">
 					<div class="col">
-						<label for="date" class="form-label">Start date:</label> 
-						<input type="date" class="form-control" th:field="*{start}" name="start"
+						<label for="date" class="form-label">Start date:</label> <input
+							type="date" class="form-control" th:field="*{start}" name="start"
 							id="start">
 					</div>
 					<div class="col">
@@ -29,6 +30,7 @@
 		</div>
 
 		<div class="container pt-3" style="text-align: center">
+		
 			<table class="table table-striped table-bordered table-hover">
 				<tr>
 					<th scope="col">Session</th>
@@ -36,23 +38,66 @@
 					<th scope="col">Group</th>
 					<th scope="col">Audience</th>
 				</tr>
-				 <tr th:if="${lectures.getLectures() == null}">
-            <td colspan="5"> No Lectures Available</td>
-        </tr>
-				<th:block th:each = "instance : ${lectures.getLectures()}">
+
+				<tr th:if="${lectures.getLectures().isEmpty()}">
+					<td class="bg-warning" colspan="5">No Lectures Available</td>
+				</tr>
+
+				<th:block th:each="instance : ${lectures.getLectures()}">
+
+
 					<tr>
 						<td colspan="5" style="text-align: center"
 							class="bg-secondary text-white h5"
 							th:text="'Lectures :' + ' ' + ${instance.key}">...</td>
 					</tr>
 
-					<tr th:each="lecture : ${instance.value}" th:onclick="'window.location.href=\'/lectures/' + ${lecture.getId()} + '\''">
+					<div th:each="lecture : ${instance.value}">
+
+						<span th:switch="${lecture.isArchived()}"> <span
+							th:case="false"> <span th:switch="${lecture.isModified()}">
+
+									<span th:case="false">
+					<tr
+						th:onclick="'window.location.href=\'/lectures/' + ${lecture.getId()} + '\''">
 						<td th:text="${lecture.getSession().getPeriod()}">...</td>
 						<td th:text="${lecture.getSubject().getName()}">...</td>
-						<td
-							th:text="${lecture.getGroup().getName()}">...</td>
+						<td th:text="${lecture.getGroup().getName()}">...</td>
 						<td th:text="${lecture.getAudience().getRoomNumber()}">...</td>
 					</tr>
+					</span>
+
+					<span th:case="true">
+						<tr>
+							<td colspan="5" style="text-aligh: center"
+								class="bg-warning text-dark fw-bold" th:text="${lecture.getStatus()}">...</td>
+						</tr>
+						<tr class="bg-warning text-dark">
+							<td th:text="${lecture.getSession().getPeriod()}">...</td>
+							<td th:text="${lecture.getSubject().getName()}">...</td>
+							<td th:text="${lecture.getGroup().getName()}">...</td>
+							<td th:text="${lecture.getAudience().getRoomNumber()}">...</td>
+						</tr>
+					</span>
+					</span>
+					</span>
+
+					<span th:case="${true}">
+						<tr>
+							<td colspan="5" style="text-aligh: center"
+								class="bg-danger text-light fw-bold" th:text="${lecture.getStatus()}">...</td>
+						</tr>
+						<tr class="bg-danger text-light">
+							<td th:text="${lecture.getSession().getPeriod()}">...</td>
+							<td th:text="${lecture.getSubject().getName()}">...</td>
+							<td th:text="${lecture.getGroup().getName()}">...</td>
+							<td th:text="${lecture.getAudience().getRoomNumber()}">...</td>
+						</tr>
+					</span>
+					</span>
+					</div>
+
+
 				</th:block>
 			</table>
 		</div>
