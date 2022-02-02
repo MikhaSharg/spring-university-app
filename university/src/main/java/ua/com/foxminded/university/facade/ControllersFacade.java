@@ -18,6 +18,8 @@ public interface ControllersFacade {
     StudentsView collectAllStudentsForView();
     StudentView collectStudentForView(Long id);
     Long saveNewStudent(Student student);
+    Student updateStudent (Student student);
+    void deleteStudent(Long id);
     
     //lectures
     List<LecturesView> collectLecturesByDateRange(LocalDate start, LocalDate end);

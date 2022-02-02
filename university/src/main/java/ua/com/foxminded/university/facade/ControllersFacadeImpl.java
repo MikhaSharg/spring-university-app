@@ -41,7 +41,7 @@ public class ControllersFacadeImpl implements ControllersFacade {
 		this.subjectService = subjectService;
 		this.audienceService = audieenceService;
 		this.sessionService = sessionService;
-		this.generatorConfig=generatorConfig;
+		this.generatorConfig = generatorConfig;
 	}
 
 	private Map<Long, Group> collectGroupsFromStudents(Collection<Student> students) {
@@ -210,6 +210,15 @@ public class ControllersFacadeImpl implements ControllersFacade {
 	public Long saveNewStudent(Student student) {
 		return studentService.saveStudent(student).getId();
 	}
-	
-	
+
+	@Override
+	public Student updateStudent(Student student) {
+		return studentService.saveStudent(student);
+	}
+
+	@Override
+	public void deleteStudent(Long id) {
+		studentService.deleteStudentById(id);
+	}
+
 }

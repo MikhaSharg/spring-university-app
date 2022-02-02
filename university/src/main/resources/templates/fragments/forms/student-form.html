@@ -6,7 +6,7 @@
 	<row class="row" id="student"
 		th:fragment="student-form(editMode, canEdit)">
 
-	<div class="d-grid">
+	<div class="d-grid" th:if="${!editMode && canEdit}">
 		<a class="btn btn-primary btn-sm h5" role="button"
 			th:href="@{/lectures/groups/{id}(id=${student.getGroupId()})}">Schedule</a>
 	</div>
@@ -28,12 +28,20 @@
 				th:value="
 				${student.getLastName()}" type="text">
 		</div>
-		<div class="mb-3">
+		<div class="mb-3" th:if="${!editMode && canEdit}">
 			<label for="gender">Gender</label> <input class="form-control"
 				id="gender" th:field="*{gender}" th:readonly="${!editMode}"
 				th:value="
 				${student.getGender()}" type="text">
 		</div>
+		<div class="mb-3" th:if="${editMode && canEdit}">
+			<label for="gender">Gender</label> <select
+				class="form-select bg-warning" id="gender" th:field="*{gender}">
+				<option th:each="gender : *{genders}" th:selected="*{genders!=null}"
+					th:text="${gender}" th:value="${gender}"></option>
+			</select>
+		</div>
+
 		<div class="mb-3">
 			<label for="email">Email</label> <input class="form-control"
 				id="email" th:field="*{email}" th:readonly="${!editMode}"
@@ -58,21 +66,32 @@
 				th:readonly="${!editMode}"
 				th:value="
 				${student.getPhoneNumber()}" type="text">
+
 		</div>
-		<div class="mb-3">
+		<div class="mb-3" th:if="${!editMode && canEdit}">
 			<label for="groupName">Group</label> <input class="form-control"
 				id="groupName" th:value="${group.name}" th:readonly="${!editMode}"
 				type="text">
 		</div>
-		<div class="mb-3" th:if="${editMode}">
-			<a class="btn btn-secondary btn-sm" role="button"
-				th:href="@{/students/list}">Cancel</a>
-			<button class="btn btn-danger btn-sm" type="submit">Save</button>
+		<div class="mb-3" th:if="${editMode && canEdit}">
+			<label for="group">Group</label> <select
+				class="form-select bg-warning" id="groupName"
+				th:field="*{groupName}">
+				<option th:each="group : *{avaliableGroups}"
+					th:selected="*{avaliableGroups!=null}" th:text="${group.getName()}"
+					th:value="${group}"></option>
+			</select>
 		</div>
+		<div class="mb-3" th:if="${editMode && canEdit}">
+			<a class="btn btn-danger btn-sm" role="button"
+				th:href="@{/students/{id}(id=${student.getId()})}">Cancel</a>
+			<button class="btn btn-success btn-sm" type="submit">Save</button>
+		</div>
+
 	</form>
 	<div class="mb-3" th:if="${!editMode && canEdit}">
 		<form method="post"
-			th:action="@{/students/{id}/cancel(id=${student.getId()})}">
+			th:action="@{/students/{id}/delete(id=${student.getId()})}">
 			<a class="btn btn-primary btn-sm" role="button"
 				th:href="@{/students/{id}/edit(id=${student.getId()})}">Edit</a>
 			<button class="btn btn-danger btn-sm"

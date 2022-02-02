@@ -1,11 +1,10 @@
 package ua.com.foxminded.university.model;
 
-import java.util.Set;
-import javax.validation.constraints.*;
+import java.util.Arrays;
+import java.util.List;
 
 public abstract class AbstractPerson extends IdEntity {
 
-	
 	private String firstName;
 	private String lastName;
 	private String gender;
@@ -14,7 +13,7 @@ public abstract class AbstractPerson extends IdEntity {
 	private Integer age;
 	private Long phoneNumber;
 	private String role;
-
+	
 	protected AbstractPerson(Long id, String firstName, String lastName, String gender, String email, String address,
 			Integer age, Long phoneNumber, String role) {
 

@@ -69,4 +69,38 @@ public class StudentController {
 				studentView.getStudent().getLastName()));
 		return "students/view";
 	}
+	
+	@GetMapping(path="/{id}/edit")
+	String showStudentEditForm (@PathVariable(name = "id", required = true) Long id, Model model) {
+		Student beforeUpdateStudent = facade.collectStudentForView(id).getStudent();
+		avaliableGroups=facade.collectAllNotFullGroups();
+		StudentRegistration student = new StudentRegistration(
+				beforeUpdateStudent, 
+				avaliableGroups, 
+				facade.findGroupById(beforeUpdateStudent.getGroupId()).getName());
+		model.addAttribute("student", student);
+		setTitle(model, "Edit student", String.format("%s %s", student.getFirstName(),
+				student.getLastName()));
+		return "students/edit";
+	}
+	
+	@PostMapping(path="/{id}/edit")
+	String updateStudent (StudentRegistration student, Model model, @PathVariable(name="id", required = true) Long id) {
+		StudentRegistration studentRegistration = student;
+		studentRegistration.setAvaliableGroups(avaliableGroups);
+		Student updatingStudent = studentRegistration.getStudent();
+		updatingStudent.setId(id);
+		Student updatedStudent = facade.updateStudent(updatingStudent);
+		model.addAttribute("student", updatedStudent);
+		model.addAttribute("group", facade.findGroupById(updatedStudent.getGroupId()));
+		setTitle(model, "Update student", String.format("%s %s", student.getFirstName(),
+				student.getLastName()));
+		return "students/view";
+	}
+	
+	@PostMapping("/{id}/delete")
+	String deleteStudent (@PathVariable(name="id", required = true) Long id) {
+		facade.deleteStudent(id);
+		return "redirect:/students/";
+	}
 }

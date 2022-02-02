@@ -8,6 +8,7 @@ import ua.com.foxminded.university.model.Student;
 
 public class StudentRegistration {
 	
+	private Long id;
 	private String firstName;
 	private String lastName;
 	private String gender;
@@ -20,13 +21,34 @@ public class StudentRegistration {
 	private List<Group> avaliableGroups;
 	private final List<String> genders = Arrays.asList(GENDER_FEMALE, GENDER_MALE);
 	private Student student;
+	private Student beforeUpdateStudent;
 	
 	private static final String GENDER_MALE = "male";
 	private static final String GENDER_FEMALE = "female";
 	
+	public StudentRegistration() {
+		super();
+	}
+
 	public StudentRegistration(List<Group> avaliableGroups) {
 		super();
 		this.avaliableGroups = avaliableGroups;
+	}
+	
+	public StudentRegistration(Student beforeUpdateStudent, List<Group> avaliableGroups, String groupName) {
+		super();
+		this.avaliableGroups = avaliableGroups;
+		this.beforeUpdateStudent = beforeUpdateStudent;
+		
+		this.firstName=beforeUpdateStudent.getFirstName();
+		this.lastName=beforeUpdateStudent.getLastName();
+		this.gender=beforeUpdateStudent.getGender();
+		this.email=beforeUpdateStudent.getEmail();
+		this.address=beforeUpdateStudent.getAddress();
+		this.age=beforeUpdateStudent.getAge();
+		this.phoneNumber=beforeUpdateStudent.getPhoneNumber();
+		this.groupName=groupName;
+		this.id=beforeUpdateStudent.getId();
 	}
 
 	public String getFirstName() {
@@ -102,9 +124,8 @@ public class StudentRegistration {
 	}
 
 	public Student getStudent() {
-		
 		Long groupId = avaliableGroups.stream().filter(gr->gr.getName().equals(groupName)).findAny().orElse(null).getId();
-		this.student = new Student(firstName, lastName, gender, email, address, age, groupId, address, groupId);
+		this.student = new Student(firstName, lastName, gender, email, address, age, phoneNumber, address, groupId);
 		return student;
 	}
 
@@ -114,6 +135,15 @@ public class StudentRegistration {
 
 	public List<String> getGenders() {
 		return genders;
+	}
+	
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
 	}
 
 	@Override
