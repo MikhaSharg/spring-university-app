@@ -6,9 +6,9 @@
 	<row class="row" id="teacher"
 		th:fragment="teacher-form(editMode, canEdit)">
 
-	<div class="d-grid">
+	<div class="d-grid" th:if="${!editMode}">
 		<a class="btn btn-primary btn-sm h5" role="button"
-			th:href="@{/lectures/teacher/{id}(id=${teacher.getId()})}">Shedule</a>
+			th:href="@{/lectures/teacher/{id}(id=${teacher.getId()})}">Schedule</a>
 	</div>
 
 	<form method="post"
@@ -26,10 +26,19 @@
 				id="lastName" th:field="*{lastName}" th:readonly="${!editMode}"
 				th:value="${teacher.getLastName()}" type="text">
 		</div>
-		<div class="mb-3">
+
+		<div class="mb-3" th:if="${!editMode}">
 			<label for="gender">Gender</label> <input class="form-control"
 				id="gender" th:field="*{gender}" th:readonly="${!editMode}"
 				th:value="${teacher.getGender()}" type="text">
+		</div>
+
+		<div class="mb-3" th:if="${editMode && canEdit}">
+			<label for="gender">Gender</label> <select
+				class="form-select bg-warning" id="gender" th:field="*{gender}">
+				<option th:each="gender : *{genders}" th:selected="*{genders!=null}"
+					th:text="${gender}" th:value="${gender}"></option>
+			</select>
 		</div>
 		<div class="mb-3">
 			<label for="email">Email</label> <input class="form-control"
@@ -57,9 +66,14 @@
 				id="profile" th:field="*{profile}" th:readonly="${!editMode}"
 				th:value="${teacher.getProfile()}" type="text">
 		</div>
+		<div class="mb-3" th:if="${editMode && canEdit}">
+			<a class="btn btn-danger btn-sm" role="button"
+				th:href="@{/teachers/{id}(id=${teacher.getId()})}">Cancel</a>
+			<button class="btn btn-success btn-sm" type="submit">Save</button>
+		</div>
 	</form>
 
-	<div class="mb-3">
+	<div class="mb-3" th:if="${!editMode}">
 		<form method="post"
 			th:action="@{/teachers/{id}/delete(id=${teacher.getId()})}">
 			<a class="btn btn-primary btn-sm" role="button"

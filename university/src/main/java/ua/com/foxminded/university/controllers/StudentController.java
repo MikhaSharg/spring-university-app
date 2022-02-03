@@ -13,7 +13,7 @@ import ua.com.foxminded.university.model.Group;
 import ua.com.foxminded.university.model.Student;
 import ua.com.foxminded.university.model.view.StudentView;
 import ua.com.foxminded.university.model.view.StudentsView;
-import ua.com.foxminded.university.wrappers.StudentRegistration;
+import ua.com.foxminded.university.wrappers.StudentWrapper;
 
 import static ua.com.foxminded.university.controllers.ControllerUtils.*;
 
@@ -52,14 +52,14 @@ public class StudentController {
 	@GetMapping(path="/registerNewStudent")
 	String showNewStudentRegistrationForm (Model model) {
 		avaliableGroups = facade.collectAllNotFullGroups();
-		StudentRegistration studentRegistration = new StudentRegistration(avaliableGroups);
+		StudentWrapper studentRegistration = new StudentWrapper(avaliableGroups);
 		model.addAttribute("student", studentRegistration);
 		setTitle(model, "Students", "new student registration");
 		return "students/registration";
 	}
 	
 	@PostMapping(path="/newStudentRegistration")
-	String registrateNewStudent (StudentRegistration studentRegistration, Model model) {
+	String registrateNewStudent (StudentWrapper studentRegistration, Model model) {
 		studentRegistration.setAvaliableGroups(avaliableGroups);
 		Long newStudentId = facade.saveNewStudent(studentRegistration.getStudent());
 		StudentView studentView = facade.collectStudentForView(newStudentId);
@@ -74,7 +74,7 @@ public class StudentController {
 	String showStudentEditForm (@PathVariable(name = "id", required = true) Long id, Model model) {
 		Student beforeUpdateStudent = facade.collectStudentForView(id).getStudent();
 		avaliableGroups=facade.collectAllNotFullGroups();
-		StudentRegistration student = new StudentRegistration(
+		StudentWrapper student = new StudentWrapper(
 				beforeUpdateStudent, 
 				avaliableGroups, 
 				facade.findGroupById(beforeUpdateStudent.getGroupId()).getName());
@@ -85,8 +85,8 @@ public class StudentController {
 	}
 	
 	@PostMapping(path="/{id}/edit")
-	String updateStudent (StudentRegistration student, Model model, @PathVariable(name="id", required = true) Long id) {
-		StudentRegistration studentRegistration = student;
+	String updateStudent (StudentWrapper student, Model model, @PathVariable(name="id", required = true) Long id) {
+		StudentWrapper studentRegistration = student;
 		studentRegistration.setAvaliableGroups(avaliableGroups);
 		Student updatingStudent = studentRegistration.getStudent();
 		updatingStudent.setId(id);

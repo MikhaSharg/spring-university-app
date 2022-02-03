@@ -6,7 +6,7 @@ import java.util.List;
 import ua.com.foxminded.university.model.Group;
 import ua.com.foxminded.university.model.Student;
 
-public class StudentRegistration {
+public class StudentWrapper {
 	
 	private Long id;
 	private String firstName;
@@ -26,16 +26,16 @@ public class StudentRegistration {
 	private static final String GENDER_MALE = "male";
 	private static final String GENDER_FEMALE = "female";
 	
-	public StudentRegistration() {
+	public StudentWrapper() {
 		super();
 	}
 
-	public StudentRegistration(List<Group> avaliableGroups) {
+	public StudentWrapper(List<Group> avaliableGroups) {
 		super();
 		this.avaliableGroups = avaliableGroups;
 	}
 	
-	public StudentRegistration(Student beforeUpdateStudent, List<Group> avaliableGroups, String groupName) {
+	public StudentWrapper(Student beforeUpdateStudent, List<Group> avaliableGroups, String groupName) {
 		super();
 		this.avaliableGroups = avaliableGroups;
 		this.beforeUpdateStudent = beforeUpdateStudent;

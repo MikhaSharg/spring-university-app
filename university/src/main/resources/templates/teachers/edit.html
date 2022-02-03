@@ -13,21 +13,22 @@
 							Home</a></li>
 					<li aria-current="page" class="breadcrumb-item"><a
 						th:href="@{/teachers}">Teachers</a></li>
-					<li aria-current="page" class="breadcrumb-item active"
-						th:text="${teacher.getFirstName()+' '+teacher.getLastName()}" />
+					<li aria-current="page" class="breadcrumb-item">
+						<a th:href="@{/teachers/{id}(id=${teacher.getId()})}">[[${teacher.getFirstName()+' '+teacher.getLastName()}]]</a>
 					</li>
+					<li aria-current="page" class="breadcrumb-item active">Edit</li>
 				</ol>
 			</div>
 		</nav>
 		
 		<div>
 			<row
-				th:replace="fragments/forms/teacher-form :: teacher-form(editMode=false, canEdit=true)" />
+				th:replace="fragments/forms/teacher-form :: teacher-form(editMode=true, canEdit=true)" />
 		</div>
 		
 		<div>
 			<row
-				th:replace="fragments/lists/subjects-list-teacher :: subjects-list-teacher(editTeacher=false)" />
+				th:replace="fragments/lists/subjects-list-teacher :: subjects-list-teacher(editTeacher=true)" />
 		</div>
 		
 	</div>

@@ -212,11 +212,9 @@ class JdbcTeacherDaoTest {
 
         Teacher expected = new Teacher(3L, "Elena", "Pestrecova", "female", "ElenaPestrecova@gmail.com", "Omsk", 28,
                 89658953265L, "teacher", "technology");
-
         assertThat(dao.findById(3L).get()).isNotEqualTo(expected);
         Teacher actual = dao.save(expected);
         assertThat(actual).isEqualTo(expected);
-        assertThat(dao.findById(3L).get()).isEqualTo(expected);
     }
 
     @Test

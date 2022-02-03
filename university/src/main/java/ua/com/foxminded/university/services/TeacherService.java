@@ -12,7 +12,7 @@ import ua.com.foxminded.university.dao.TeacherDao;
 import ua.com.foxminded.university.model.Teacher;
 
 @Service
-@Transactional(readOnly = true)
+@Transactional
 public class TeacherService {
 
 	private final TeacherDao teachertDao;
@@ -22,9 +22,9 @@ public class TeacherService {
 		this.teachertDao = teachertDao;
 	}
 
-	Teacher saveTeacher(Teacher newTeacher) {
+	public Teacher saveTeacher(Teacher newTeacher) {
 		Teacher teacher = teachertDao.save(newTeacher);
-		if (newTeacher.getId() != null) {
+		if (newTeacher.getId() == null) {
 			log.info("Saved teacher {}, {}, {}", teacher.getId(), teacher.getFirstName(), teacher.getLastName());
 		} else {
 			log.info("Updated teacher {}, {}, {}", teacher.getId(), teacher.getFirstName(), teacher.getLastName());
@@ -40,7 +40,7 @@ public class TeacherService {
 	public List<Teacher> findAllExistTeachers() {
 		List<Teacher> teachers = teachertDao.findAll();
 		if (!teachers.isEmpty()) {
-			log.info("Finded {} teachers", teachers.size());
+			log.info("Found {} teachers", teachers.size());
 		} else {
 			log.warn("Could not find any teachers");
 		}
@@ -50,22 +50,24 @@ public class TeacherService {
 	public Teacher findTeacherById(Long teacherId) {
 		Optional<Teacher> teacher = teachertDao.findById(teacherId);
 		if (teacher.isPresent()) {
-			log.info("Finded teacher {}, {}, {}", teacher.get().getId(), teacher.get().getFirstName(),
+			log.info("Found teacher {}, {}, {}", teacher.get().getId(), teacher.get().getFirstName(),
 					teacher.get().getLastName());
 		} else {
 			log.warn("Could not find teacher with ID {}", teacherId);
 		}
 		return teacher.get();
 	}
-	
-	public List<Teacher> findAllTeachersBySubjectId (Long subjectId) {
+
+	public List<Teacher> findAllTeachersBySubjectId(Long subjectId) {
 		List<Teacher> teachers = teachertDao.findAllTeachersBySubjectId(subjectId);
-		if(!teachers.isEmpty()) {
-			log.info("Finded {} teachers for subject_id {}", teachers.size(), subjectId);
-		} else {log.warn("Could not find any teachers for subject_id {}", subjectId);}
-		
+		if (!teachers.isEmpty()) {
+			log.info("Found {} teachers for subject_id {}", teachers.size(), subjectId);
+		} else {
+			log.warn("Could not find any teachers for subject_id {}", subjectId);
+		}
+
 		return teachers;
-		
+
 	}
 
 }

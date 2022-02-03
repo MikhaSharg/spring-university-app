@@ -36,7 +36,7 @@ public class JdbcTeacherDao extends AbstractCrudDao<Teacher> implements TeacherD
 	public static final String PROFILE = "PROFILE";
 
 	private static final String UPDATE_ONE = "UPDATE teachers SET first_name=?, last_name=?, gender=?, email=?, address=?, age=?, phone_number=?, role=?, profile=? \n"
-			+ "WHERE teacher_id=?; DELETE FROM teachers_subjects WHERE teacher_id = ?;";
+			+ "WHERE teacher_id=?";
 	private static final String SELECT_BY_ID = "SELECT * FROM teachers WHERE teacher_id=?";
 	private static final String DELETE_BY_ID = "DELETE FROM teachers WHERE teacher_id=?";
 	private static final String INSERT_ONE_NAMED = "INSERT INTO teachers (first_name, last_name, gender, email, address, age, phone_number, role, profile) \n"
@@ -80,7 +80,6 @@ public class JdbcTeacherDao extends AbstractCrudDao<Teacher> implements TeacherD
 		ps.setString(8, entity.getRole());
 		ps.setString(9, entity.getProfile());
 		ps.setLong(10, entity.getId());
-		ps.setLong(11, entity.getId());
 	}
 
 	@Override

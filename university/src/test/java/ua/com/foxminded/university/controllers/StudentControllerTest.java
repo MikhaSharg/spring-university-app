@@ -21,7 +21,7 @@ import ua.com.foxminded.university.model.Group;
 import ua.com.foxminded.university.model.Student;
 import ua.com.foxminded.university.model.view.StudentView;
 import ua.com.foxminded.university.model.view.StudentsView;
-import ua.com.foxminded.university.wrappers.StudentRegistration;
+import ua.com.foxminded.university.wrappers.StudentWrapper;
 
 @WebMvcTest(StudentController.class)
 class StudentControllerTest {

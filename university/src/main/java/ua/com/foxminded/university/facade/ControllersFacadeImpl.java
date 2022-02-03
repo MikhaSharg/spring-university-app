@@ -3,7 +3,6 @@ package ua.com.foxminded.university.facade;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -15,9 +14,30 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Controller;
 
 import ua.com.foxminded.university.misc.GeneratorConfig;
-import ua.com.foxminded.university.model.*;
-import ua.com.foxminded.university.model.view.*;
-import ua.com.foxminded.university.services.*;
+import ua.com.foxminded.university.model.Audience;
+import ua.com.foxminded.university.model.FreeItem;
+import ua.com.foxminded.university.model.Group;
+import ua.com.foxminded.university.model.Lecture;
+import ua.com.foxminded.university.model.LectureSessions;
+import ua.com.foxminded.university.model.Student;
+import ua.com.foxminded.university.model.Subject;
+import ua.com.foxminded.university.model.Teacher;
+import ua.com.foxminded.university.model.view.FreeItemsView;
+import ua.com.foxminded.university.model.view.LecturesAudience;
+import ua.com.foxminded.university.model.view.LecturesGroup;
+import ua.com.foxminded.university.model.view.LecturesSubject;
+import ua.com.foxminded.university.model.view.LecturesTeacher;
+import ua.com.foxminded.university.model.view.LecturesView;
+import ua.com.foxminded.university.model.view.StudentView;
+import ua.com.foxminded.university.model.view.StudentsView;
+import ua.com.foxminded.university.model.view.SubjectView;
+import ua.com.foxminded.university.services.AudienceService;
+import ua.com.foxminded.university.services.GroupService;
+import ua.com.foxminded.university.services.LectureService;
+import ua.com.foxminded.university.services.SessionService;
+import ua.com.foxminded.university.services.StudentService;
+import ua.com.foxminded.university.services.SubjectService;
+import ua.com.foxminded.university.services.TeacherService;
 
 @Controller
 public class ControllersFacadeImpl implements ControllersFacade {
@@ -219,6 +239,11 @@ public class ControllersFacadeImpl implements ControllersFacade {
 	@Override
 	public void deleteStudent(Long id) {
 		studentService.deleteStudentById(id);
+	}
+
+	@Override
+	public Teacher updateTeacher(Teacher newTeacher) {
+		return teacherService.saveTeacher(newTeacher);
 	}
 
 }

@@ -5,8 +5,13 @@ import java.util.List;
 
 public class Teacher extends AbstractPerson {
 
+	
+
 	private String profile;
 	private List<Subject> subjects = new ArrayList<>();
+	
+	public Teacher() {
+	}
 
 	public Teacher(Long id, String firstName, String lastName, String gender, String email, String address, Integer age,
 			Long phoneNumber, String role, String profile, List<Subject> subjects) {
@@ -89,5 +94,5 @@ public class Teacher extends AbstractPerson {
 	public String toString() {
 		return getFirstName() + " " + getLastName() + ", " + profile;
 	}
-
+	
 }
