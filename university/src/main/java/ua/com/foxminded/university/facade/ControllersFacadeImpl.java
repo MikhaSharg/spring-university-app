@@ -246,4 +246,10 @@ public class ControllersFacadeImpl implements ControllersFacade {
 		return teacherService.saveTeacher(newTeacher);
 	}
 
+	@Override
+	public void deleteTeacher(Long id) {
+		lectureService.cancelLecturesForRetiredTeacher(id);
+		teacherService.fireTeacher(id);
+	}
+
 }

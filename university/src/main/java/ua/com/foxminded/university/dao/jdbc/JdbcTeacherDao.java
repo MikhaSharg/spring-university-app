@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -48,6 +49,7 @@ public class JdbcTeacherDao extends AbstractCrudDao<Teacher> implements TeacherD
 	private static final String SELECT_All_SUBJECTS = "SELECT t.*, s.* FROM teachers t LEFT JOIN teachers_subjects ts ON t.teacher_id = ts.teacher_id LEFT JOIN subjects s \n"
 			+ "ON s.subject_id = ts.subject_id";
 	private static final String SELECT_All_TEACHERS_BY_SUBJECT_ID = "SELECT t.* FROM teachers t JOIN teachers_subjects ts USING (teacher_id) WHERE ts.subject_id = ?";
+	private static final Object FIRED = "fired_teacher";
 
 	
 	public JdbcTeacherDao(JdbcTemplate jdbsTemplate, RowMapper<Teacher> rowMapper) {
@@ -57,6 +59,7 @@ public class JdbcTeacherDao extends AbstractCrudDao<Teacher> implements TeacherD
 	@Override
 	protected void setInsertParams(PreparedStatement ps, Teacher entity) throws SQLException {
 		ps.setString(1, entity.getFirstName());
+		
 		ps.setString(2, entity.getLastName());
 		ps.setString(3, entity.getGender());
 		ps.setString(4, entity.getEmail());
@@ -223,7 +226,7 @@ public class JdbcTeacherDao extends AbstractCrudDao<Teacher> implements TeacherD
 
 			teacher.setSubjects(subjects);
 
-			return teacher;
+			return pointFiredTeacher(teacher);
 		});
 
 	}
@@ -304,7 +307,7 @@ public class JdbcTeacherDao extends AbstractCrudDao<Teacher> implements TeacherD
 				}
 
 			}
-			return teachers;
+			return pointeFiredTeacher(teachers);
 		});
 	}
 
@@ -318,8 +321,41 @@ public class JdbcTeacherDao extends AbstractCrudDao<Teacher> implements TeacherD
 						rs.getString("address"), rs.getInt("age"), rs.getLong("phone_number"),
 						rs.getString("role"), rs.getString("profile")));
 			}
-			return teachers;
+			
+			return pointeFiredTeacher(teachers);
 		});
 	}
+	
+	private List<Teacher> pointeFiredTeacher (List<Teacher> teachers) {
+		List<Teacher> pointedFiredLectures = new ArrayList<>();
+		
+		if(!teachers.isEmpty()) {
+		teachers.stream().forEach(teach-> {
+			
+			if(teach.getRole().equals(FIRED)) {
+				
+		teach.setIsFired(true);
+		pointedFiredLectures.add(teach);
+		
+		} 
+			
+			else {pointedFiredLectures.add(teach);}
+			
+			
+			
+			
+			
+		});
+		return pointedFiredLectures;
+		} return teachers;
+	}
+	
+	private Teacher pointFiredTeacher (Teacher teacher) {
+		Teacher pointingTeacher = teacher;
+		if(pointingTeacher.getRole().equals(FIRED)) {
+			pointingTeacher.setIsFired(true);
+		}
+		return pointingTeacher;	
+		}
 }
 	

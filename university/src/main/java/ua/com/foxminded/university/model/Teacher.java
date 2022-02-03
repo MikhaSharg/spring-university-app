@@ -5,10 +5,9 @@ import java.util.List;
 
 public class Teacher extends AbstractPerson {
 
-	
-
 	private String profile;
 	private List<Subject> subjects = new ArrayList<>();
+	private Boolean isFired = false;
 	
 	public Teacher() {
 	}
@@ -57,6 +56,14 @@ public class Teacher extends AbstractPerson {
 
 	public void addSubject(Subject subject) {
 		this.subjects.add(subject);
+	}
+	
+	public Boolean getIsFired() {
+		return isFired;
+	}
+
+	public void setIsFired(Boolean isFired) {
+		this.isFired = isFired;
 	}
 
 	@Override

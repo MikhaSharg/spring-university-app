@@ -22,7 +22,6 @@
 			<tbody>
 				<tr th:each="subject,iter : ${teacher.getSubjects()}"
 					th:onclick="'window.location.href=\'/subjects/' + ${subject.getId()} + '\''">
-
 					<td><span th:text="${iter.count}">Index</span>
 					<td><span th:text="${subject.getName()}" /></td>
 					<td><a class="btn btn-primary btn-sm" role="button">Edit</a>

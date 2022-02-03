@@ -62,4 +62,10 @@ public class TeacherController {
 				teacher.getProfile()));
 		return "/teachers/view";
 	}
-}
+	
+	@PostMapping(path="/{id}/delete")
+	String deleteTeacherWithSubjects(@PathVariable(name="id") Long id) {
+		facade.deleteTeacher(id);
+		return "redirect:/teachers/";
+	}
+} 

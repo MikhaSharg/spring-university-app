@@ -8,7 +8,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import ua.com.foxminded.university.dao.LectureDao;
 import ua.com.foxminded.university.dao.TeacherDao;
+import ua.com.foxminded.university.model.Lecture;
 import ua.com.foxminded.university.model.Teacher;
 
 @Service
@@ -17,6 +19,7 @@ public class TeacherService {
 
 	private final TeacherDao teachertDao;
 	private static final Logger log = LoggerFactory.getLogger(TeacherService.class);
+	private static final String FIRED = "fired_teacher";
 
 	public TeacherService(TeacherDao teachertDao) {
 		this.teachertDao = teachertDao;
@@ -68,6 +71,14 @@ public class TeacherService {
 
 		return teachers;
 
+	}
+
+	public void fireTeacher(Long id) {
+		Teacher teacher = this.findTeacherById(id);
+		teacher.setRole(FIRED);
+		this.saveTeacher(teacher);
+		log.info("Teacher {} {} was fired", teacher.getId(), teacher.toString());
+		
 	}
 
 }

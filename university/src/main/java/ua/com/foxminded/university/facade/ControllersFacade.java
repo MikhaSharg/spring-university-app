@@ -39,6 +39,7 @@ public interface ControllersFacade {
     List<Teacher> collectAllTeachersForList();
     Teacher collectTeacherForView(Long teacherId);
     Teacher updateTeacher(Teacher newTeacher);
+	void deleteTeacher(Long id);
     
     //subjects
     List <Subject> collectAllSubjectsForView();
@@ -53,6 +54,7 @@ public interface ControllersFacade {
 	// others
 	void cancelLecture (Long lectureId);
 	FreeItemsView collectFreeItemsInSchedule (Long lectureId);
+
 	
 	
 	

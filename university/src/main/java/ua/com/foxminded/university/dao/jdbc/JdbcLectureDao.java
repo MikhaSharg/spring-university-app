@@ -115,6 +115,11 @@ public class JdbcLectureDao extends AbstractCrudDao<Lecture> implements LectureD
 	private static final String DELETE_ARCHIVED_LECTURE = "DELETE FROM archive_lectures  WHERE lecture_id=?";
 	private static final String SELECT_NEW_LECTURES_FROM_ARCHIVE = "SELECT al.lecture_date, al.status, al.new_lecture_id, s.period AS session FROM archive_lectures al \n"
 			+ "LEFT JOIN lecture_sessions s USING (session_id) WHERE new_lecture_id IS NOT NULL";
+	
+	private static final String SELECT_BY_TEACHER_ID = "SELECT l.*, ls.*, a.*, s.*, t.*, g.* \n"
+			+ "FROM lectures l JOIN lecture_sessions ls USING (session_id) JOIN audiences a USING(audience_id) \n"
+			+ "JOIN subjects s USING (subject_id) JOIN teachers t USING (teacher_id) JOIN groups g USING (group_id) \n"
+			+ "WHERE t.teacher_id = ?";
 
 	public JdbcLectureDao(JdbcTemplate jdbsTemplate, RowMapper<Lecture> rowMapper) {
 		super(jdbsTemplate, rowMapper);
@@ -584,4 +589,30 @@ public class JdbcLectureDao extends AbstractCrudDao<Lecture> implements LectureD
 		});
 	}
 
+	@Override
+	public List<Lecture> findAllLecturesByTeacherId(Long id) {
+		return jdbcTemplate.query(SELECT_BY_TEACHER_ID, ps -> {
+			ps.setLong(1, id);
+		}, rs -> {
+			List<Lecture> lectures = new ArrayList<>();
+			while (rs.next()) {
+				LectureSessions lectureSessions = new LectureSessions(rs.getLong("session_id"), rs.getString("period"),
+						rs.getString("start_time"), rs.getString("end_time"));
+				Audience audence = new Audience(rs.getLong("audience_id"), rs.getInt("room_number"));
+				Subject subject = new Subject(rs.getLong("subject_id"), rs.getString("subject_name"));
+				Teacher teacher = new Teacher(rs.getLong("teacher_id"), rs.getString("first_name"),
+						rs.getString("last_name"), rs.getString("gender"), rs.getString("email"),
+						rs.getString("address"), rs.getInt("age"), rs.getLong("phone_number"), rs.getString("role"),
+						rs.getString("profile"));
+				Group group = new Group(rs.getLong("group_id"), rs.getString("group_name"));
+
+				Lecture lecture = new Lecture(rs.getLong("lecture_id"), rs.getDate("lecture_date").toLocalDate(),
+						lectureSessions, audence, subject, teacher, group);
+				lectures.add(lecture);
+			}
+			return lectures;
+		});
+	}
+
+	
 }

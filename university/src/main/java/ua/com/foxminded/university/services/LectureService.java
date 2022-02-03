@@ -35,6 +35,7 @@ public class LectureService {
 	private static final Logger log = LoggerFactory.getLogger(LectureService.class);
 	public static final String TEACHER = "teacher";
 	public static final String GROUP = "group";
+	private static final String FIRED_TEACHER = "fired_teacher";
 
 	LocalDate currentDay = LocalDate.now();
 
@@ -134,6 +135,17 @@ public class LectureService {
 		log.info("Lecture ID {} was archived with status {}", lectureId, lecture.getStatus());
 		lectureDao.deleteById(lectureId);
 		log.info("Lecture ID {} canceled (deleted)", lectureId);
+	}
+	
+	public void cancelLecturesForRetiredTeacher(Long teacherId) {
+		List<Lecture> lecturesWithRetiredTeacher = lectureDao.findAllLecturesByTeacherId(teacherId);
+		log.info("Prepare {} lectures for cancel that have fired teacher ID {}", lecturesWithRetiredTeacher.size(), teacherId);
+		lecturesWithRetiredTeacher.stream().forEach(lecture->{
+			lecture.setStatus(FIRED_TEACHER);
+			lectureDao.archiveLecture(lecture);
+			log.info("Lecture ID {} was archived and deleted because Teacher ID {} was fired (deleted)", lecture.getId(), teacherId);
+			lectureDao.deleteById(lecture.getId());
+		});
 	}
 
 	public List<FreeItem> findAllFreeItemsInSchedule(Long teacherId, Long groupId) {

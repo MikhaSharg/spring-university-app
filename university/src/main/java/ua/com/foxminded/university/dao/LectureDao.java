@@ -35,4 +35,7 @@ public interface LectureDao extends CrudDao<Lecture, Long> {
 
 	Map<Long, String> findModifiedLectures();
 
+	List<Lecture> findAllLecturesByTeacherId(Long id);
+
 }
+
