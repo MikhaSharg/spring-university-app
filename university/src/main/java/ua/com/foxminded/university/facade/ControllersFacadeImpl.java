@@ -38,6 +38,7 @@ import ua.com.foxminded.university.services.SessionService;
 import ua.com.foxminded.university.services.StudentService;
 import ua.com.foxminded.university.services.SubjectService;
 import ua.com.foxminded.university.services.TeacherService;
+import ua.com.foxminded.university.wrappers.SubjectWrapper;
 
 @Controller
 public class ControllersFacadeImpl implements ControllersFacade {
@@ -250,6 +251,23 @@ public class ControllersFacadeImpl implements ControllersFacade {
 	public void deleteTeacher(Long id) {
 		lectureService.cancelLecturesForRetiredTeacher(id);
 		teacherService.fireTeacher(id);
+	}
+
+	@Override
+	public Subject saveNewSubject(Subject newSubject) {
+		return subjectService.saveSubject(newSubject);
+	}
+
+	@Override
+	public Subject findSubjectById(Long subjectId) {
+		return subjectService.findSubjectById(subjectId);
+	}
+
+	@Override
+	public SubjectView addNewSubgectToTeacher(Long teacherId, SubjectWrapper subject) {
+		Long newSubjectId = findSubjectById(saveNewSubject(subject.getNewSubject()).getId()).getId();
+		subjectService.addSubjectToTeacher(teacherId, newSubjectId);
+		return collectSubjectForView(newSubjectId);
 	}
 
 }

@@ -26,6 +26,7 @@ public class TeacherWrapper {
 	
 	private static final String GENDER_MALE = "male";
 	private static final String GENDER_FEMALE = "female";
+	private static final String ROLE_TEACHER = "teacher";
 	
 	public TeacherWrapper() {
 		super();
@@ -128,8 +129,8 @@ public class TeacherWrapper {
 	
 	public Teacher getNewTeacher() {
 		if (this.id == null) {
-			return new Teacher(firstName, lastName, gender, email, address, age, phoneNumber, oldTeacher.getRole(),
-					profile, oldTeacher.getSubjects());
+			return new Teacher(firstName, lastName, gender, email, address, age, phoneNumber, ROLE_TEACHER,
+					profile);
 		} else {
 			return new Teacher(id, firstName, lastName, gender, email, address, age, phoneNumber, oldTeacher.getRole(),
 					profile, oldTeacher.getSubjects());

@@ -13,7 +13,7 @@ import ua.com.foxminded.university.model.Student;
 import ua.com.foxminded.university.model.Subject;
 
 @Service
-@Transactional(readOnly = true)
+@Transactional
 public class SubjectService {
 
 	private final SubjectDao subjectDao;
@@ -45,4 +45,18 @@ public class SubjectService {
 		return subjects;
 	}
 
+	public Subject saveSubject(Subject subject) {
+		Subject savedSubject = subjectDao.save(subject);
+		if (subject != null) {
+			log.info("Subject ID = {} name = {} was updated", subject.getId(), savedSubject.getName());
+		} else {
+			log.info("New Subject ID = {} name = {} was saved", savedSubject.getId(), savedSubject.getName());
+		}
+		return savedSubject;
+	}
+
+	public void addSubjectToTeacher(Long teacherId, Long subjectId) {
+		subjectDao.addSubjectToTeacher(teacherId, subjectId);
+		log.info("Subject ID {} was added to Teacher ID {}", subjectId, teacherId);
+	}
 }

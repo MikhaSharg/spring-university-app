@@ -11,14 +11,14 @@
 				<ol class="breadcrumb">
 					<li aria-current="page" class="breadcrumb-item"><a href="/">Home</a></li>
 					<li aria-current="page" class="breadcrumb-item"><a th:href="@{/subjects}">Subjects</a></li>
-					<li aria-current="page" class="breadcrumb-item active" th:text="'Subject: ' + ${subject.getName()}" /></li>
+					<li aria-current="page" class="breadcrumb-item active"/>Add new subject to Teacher</li>
 				</ol>
 			</div>
 		</nav>
 		
 		<div>
 			<row
-				th:replace="fragments/forms/subject-form :: subject-form(editMode=false, canEdit=true, newSubject=false)"/>
+				th:replace="fragments/forms/subject-form :: subject-form(editMode=true, canEdit=true, newSubject=true)"/>
 		</div>
 		
 		<div>

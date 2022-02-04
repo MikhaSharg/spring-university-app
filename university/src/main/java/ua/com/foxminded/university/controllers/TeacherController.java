@@ -68,4 +68,19 @@ public class TeacherController {
 		facade.deleteTeacher(id);
 		return "redirect:/teachers/";
 	}
+	
+	@GetMapping(path="/registerNewTeacher")
+	String showNewTeacherRegistrationForm (Model model) {
+		TeacherWrapper teacher = new TeacherWrapper();
+		model.addAttribute("teacher", teacher);
+		return "teachers/registration";
+	}
+	
+	@PostMapping(path="/newTeacherRegistration")
+	String registrateNewTeacher (TeacherWrapper teacherRegistration, Model model) {
+		Long newTeacherId = facade.updateTeacher(teacherRegistration.getNewTeacher()).getId();
+		model.addAttribute("teacher", facade.collectTeacherForView(newTeacherId));
+		return "teachers/view";
+	}
+	
 } 

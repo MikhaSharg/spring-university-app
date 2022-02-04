@@ -4,13 +4,13 @@
 </head>
 <body>
 	<row class="row" id="subjects" th:fragment="subjects-list-teacher(editTeacher)">
+	
 	<div class="container" >
-		<table th:if="${!editTeacher}" class="table table-striped table-bordered table-hover"
-			style="text-align: center">
+		<table th:if="${!editTeacher}" class="table table-striped table-bordered table-hover" style="text-align: center">
 			<thead>
 				<tr>
 					<th class="h5 bg-secondary text-white" colspan="3">Subjects
-					<a class="btn btn-info btn-sm fs-6 fw-bold" role="button">Add new item</a>
+					<a class="btn btn-info btn-sm fs-6 fw-bold" role="button" th:href="@{/subjects/{teacherId}/new(teacherId=${teacher.getId()})}">Add new item</a>
 					</th>
 				</tr>
 				<tr>
@@ -20,13 +20,15 @@
 				</tr>
 			</thead>
 			<tbody>
-				<tr th:each="subject,iter : ${teacher.getSubjects()}"
-					th:onclick="'window.location.href=\'/subjects/' + ${subject.getId()} + '\''">
+				<tr th:each="subject,iter : ${teacher.getSubjects()}" th:onclick="'window.location.href=\'/subjects/' + ${subject.getId()} + '\''">
 					<td><span th:text="${iter.count}">Index</span>
 					<td><span th:text="${subject.getName()}" /></td>
-					<td><a class="btn btn-primary btn-sm" role="button">Edit</a>
+					
+					<td>
+					<a class="btn btn-primary btn-sm" role="button">Edit</a>
 					<a class="btn btn-danger btn-sm" role="button">Delete</a>
 					</td>
+					
 				</tr>
 			</tbody>
 		</table>
@@ -34,4 +36,3 @@
 	<row />
 </body>
 </html>
->

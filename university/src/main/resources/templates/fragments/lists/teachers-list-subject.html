@@ -3,10 +3,9 @@
 <head>
 </head>
 <body>
-	<row class="row" id="teachers" th:fragment="teachers-list-subject">
+	<row class="row" id="teachers" th:fragment="teachers-list-subject(editMode, canEdit)">
 	<div class="container">
-		<table class="table table-striped table-bordered table-hover"
-			style="text-align: center">
+		<table class="table table-striped table-bordered table-hover" style="text-align: center">
 			<thead>
 				<tr>
 					<th class="h5 bg-secondary text-white" colspan="5">Teachers</th>
@@ -16,19 +15,16 @@
 					<th scope="col">First Name</th>
 					<th scope="col">Last Name</th>
 					<th scope="col">Profile</th>
-					<th scope="col">Action</th>
+					<th th:if="${editMode}" scope="col">Action</th>
 				</tr>
 			</thead>
 			<tbody>
-				<tr th:each="teacher,iter : ${subject.getTeachers()}"
-					th:onclick="'window.location.href=\'/teachers/' + ${teacher.getId()} + '\''">
-
+				<tr th:each="teacher,iter : ${subject.getTeachers()}" th:onclick="'window.location.href=\'/teachers/' + ${teacher.getId()} + '\''">
 					<td><span th:text="${iter.count}">Index</span>
 					<td><span th:text="${teacher.getFirstName()}" /></td>
 					<td><span th:text="${teacher.getLastName()}" /></td>
 					<td><span th:text="${teacher.getProfile()}" /></td>
-					<td><a class="btn btn-danger btn-sm" role="button">Unenroll</a>
-					</td>
+					<td th:if="${editMode}"><a class="btn btn-danger btn-sm" role="button">Unenroll</a></td>
 				</tr>
 			</tbody>
 		</table>

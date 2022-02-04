@@ -3,86 +3,77 @@
 <head>
 </head>
 <body>
-	<row class="row" id="teacher"
-		th:fragment="teacher-form(editMode, canEdit)">
+
+	<row class="row" id="teacher" th:fragment="teacher-form(editMode, canEdit, registration)">
 
 	<div class="d-grid" th:if="${!editMode}">
-		<a class="btn btn-primary btn-sm h5" role="button"
-			th:href="@{/lectures/teacher/{id}(id=${teacher.getId()})}">Schedule</a>
+		<a class="btn btn-primary btn-sm h5" role="button" th:href="@{/lectures/teacher/{id}(id=${teacher.getId()})}">Schedule</a>
 	</div>
 
-	<form method="post"
-		th:action="@{/teachers/{id}/edit(id=${teacher.getId()})}"
-		th:object="${teacher}">
+	<form method="post" th:action="${registration}!=true ? @{/teachers/{id}/edit(id=${teacher.getId()})} : @{/teachers/newTeacherRegistration}" th:object="${teacher}">
 
 		<div class="mb-3">
-			<label for="firstName">First Name</label> <input class="form-control"
-				id="firstName" th:field="*{firstName}" th:readonly="${!editMode}"
-				th:value="${teacher.getFirstName()}" type="text">
+			<label for="firstName">First Name</label> 
+			<input class="form-control" id="firstName" th:field="*{firstName}" th:readonly="${!editMode}" th:value="${teacher.getFirstName()}" type="text">
 		</div>
 
 		<div class="mb-3">
-			<label for="lastName">Last Name</label> <input class="form-control"
-				id="lastName" th:field="*{lastName}" th:readonly="${!editMode}"
-				th:value="${teacher.getLastName()}" type="text">
+			<label for="lastName">Last Name</label> 
+			<input class="form-control" id="lastName" th:field="*{lastName}" th:readonly="${!editMode}" th:value="${teacher.getLastName()}" type="text">
 		</div>
 
 		<div class="mb-3" th:if="${!editMode}">
-			<label for="gender">Gender</label> <input class="form-control"
-				id="gender" th:field="*{gender}" th:readonly="${!editMode}"
-				th:value="${teacher.getGender()}" type="text">
+			<label for="gender">Gender</label> 
+			<input class="form-control" id="gender" th:field="*{gender}" th:readonly="${!editMode}" th:value="${teacher.getGender()}" type="text">
 		</div>
 
 		<div class="mb-3" th:if="${editMode && canEdit}">
-			<label for="gender">Gender</label> <select
-				class="form-select bg-warning" id="gender" th:field="*{gender}">
-				<option th:each="gender : *{genders}" th:selected="*{genders!=null}"
-					th:text="${gender}" th:value="${gender}"></option>
+			<label for="gender">Gender</label>
+			<select class="form-select bg-warning" id="gender" th:field="*{gender}">
+				<option th:each="gender : *{genders}" th:selected="*{genders!=null}" th:text="${gender}" th:value="${gender}"></option>
 			</select>
 		</div>
+		
 		<div class="mb-3">
-			<label for="email">Email</label> <input class="form-control"
-				id="email" th:field="*{email}" th:readonly="${!editMode}"
-				th:value="${teacher.getEmail()}" type="text">
+			<label for="email">Email</label>
+			<input class="form-control" id="email" th:field="*{email}" th:readonly="${!editMode}" th:value="${teacher.getEmail()}" type="text">
 		</div>
+		
 		<div class="mb-3">
-			<label for="address">Address</label> <input class="form-control"
-				id="address" th:field="*{address}" th:readonly="${!editMode}"
-				th:value="${teacher.getAddress()}" type="text">
+			<label for="address">Address</label>
+			<input class="form-control" id="address" th:field="*{address}" th:readonly="${!editMode}" th:value="${teacher.getAddress()}" type="text">
 		</div>
+		
 		<div class="mb-3">
-			<label for="age">Age</label> <input class="form-control" id="age"
-				th:field="*{age}" th:readonly="${!editMode}"
-				th:value="${teacher.getAge()}" type="text">
+			<label for="age">Age</label>
+			<input class="form-control" id="age" th:field="*{age}" th:readonly="${!editMode}" th:value="${teacher.getAge()}" type="text">
 		</div>
+		
 		<div class="mb-3">
-			<label for="phoneNumber">Phone Number</label> <input
-				class="form-control" id="phoneNumber" th:field="*{phoneNumber}"
-				th:readonly="${!editMode}" th:value="${teacher.getPhoneNumber()}"
-				type="text">
+			<label for="phoneNumber">Phone Number</label>
+			<input class="form-control" id="phoneNumber" th:field="*{phoneNumber}" th:readonly="${!editMode}" th:value="${teacher.getPhoneNumber()}" type="text">
 		</div>
+		
 		<div class="mb-3">
-			<label for="profile">Profile</label> <input class="form-control"
-				id="profile" th:field="*{profile}" th:readonly="${!editMode}"
-				th:value="${teacher.getProfile()}" type="text">
+			<label for="profile">Profile</label>
+			<input class="form-control" id="profile" th:field="*{profile}" th:readonly="${!editMode}" th:value="${teacher.getProfile()}" type="text">
 		</div>
+		
 		<div class="mb-3" th:if="${editMode && canEdit}">
-			<a class="btn btn-danger btn-sm" role="button"
-				th:href="@{/teachers/{id}(id=${teacher.getId()})}">Cancel</a>
+			<a class="btn btn-danger btn-sm" role="button" th:href="@{/teachers/{id}(id=${teacher.getId()})}">Cancel</a>
 			<button class="btn btn-success btn-sm" type="submit">Save</button>
 		</div>
+		
 	</form>
 
+
 	<div class="mb-3" th:if="${!editMode}">
-		<form method="post"
-			th:action="@{/teachers/{id}/delete(id=${teacher.getId()})}">
-			<a class="btn btn-primary btn-sm" role="button"
-				th:href="@{/teachers/{id}/edit(id=${teacher.getId()})}">Edit</a>
-			<button class="btn btn-danger btn-sm"
-				onclick="return confirm('Are you sure?')" type="submit">Delete
-			</button>
+		<form method="post" th:action="@{/teachers/{id}/delete(id=${teacher.getId()})}">
+			<a class="btn btn-primary btn-sm" role="button" th:href="@{/teachers/{id}/edit(id=${teacher.getId()})}">Edit</a>
+			<button class="btn btn-danger btn-sm" onclick="return confirm('Are you sure?')" type="submit">Delete</button>
 		</form>
 	</div>
+	
 	</row>
 </body>
 </html>

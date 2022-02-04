@@ -5,12 +5,14 @@ import java.util.List;
 
 import ua.com.foxminded.university.model.Audience;
 import ua.com.foxminded.university.model.Group;
+import ua.com.foxminded.university.model.IdEntity;
 import ua.com.foxminded.university.model.Lecture;
 import ua.com.foxminded.university.model.LectureSessions;
 import ua.com.foxminded.university.model.Student;
 import ua.com.foxminded.university.model.Subject;
 import ua.com.foxminded.university.model.Teacher;
 import ua.com.foxminded.university.model.view.*;
+import ua.com.foxminded.university.wrappers.SubjectWrapper;
 
 public interface ControllersFacade {
 	
@@ -40,10 +42,14 @@ public interface ControllersFacade {
     Teacher collectTeacherForView(Long teacherId);
     Teacher updateTeacher(Teacher newTeacher);
 	void deleteTeacher(Long id);
+
     
     //subjects
     List <Subject> collectAllSubjectsForView();
 	SubjectView collectSubjectForView(Long subjectId);
+	Subject saveNewSubject(Subject newSubject);
+	Subject findSubjectById(Long subjectId);
+	SubjectView addNewSubgectToTeacher(Long teacherId, SubjectWrapper subject);
 	
 	//audiences
 	List<Audience> collectAvailableAudiences(LocalDate date, Long sessionId);
@@ -54,7 +60,11 @@ public interface ControllersFacade {
 	// others
 	void cancelLecture (Long lectureId);
 	FreeItemsView collectFreeItemsInSchedule (Long lectureId);
-
+	
+	
+	
+	
+	
 	
 	
 	

@@ -156,6 +156,7 @@ public class LectureService {
 		log.info("Found {} days in current year", studyDays.size());
 		List<FreeItem> freeItems = new ArrayList<>();
 		List<LectureSessions> sessions = lectureSessionsDao.findAll();
+		
 		List<Lecture> archivedLectures = lectureDao.findArchivedLectures(teacherId, groupId);
 		List<Lecture> actualArchivedLectures = archivedLectures.stream().filter(e->e.getDate().getDayOfYear() >= LocalDate.now().getDayOfYear()).collect(Collectors.toList());
 		if (!actualArchivedLectures.isEmpty()) {
