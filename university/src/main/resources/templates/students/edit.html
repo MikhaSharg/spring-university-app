@@ -7,17 +7,10 @@
 		<nav>
 			<div class="container">
 				<ol class="breadcrumb">
-					<li aria-current="page" class="breadcrumb-item"><a href="/">
-							Home</a></li>
-					<li aria-current="page" class="breadcrumb-item"><a
-						th:href="@{/students}">Students</a></li>
-					<li aria-current="page" class="breadcrumb-item"
-						th:text="${student.getFirstName()+' '+student.getLastName()}" />
-					</li>
-					<li aria-current="page" class="breadcrumb-item active">Edit
-					</li>
-					
-					
+					<li aria-current="page" class="breadcrumb-item"><a href="/">Home</a></li>
+					<li aria-current="page" class="breadcrumb-item"><a th:href="@{/students}">Students</a></li>
+					<li aria-current="page" class="breadcrumb-item" th:text="${student.getFirstName()+' '+student.getLastName()}" /></li>
+					<li aria-current="page" class="breadcrumb-item active">Edit></li>
 				</ol>
 			</div>
 		</nav>

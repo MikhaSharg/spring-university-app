@@ -3,55 +3,60 @@
 <head>
 </head>
 <body>
-	<row class="row" id="student" th:fragment="student-form-registration">
+	<row class="row" id="student" th:fragment="student-form-registration(canEdit, editMode, registrationMode)">
 
-	<form method="post" th:action="@{/students/newStudentRegistration}"
-		th:object="${student}">
+	<form method="post" th:action="${registrationMode}? 
+	@{/students/newStudentRegistration} :
+	@{/students/{studentId}/moveToAnotherGroup(studentId=${student.getId()})}" th:object="${student}">
 
-		<div class="mb-3">
-			<label for="firstName">First Name</label> <input class="form-control"
-				id="firstName" th:field="*{firstName}" type="text">
-		</div>
-		<div class="mb-3">
-			<label for="lastName">Last Name</label> <input class="form-control"
-				id="lastName" th:field="*{lastName}" type="text">
 			<div class="mb-3">
-				<label for="gender">Gender</label> <select
-					class="form-select bg-warning" id="gender" th:field="*{gender}">
-					<option th:each="gender : *{genders}"
-						th:selected="*{genders!=null}" th:text="${gender}"
-						th:value="${gender}"></option>
+				<label for="firstName">First Name</label> 
+				<input class="form-control" id="firstName" th:readonly="${!canEdit}" th:field="*{firstName}" type="text">
+			</div>
+		
+			<div class="mb-3">
+				<label for="lastName">Last Name</label>
+				<input class="form-control" id="lastName" th:readonly="${!canEdit}" th:field="*{lastName}" type="text">
+			</div>
+			
+			<div class="mb-3" th:if="${registrationMode}">
+				<label for="gender">Gender</label>
+				<select class="form-select bg-warning" id="gender" th:field="*{gender}">
+					<option th:each="gender : *{genders}" th:selected="*{genders!=null}" th:text="${gender}" th:value="${gender}"></option>
 				</select>
 			</div>
-			<div class="mb-3">
-				<label for="email">Email</label> <input class="form-control"
-					id="email" th:field="*{email}" type="text">
+			
+			<div class="mb-3" th:if="${!registrationMode}">
+				<label for="gender">Gender</label> <input class="form-control" id="gender" th:readonly="${!canEdit}" th:field="*{gender}" type="text">
 			</div>
+			
 			<div class="mb-3">
-				<label for="address">Address</label> <input class="form-control"
-					id="address" th:field="*{address}" type="text">
+				<label for="email">Email</label> <input class="form-control" id="email" th:readonly="${!canEdit}" th:field="*{email}" type="text">
 			</div>
+			
 			<div class="mb-3">
-				<label for="age">Age</label> <input class="form-control" id="age"
-					th:field="*{age}" type="text">
+				<label for="address">Address</label> <input class="form-control" id="address" th:readonly="${!canEdit}" th:field="*{address}" type="text">
 			</div>
+			
 			<div class="mb-3">
-				<label for="phoneNumber">Phone Number</label> <input
-					class="form-control" id="phoneNumber" th:field="*{phoneNumber}"
-					type="text">
+				<label for="age">Age</label> <input class="form-control" id="age" th:readonly="${!canEdit}" th:field="*{age}" type="text">
 			</div>
+			
 			<div class="mb-3">
-				<label for="group">Group</label> <select
-					class="form-select bg-warning" id="groupName"
-					th:field="*{groupName}">
-					<option th:each="group : *{avaliableGroups}"
-						th:selected="*{avaliableGroups!=null}"
-						th:text="${group.getName()}" th:value="${group}"></option>
+				<label for="phoneNumber">Phone Number</label> <input class="form-control" id="phoneNumber" th:readonly="${!canEdit}" th:field="*{phoneNumber}" type="text">
+			</div>
+			
+			<div class="input-group pb-3">
+				<span class="input-group-text bg-secondary text-white col-sm-1">Groups</span>
+				<span class="input-group-text bg-secondary col-sm-3 bg-warning fw-bold fs-6">Please,choose group</span> 
+				<select class= "form-select bg-warning" th:field="*{groupId}">
+					<option th:each="group : *{avaliableGroups}" th:selected="*{avaliableGroups!=null}" th:text="${group.getName()}" th:value="${group.getId()}"></option>
 				</select>
 			</div>
+			
 			<div class="mb-3">
-				<a class="btn btn-secondary btn-sm" role="button"
-					th:href="@{/students}">Cancel</a>
+				<a th:if="${registrationMode}" class="btn btn-secondary btn-sm" role="button" th:href="@{/students}">Cancel</a>
+				<a th:if="${!registrationMode}" class="btn btn-secondary btn-sm" role="button" th:href="@{/groups/{groupId}(groupId=${student.getGroupId()})}">Cancel</a>
 				<button class="btn btn-danger btn-sm" type="submit">Save</button>
 			</div>
 	</form>

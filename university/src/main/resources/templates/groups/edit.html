@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:include="fragments/headerPart :: headerFragment" />
+<body>
+	<header th:replace="fragments/headerPart :: header" />
+	
+	<div class="container">
+		<nav>
+			<div class="container">
+				<ol class="breadcrumb">
+					<li aria-current="page" class="breadcrumb-item"><a href="/">Home</a></li>
+					<li aria-current="page" class="breadcrumb-item"><a th:href="@{/groups}">Groups</a></li>
+					<li aria-current="page" class="breadcrumb-item">Group: [[${group.getName()}]]<a th:href="@{/groups{id}(id=${group.getId()})}"></a></li>
+					<li aria-current="page" class="breadcrumb-item active">Edit</li>
+					
+			</div>
+		</nav>
+		<div>
+			<row
+				th:replace="fragments/forms/group-form :: group-form(editMode=true, canEdit=true)" />
+
+		</div>
+		<div>
+			<row
+				th:replace="fragments/lists/students-list-group :: students-list-group (editMode)" />
+
+		</div>
+</body>
+</html>

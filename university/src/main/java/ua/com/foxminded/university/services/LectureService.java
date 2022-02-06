@@ -36,6 +36,7 @@ public class LectureService {
 	public static final String TEACHER = "teacher";
 	public static final String GROUP = "group";
 	private static final String FIRED_TEACHER = "fired_teacher";
+	private static final String DELETE_SUBJECT = "deleted_subject";
 
 	LocalDate currentDay = LocalDate.now();
 
@@ -110,7 +111,7 @@ public class LectureService {
 	public List<Lecture> findLectureForGroupForCurrentDay(Long groupId) {
 		List<Lecture> lectures = lectureDao.findLecturesForGroupByDate(groupId, currentDay);
 		if (!lectures.isEmpty()) {
-			log.info("Finded {} lectures for group {} on date {}", lectures.size(), groupId, currentDay);
+			log.info("Found {} lectures for group {} on date {}", lectures.size(), groupId, currentDay);
 		} else {
 			log.warn("Could not find any lectures for group {} on date {}", groupId, currentDay);
 		}
@@ -120,7 +121,7 @@ public class LectureService {
 	public Lecture findLectureById(Long lectureId) {
 		Optional<Lecture> lecture = lectureDao.findById(lectureId);
 		if (lecture.isPresent()) {
-			log.info("Finded lecture id: {}, date: {}, subject: {}", lecture.get().getId(), lecture.get().getDate(),
+			log.info("Found lecture id: {}, date: {}, subject: {}", lecture.get().getId(), lecture.get().getDate(),
 					lecture.get().getSubject().getName());
 		} else {
 			log.warn("Could not find subject with ID {}", lectureId);
@@ -139,7 +140,7 @@ public class LectureService {
 	
 	public void cancelLecturesForRetiredTeacher(Long teacherId) {
 		List<Lecture> lecturesWithRetiredTeacher = lectureDao.findAllLecturesByTeacherId(teacherId);
-		log.info("Prepare {} lectures for cancel that have fired teacher ID {}", lecturesWithRetiredTeacher.size(), teacherId);
+		log.info("Prepare {} lectures to cancel that have fired teacher ID {}", lecturesWithRetiredTeacher.size(), teacherId);
 		lecturesWithRetiredTeacher.stream().forEach(lecture->{
 			lecture.setStatus(FIRED_TEACHER);
 			lectureDao.archiveLecture(lecture);
@@ -234,5 +235,26 @@ public class LectureService {
 			lectures.addAll(archivedLectures);
 			lectures.sort((Lecture lecture1, Lecture lecture2) -> lecture1.getId().compareTo(lecture2.getId()));
 		}
+	}
+
+	public Boolean cancelAllLecturesForDeletablegSubject(Long teacherId, Long subjectId) {
+		List<Lecture> lectures = lectureDao.findAllLecturesByTeacherId(teacherId);
+		lectures = lectures.stream().filter(lec->lec.getSubject().getId().equals(subjectId)).collect(Collectors.toList());
+	 	if(lectures.isEmpty()) {
+	 		return false;
+	 	} else {
+	 	
+
+		log.info("Prepare {} lectures to cancel because Subject ID {} was deleted from Teacher ID {}", lectures.size(), subjectId, teacherId);
+		List<Long> counter = new ArrayList<>();
+		lectures.stream().forEach(lec->{
+			lec.setStatus(DELETE_SUBJECT);
+			lectureDao.archiveLecture(lec);
+			counter.add(lec.getId());
+			lectureDao.deleteById(lec.getId());
+		});
+		log.info("{} lectures was archived (deleted)", counter.size());
+		return true;
+	 	}
 	}
 }

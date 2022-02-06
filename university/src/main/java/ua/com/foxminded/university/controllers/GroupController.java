@@ -1,15 +1,16 @@
 package ua.com.foxminded.university.controllers;
 
+import static ua.com.foxminded.university.controllers.ControllerUtils.setTitle;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import ua.com.foxminded.university.facade.ControllersFacade;
 import ua.com.foxminded.university.model.Group;
-
-import static ua.com.foxminded.university.controllers.ControllerUtils.*;
 
 
 @Controller
@@ -36,5 +37,18 @@ public class GroupController {
 		setTitle(model, "Group", group.getName());
 		return "groups/view";
 	}
-
+	
+	@GetMapping(path="/{id}/edit")
+	String showGroupEditForm (@PathVariable(name="id") Long id, Model model) {
+		model.addAttribute("group", facade.findGroupById(id));
+		return "groups/edit";
+	}
+	
+	@PostMapping(path="/{id}/edit")
+	String updateGroup (@PathVariable(name="id") Long id, Group group) {
+		group.setId(id);
+		facade.saveGroup(group);
+		return "redirect:/groups/" + id;
+	}
+	
 }

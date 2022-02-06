@@ -49,12 +49,69 @@ public class SubjectController {
 	
 	@PostMapping(path="/{teacherId}/addNewSubject")
 	String addNewSubjectToTeacher (@PathVariable(name="teacherId") Long teacherId, SubjectWrapper subject, Model model) {
-		SubjectView subjectView = facade.addNewSubgectToTeacher (teacherId, subject);
+		SubjectView subjectView = facade.addNewSubjectToTeacher (teacherId, subject);
 		String response = "redirect:/teachers/"+teacherId;
 		model.addAttribute("subject", subjectView);
 		return response;
 	}
 	
+	@GetMapping(path="/delete/subject{subjectId}/from/teacher{teacherId}")
+	String deleteSubjectFromTeacher (@PathVariable(name="teacherId") Long teacherId, @PathVariable(name="subjectId") Long subjectId) {
+		facade.deleteSubject(teacherId, subjectId);
+		String response = "redirect:/teachers/"+teacherId;
+		return response;
+	}
 	
+	@GetMapping(path="/edit/subject{subjectId}/for/teacher{teacherId}")
+	String showSubjectEditFormTeacherMode (@PathVariable(name="subjectId") Long subjectId, @PathVariable(name="teacherId") Long teacherId, Model model) {
+		SubjectWrapper subject = new SubjectWrapper(
+				facade.findSubjectById(subjectId), 
+				facade.collectTeacherForView(teacherId),
+				facade.collectTeachersForSubject(subjectId));
+		model.addAttribute("subject", subject);
+		return "subjects/edit";
+	}
 	
+	@PostMapping(path="/edit/subject{subjectId}/for/teacher{teacherId}")
+	String updateSubjectTeacherMode (@PathVariable(name="subjectId") Long subjectId, @PathVariable(name="teacherId") Long teacherId, Model model, SubjectWrapper subjectWrapper) {
+		subjectWrapper.setId(subjectId);
+		subjectWrapper.setTeacher(facade.collectTeacherForView(teacherId));
+		facade.saveSubject(subjectWrapper.getNewSubject());
+		return "redirect:/teachers/"+teacherId;
+	}
+	
+	@GetMapping(path="/{id}/edit")
+	String showSubjectEditFormBaseMode (@PathVariable(name="id") Long id, Model model) {
+		SubjectWrapper subject = new SubjectWrapper(
+				facade.findSubjectById(id), 
+				facade.collectTeachersForSubject(id));
+		model.addAttribute("subject", subject);
+		return "subjects/editBase";
+	}
+	
+	@PostMapping(path="/{id}/edit")
+	String updateSubjectBaseMode (@PathVariable(name="id") Long id, Model model, SubjectWrapper subjectWrapper) {
+		subjectWrapper.setId(id);
+		subjectWrapper.setTeachers(facade.collectTeachersForSubject(id));
+		facade.saveSubject(subjectWrapper.getNewSubject());
+		model.addAttribute("subject", subjectWrapper);
+		return "subjects/view";
+	}
+	
+	@GetMapping(path="/{id}/delete")
+	String showSubjectDeleteForm (@PathVariable(name="id") Long id, Model model) {
+		SubjectWrapper subject = new SubjectWrapper(
+				facade.findSubjectById(id), 
+				facade.collectTeachersForSubject(id));
+		model.addAttribute("subject", subject);
+		return "subjects/delete";
+	}
+	
+	@PostMapping(path="/{id}/delete")
+	String deleteSubject (@PathVariable(name="id") Long id, Model model, SubjectWrapper subjectWrapper) {
+		System.out.println(subjectWrapper);
+		facade.deleteSubject(subjectWrapper.getTeacherId(), id);
+		model.addAttribute("subjects", facade.collectAllSubjectsForView());
+		return "subjects/list";
+	}
 }

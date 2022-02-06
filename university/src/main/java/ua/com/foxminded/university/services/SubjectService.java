@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import ua.com.foxminded.university.dao.SubjectDao;
-import ua.com.foxminded.university.model.Student;
 import ua.com.foxminded.university.model.Subject;
 
 @Service
@@ -28,7 +27,7 @@ public class SubjectService {
 	public Subject findSubjectById(Long id) {
 		Optional<Subject> subject = subjectDao.findById(id);
 		if (subject.isPresent()) {
-			log.info("Finded subject {}, {}", subject.get().getId(), subject.get().getName());
+			log.info("Found subject {}, {}", subject.get().getId(), subject.get().getName());
 		} else {
 			log.warn("Could not find subject with ID {}", id);
 		}
@@ -37,8 +36,9 @@ public class SubjectService {
 
 	public List<Subject> findAllExistSubjects() {
 		List<Subject> subjects = subjectDao.findAll();
+
 		if (!subjects.isEmpty()) {
-			log.info("Finded {} subjects", subjects.size());
+			log.info("Found {} subjects", subjects.size());
 		} else {
 			log.warn("Could not find any subjects");
 		}
@@ -55,8 +55,26 @@ public class SubjectService {
 		return savedSubject;
 	}
 
-	public void addSubjectToTeacher(Long teacherId, Long subjectId) {
+	public void enrolleSubjectToTeacher(Long teacherId, Long subjectId) {
 		subjectDao.addSubjectToTeacher(teacherId, subjectId);
-		log.info("Subject ID {} was added to Teacher ID {}", subjectId, teacherId);
+		log.info("Subject ID {} was enrolled to Teacher ID {}", subjectId, teacherId);
 	}
+
+	public void unenrollSubjectFromTeacher(Long teacherId, Long subjectId) {
+		subjectDao.deleteSubjectFromTeacher(teacherId, subjectId);
+		log.info("Subject ID {} was unenrolled from Teacher ID {}", subjectId, teacherId);
+	}
+
+	public void deleteSubject(Long subjectId) {
+		subjectDao.deleteById(subjectId);
+		log.info("Subject ID {} was deleted from DB", subjectId);
+	}
+
 }
+
+//	public List<Subject> doFilterSubjects (List<Subject> subjects) {
+//		List<Long> archivedSubjectIds = subjectDao.findArchivedSubjectIds();
+//		List<Subject> filteredSubjects = subjects.stream().filter(subject->{return !archivedSubjectIds.contains(subject.getId());}).collect(Collectors.toList());
+//		log.info("Filter removed {} archived Subjects", subjects.size()-filteredSubjects.size());
+//		return filteredSubjects;
+//	}

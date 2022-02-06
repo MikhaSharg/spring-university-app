@@ -38,6 +38,7 @@ import ua.com.foxminded.university.services.SessionService;
 import ua.com.foxminded.university.services.StudentService;
 import ua.com.foxminded.university.services.SubjectService;
 import ua.com.foxminded.university.services.TeacherService;
+import ua.com.foxminded.university.wrappers.StudentWrapper;
 import ua.com.foxminded.university.wrappers.SubjectWrapper;
 
 @Controller
@@ -160,7 +161,11 @@ public class ControllersFacadeImpl implements ControllersFacade {
 
 	@Override
 	public List<Teacher> collectAllTeachersForList() {
-		return teacherService.findAllExistTeachers();
+		List<Teacher> teachers = teacherService.findAllExistTeachers();
+		teachers.stream().forEach(teacher -> {
+			teacher.setSubjects(teacher.getSubjects());
+		});
+		return teachers;
 	}
 
 	@Override
@@ -254,7 +259,7 @@ public class ControllersFacadeImpl implements ControllersFacade {
 	}
 
 	@Override
-	public Subject saveNewSubject(Subject newSubject) {
+	public Subject saveSubject(Subject newSubject) {
 		return subjectService.saveSubject(newSubject);
 	}
 
@@ -264,10 +269,36 @@ public class ControllersFacadeImpl implements ControllersFacade {
 	}
 
 	@Override
-	public SubjectView addNewSubgectToTeacher(Long teacherId, SubjectWrapper subject) {
-		Long newSubjectId = findSubjectById(saveNewSubject(subject.getNewSubject()).getId()).getId();
-		subjectService.addSubjectToTeacher(teacherId, newSubjectId);
+	public SubjectView addNewSubjectToTeacher(Long teacherId, SubjectWrapper subject) {
+		Long newSubjectId = findSubjectById(saveSubject(subject.getNewSubject()).getId()).getId();
+		subjectService.enrolleSubjectToTeacher(teacherId, newSubjectId);
 		return collectSubjectForView(newSubjectId);
 	}
+
+	@Override
+	public void deleteSubject(Long teacherId, Long subjectId) {
+		boolean isExistLecturesForSubject = lectureService.cancelAllLecturesForDeletablegSubject(teacherId, subjectId);
+		if (!isExistLecturesForSubject) {
+			subjectService.unenrollSubjectFromTeacher(teacherId, subjectId);
+			subjectService.deleteSubject(subjectId);
+		}
+	}
+
+	@Override
+	public List<Teacher> collectTeachersForSubject(Long subjectId) {
+		return teacherService.findAllTeachersBySubjectId(subjectId);
+	}
+
+	@Override
+	public StudentWrapper prepareDataForMoveStudentForm(Long studentId) {
+		return new StudentWrapper(studentService.findStudentById(studentId), collectAllNotFullGroups());
+	}
+
+	@Override
+	public void saveGroup(Group group) {
+		groupService.saveGroup(group);
+	}
+	
+	
 
 }

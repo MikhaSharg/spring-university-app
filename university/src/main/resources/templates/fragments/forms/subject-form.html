@@ -4,13 +4,15 @@
 </head>
 <body>
 	<row class="row" id="subject"
-		th:fragment="subject-form(editMode, canEdit, newSubject)">
+		th:fragment="subject-form(editMode, canEdit, newSubject, teacherMode)">
 
 	<div class="d-grid" th:if="${!editMode}">
 		<a class="btn btn-primary btn-sm h5" role="button" th:href="@{/lectures/subject/{id}(id=${subject.getId()})}">Schedule</a>
 	</div>
 
-	<form method="post" th:action="${newSubject}!=true ? @{/subjects/{id}/edit(id=${subject.getId()})} : @{/subjects/{teacherId}/addNewSubject(teacherId=${subject.getTeacher().getId()})}" th:object="${subject}">
+	<form method="post" th:if="${teacherMode}" th:action="${newSubject}!=true ? 
+	@{/subjects/edit/subject{subjectId}/for/teacher{teacherId}(subjectId=${subject.getId()}, teacherId=${subject.getTeacher().getId()})} : 
+	@{/subjects/{teacherId}/addNewSubject(teacherId=${subject.getTeacher().getId()})}" th:object="${subject}">
 		<div class="mb-3">
 			<label for="name">Name</label>
 			<input class="form-control" id="name" th:field="*{name}" th:readonly="${!editMode}" th:value="${subject.getName()}" type="text">
@@ -20,13 +22,25 @@
 			<a class="btn btn-danger btn-sm" role="button" th:href="@{/teachers/{teacherId}(teacherId=${subject.getTeacher().getId()})}">Cancel</a>
 			<button class="btn btn-success btn-sm" type="submit">Save</button>
 		</div>
+	</form>
+	
+	<form method="post" th:if="${!teacherMode}" th:action="@{/subjects/{id}/edit(id=${subject.getId()})}"
+	 th:object="${subject}">
+		<div class="mb-3">
+			<label for="name">Name</label>
+			<input class="form-control" id="name" th:field="*{name}" th:readonly="${!editMode}" th:value="${subject.getName()}" type="text">
+		</div>
 		
+		<div class="mb-3" th:if="${editMode && canEdit}">
+			<a class="btn btn-danger btn-sm" role="button" th:href="@{/subjects/{id}(id=${subject.getId()})}">Cancel</a>
+			<button class="btn btn-success btn-sm" type="submit">Save</button>
+		</div>
 	</form>
 
 	<div class="mb-3" th:if="${!editMode}">
-		<form method="post" th:action="@{/subject/{id}/delete(id=${subject.getId()})}">
-			<a class="btn btn-primary btn-sm" role="button" th:href="@{/subject/{id}/edit(id=${subject.getId()})}">Edit</a>
-			<button class="btn btn-danger btn-sm" onclick="return confirm('Are you sure?')" type="submit">Delete</button>
+		<form method="get" th:action="@{/subjects/{id}/delete(id=${subject.getId()})}">
+			<a class="btn btn-primary btn-sm" role="button" th:href="@{/subjects/{id}/edit(id=${subject.getId()})}">Edit</a>
+			<button class="btn btn-danger btn-sm" type="submit">Delete</button>
 		</form>
 	</div>
 	

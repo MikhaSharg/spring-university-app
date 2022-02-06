@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+</head>
+<body>
+	<row class="row" id="subject" th:fragment="delete-subject-form">
+
+	<form method="post"  th:action="${newSubject}" th:object="${subject}">
+		<div class="mb-3">
+			<label for="name">Name</label>
+			<input class="form-control" id="name" th:field="*{name}" th:readonly="${true}" th:value="${subject.getName()}" type="text">
+		</div>
+		
+		<div class="input-group pb-3">
+			<span class="input-group-text bg-secondary text-white col-sm-1">Teachers</span>
+			<span class="input-group-text bg-secondary col-sm-3 bg-warning fw-bold fs-6">Please,choose teacher</span> 
+			<select class="form-select bg-warning" id="teacher" th:field="*{teacherId}">
+				<option th:each="teacher : *{teachers}" th:selected="*{teacher!=null}" th:text="${teacher}" th:value="${teacher.getId()}"></option>
+			</select>
+		</div>
+		
+		<div class="mb-3">
+			<a class="btn btn-danger btn-sm" role="button" th:href="@{/subjects/{id}(id=${subject.getId()})}">Cancel</a>
+			<button class="btn btn-danger btn-sm" type="submit">Delete</button>
+		</div>
+	</form>
+	
+	</row>
+</body>
+</html>

@@ -28,4 +28,9 @@ public class SubjectView {
 		return teachers;
 	}
 
+	@Override
+	public String toString() {
+		return "SubjectView [id=" + id + ", name=" + name + ", teachers=" + teachers + "]";
+	}
+
 }

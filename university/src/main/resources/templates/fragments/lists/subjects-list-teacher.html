@@ -25,10 +25,9 @@
 					<td><span th:text="${subject.getName()}" /></td>
 					
 					<td>
-					<a class="btn btn-primary btn-sm" role="button">Edit</a>
-					<a class="btn btn-danger btn-sm" role="button">Delete</a>
+					<a class="btn btn-primary btn-sm" role="button" th:href="@{/subjects/edit/subject{subjectId}/for/teacher{teacherId}(subjectId=${subject.getId()}, teacherId=${teacher.getId()})}">Edit</a>
+					<a class="btn btn-danger btn-sm" role="button" th:href="@{/subjects/delete/subject{subjectId}/from/teacher{teacherId}(subjectId=${subject.getId()}, teacherId=${teacher.getId()})}">Delete</a>
 					</td>
-					
 				</tr>
 			</tbody>
 		</table>

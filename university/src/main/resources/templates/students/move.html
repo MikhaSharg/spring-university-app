@@ -10,20 +10,22 @@
 					<li aria-current="page" class="breadcrumb-item"><a href="/">
 							Home</a></li>
 					<li aria-current="page" class="breadcrumb-item"><a
-						th:href="@{/groups}">Groups</a></li>
+						th:href="@{/students}">Students</a></li>
 					<li aria-current="page" class="breadcrumb-item"
-						th:text="'Group: ' + ${group.getName()}" />
+						th:text="${student.getFirstName()+' '+student.getLastName()}" />
+					</li>
+					<li aria-current="page" class="breadcrumb-item active">Move student to another group
+					</li>
+					
+					
+				</ol>
 			</div>
 		</nav>
-		<div>
-			<row
-				th:replace="fragments/forms/group-form :: group-form(editMode=false, canEdit=false)" />
+<div>
+		<row
+			th:replace="fragments/forms/student-form-registration :: student-form-registration(canEdit=false, editMode=true, registrationMode=false)" />
+</div>
+	</div>
 
-		</div>
-		<div>
-			<row
-				th:replace="fragments/lists/students-list-group :: students-list-group(editMode=false)" />
-
-		</div>
 </body>
 </html>

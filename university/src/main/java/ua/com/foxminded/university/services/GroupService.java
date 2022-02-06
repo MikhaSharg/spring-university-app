@@ -10,13 +10,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import ua.com.foxminded.university.dao.GroupDao;
-import ua.com.foxminded.university.misc.DataGenerator;
 import ua.com.foxminded.university.misc.GeneratorConfig;
 import ua.com.foxminded.university.model.Group;
 import ua.com.foxminded.university.model.Student;
 
 @Service
-@Transactional(readOnly = true)
+@Transactional
 public class GroupService {
 
 	private static final Logger log = LoggerFactory.getLogger(GroupService.class);
@@ -27,10 +26,10 @@ public class GroupService {
 	public GroupService(GroupDao groupDao, StudentService studentService, GeneratorConfig config) {
 		this.groupDao = groupDao;
 		this.studentService = studentService;
-		this.config=config;
+		this.config = config;
 	}
 
-	Group saveGroup(Group newGroup) {
+	public Group saveGroup(Group newGroup) {
 		Group group = groupDao.save(newGroup);
 		if (newGroup.getId() == null) {
 			log.info("Saved group {}", group.getName());
@@ -57,7 +56,7 @@ public class GroupService {
 		} else {
 			log.warn("Could not find any groups");
 		}
-		
+
 		return groups;
 	}
 
@@ -72,14 +71,16 @@ public class GroupService {
 	}
 
 	public List<Group> findAllNotFullGroups() {
-		List<Group> allGroups =	this.findAllExistGroups();
+		List<Group> allGroups = this.findAllExistGroups();
 		int maxSizeStudentInOneGroup = config.getGroupsMaxStudenets();
-		List<Group> notFullGroups = allGroups.stream().filter(gr->gr.getStudents().size()<maxSizeStudentInOneGroup).collect(Collectors.toList());
+		List<Group> notFullGroups = allGroups.stream().filter(gr -> gr.getStudents().size() < maxSizeStudentInOneGroup)
+				.collect(Collectors.toList());
 		if (!notFullGroups.isEmpty()) {
-			log.info("Found {} not full groups. Max count of students in one group is {}", notFullGroups.size(), config.getGroupsMaxStudenets());
+			log.info("Found {} not full groups. Max count of students in one group is {}", notFullGroups.size(),
+					config.getGroupsMaxStudenets());
 		} else {
 			log.warn("All groups are full");
 		}
-		return notFullGroups; 
+		return notFullGroups;
 	}
 }

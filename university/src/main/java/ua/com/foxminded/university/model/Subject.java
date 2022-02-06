@@ -3,6 +3,7 @@ package ua.com.foxminded.university.model;
 public class Subject extends IdEntity {
 
     private String name;
+    private Boolean isDeleted;
 
     public Subject(Long id, String name) {
         super(id);
@@ -19,10 +20,19 @@ public class Subject extends IdEntity {
     }
 
     public void setName(String name) {
-        this.name = name;
+    	this.name = name;
     }
 
-    @Override
+    
+    public Boolean getIsDeleted() {
+		return isDeleted;
+	}
+
+	public void setIsDeleted(Boolean isDeleted) {
+		this.isDeleted = isDeleted;
+	}
+
+	@Override
     public int hashCode() {
         final int prime = 31;
         int result = super.hashCode();
@@ -51,8 +61,5 @@ public class Subject extends IdEntity {
     public String toString() {
         return name;
     }
-
-
-
 
 }

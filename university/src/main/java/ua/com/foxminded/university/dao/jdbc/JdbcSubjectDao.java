@@ -3,10 +3,12 @@ package ua.com.foxminded.university.dao.jdbc;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Types;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -19,7 +21,9 @@ import ch.qos.logback.core.subst.Token.Type;
 import ua.com.foxminded.university.dao.AbstractCrudDao;
 import ua.com.foxminded.university.dao.SubjectDao;
 import ua.com.foxminded.university.dao.mappers.TeacherMapper;
+import ua.com.foxminded.university.misc.Status;
 import ua.com.foxminded.university.model.Subject;
+import ua.com.foxminded.university.model.Teacher;
 
 @Repository
 public class JdbcSubjectDao extends AbstractCrudDao<Subject> implements SubjectDao {
@@ -36,6 +40,8 @@ public class JdbcSubjectDao extends AbstractCrudDao<Subject> implements SubjectD
 	private static final String SELECT_ALL_BY_TEACHER_ID = "SELECT * FROM subjects WHERE subject_id  IN  (SELECT subject_id FROM teachers_subjects WHERE teacher_id = ?)";
 	private static final String INSERT_ONE_SUBJECT_TO_TEACHER = "INSERT INTO teachers_subjects (teacher_id, subject_id) VALUES (?, ?)";
 	private static final String DELETE_ONE_SUBJECT_FROM_TEACHER = "DELETE FROM teachers_subjects WHERE teacher_id =? AND subject_id =?";
+	private static final String SELECT_SUBJECT_IDS_FROM_ARCHIVE = "SELECT  DISTINCT subject_id FROM archive_lectures WHERE status=?"; 
+	
 
 	public JdbcSubjectDao(JdbcTemplate jdbsTemplate, RowMapper<Subject> rowMapper) {
 		super(jdbsTemplate, rowMapper);
@@ -173,7 +179,20 @@ public class JdbcSubjectDao extends AbstractCrudDao<Subject> implements SubjectD
 
 	@Override
 	public List<Subject> findAllSubjectsByTeacherId(Long teacherId) {
-		return jdbcTemplate.query(SELECT_ALL_BY_TEACHER_ID, rowMapper, teacherId);
+		List<Long> archivedSubjectIds = findArchivedSubjectIds();
+		return jdbcTemplate.query(SELECT_ALL_BY_TEACHER_ID, rowMapper, teacherId).stream().filter(s->{return !archivedSubjectIds.contains(s.getId());}).collect(Collectors.toList());
 	}
 
+	@Override
+	public List<Long> findArchivedSubjectIds() {
+		return jdbcTemplate.query(SELECT_SUBJECT_IDS_FROM_ARCHIVE, ps -> ps.setString(1, Status.DELETE_SUBJECT), rs -> {
+			List <Long> archivedSubjectIds = new ArrayList<>();
+			while(rs.next()) {
+				archivedSubjectIds.add(rs.getLong(1));
+			}
+			return archivedSubjectIds;
+		});
+	}
+	
+	
 }

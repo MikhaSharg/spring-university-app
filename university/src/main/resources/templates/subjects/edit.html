@@ -11,19 +11,20 @@
 				<ol class="breadcrumb">
 					<li aria-current="page" class="breadcrumb-item"><a href="/">Home</a></li>
 					<li aria-current="page" class="breadcrumb-item"><a th:href="@{/subjects}">Subjects</a></li>
-					<li aria-current="page" class="breadcrumb-item active"/>Add new subject to Teacher</li>
+					<li aria-current="page" class="breadcrumb-item" th:text="'Subject: ' + ${subject.getName()}"/><a th:href="@{/subjects/{id}(id=${subject.getId()})}"></a></li>
+					<li aria-current="page" class="breadcrumb-item active">Edit</li>
 				</ol>
 			</div>
 		</nav>
 		
 		<div>
 			<row
-				th:replace="fragments/forms/subject-form :: subject-form(editMode=true, canEdit=true, newSubject=true, teacherMode=true)"/>
+				th:replace="fragments/forms/subject-form :: subject-form(editMode=true, canEdit=true, newSubject=false, teacherMode=true)"/>
 		</div>
 		
 		<div>
 			<row
-				th:replace="fragments/lists/teachers-list-subject :: teachers-list-subject(editMode=false, canEdit=false)"/>
+				th:replace="fragments/lists/teachers-list-subject :: teachers-list-subject(editMode=true, canEdit=true)"/>
 		</div>
 		
 	</div>

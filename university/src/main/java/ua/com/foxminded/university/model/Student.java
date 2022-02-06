@@ -20,7 +20,7 @@ public class Student extends AbstractPerson {
 			Long phoneNumber) {
 		super(firstName, lastName, gender, email, address, age, phoneNumber);
 	}
-	
+
 	public Student(String firstName, String lastName, String gender, String email, String address, Integer age,
 			Long phoneNumber, String role) {
 		super(firstName, lastName, gender, email, address, age, phoneNumber, role);
@@ -69,6 +69,5 @@ public class Student extends AbstractPerson {
 				+ ",\n Age()=" + getAge() + ",\n PhoneNumber()=" + getPhoneNumber() + ",\n Role()=" + getRole()
 				+ ",\n groupId=" + groupId + "]";
 	}
-
 
 }

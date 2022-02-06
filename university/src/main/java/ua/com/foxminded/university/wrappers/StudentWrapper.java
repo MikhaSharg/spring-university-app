@@ -16,6 +16,7 @@ public class StudentWrapper {
 	private String address;
 	private Integer age;
 	private Long phoneNumber;
+	private Long groupId;
 	private String groupName;
 	
 	private List<Group> avaliableGroups;
@@ -49,6 +50,22 @@ public class StudentWrapper {
 		this.phoneNumber=beforeUpdateStudent.getPhoneNumber();
 		this.groupName=groupName;
 		this.id=beforeUpdateStudent.getId();
+	}
+
+	public StudentWrapper(Student beforeUpdateStudent, List<Group> avaliableGroups) {
+		super();
+		this.avaliableGroups = avaliableGroups;
+		this.beforeUpdateStudent = beforeUpdateStudent;
+		this.id=beforeUpdateStudent.getId();
+		this.firstName=beforeUpdateStudent.getFirstName();
+		this.lastName=beforeUpdateStudent.getLastName();
+		this.gender=beforeUpdateStudent.getGender();
+		this.email=beforeUpdateStudent.getEmail();
+		this.address=beforeUpdateStudent.getAddress();
+		this.age=beforeUpdateStudent.getAge();
+		this.phoneNumber=beforeUpdateStudent.getPhoneNumber();
+		this.id=beforeUpdateStudent.getId();
+		this.groupId=beforeUpdateStudent.getGroupId();
 	}
 
 	public String getFirstName() {
@@ -146,13 +163,27 @@ public class StudentWrapper {
 		this.id = id;
 	}
 
+	public Long getGroupId() {
+		return groupId;
+	}
+
+	public void setGroupId(Long groupId) {
+		this.groupId = groupId;
+	}
+
+	public Student getBeforeUpdateStudent() {
+		return beforeUpdateStudent;
+	}
+
 	@Override
 	public String toString() {
-		return "StudentRegistration [firstName=" + firstName + ", lastName=" + lastName + ", gender=" + gender
-				+ ", email=" + email + ", address=" + address + ", age=" + age + ", phoneNumber=" + phoneNumber
-				+ ", groupName=" + groupName + ", avaliableGroups=" + avaliableGroups + ", genders=" + genders
-				+ ", student=" + student + "]";
+		return "StudentWrapper [id=" + id + ",\n firstName=" + firstName + ",\n lastName=" + lastName + ",\n gender=" + gender
+				+ ",\n email=" + email + ",\n address=" + address + ",\n age=" + age + ",\n phoneNumber=" + phoneNumber
+				+ ",\n groupId=" + groupId + ",\n groupName=" + groupName + ",\n avaliableGroups=" + avaliableGroups
+				+ ",\n genders=" + genders + ",\n student=" + student + ",\n beforeUpdateStudent=" + beforeUpdateStudent
+				+ "]";
 	}
+
 	
 	
 	

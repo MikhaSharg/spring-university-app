@@ -11,5 +11,7 @@ public interface SubjectDao extends CrudDao<Subject, Long> {
 	public void addSubjectToTeacher (Long teacherId, Long subjectId);
 	
 	public void deleteSubjectFromTeacher (Long teacherId, Long subjectId);
+	
+	public List<Long> findArchivedSubjectIds(); 
 
 }

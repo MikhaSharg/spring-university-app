@@ -19,6 +19,7 @@ import org.springframework.stereotype.Repository;
 
 import ua.com.foxminded.university.dao.AbstractCrudDao;
 import ua.com.foxminded.university.dao.TeacherDao;
+import ua.com.foxminded.university.misc.Status;
 import ua.com.foxminded.university.model.Teacher;
 import ua.com.foxminded.university.model.Subject;
 
@@ -50,6 +51,7 @@ public class JdbcTeacherDao extends AbstractCrudDao<Teacher> implements TeacherD
 			+ "ON s.subject_id = ts.subject_id";
 	private static final String SELECT_All_TEACHERS_BY_SUBJECT_ID = "SELECT t.* FROM teachers t JOIN teachers_subjects ts USING (teacher_id) WHERE ts.subject_id = ?";
 	private static final Object FIRED = "fired_teacher";
+	private static final String SELECT_SUBJECT_IDS_FROM_ARCHIVE = "SELECT  DISTINCT subject_id FROM archive_lectures WHERE status=?"; 
 
 	
 	public JdbcTeacherDao(JdbcTemplate jdbsTemplate, RowMapper<Teacher> rowMapper) {
@@ -96,7 +98,6 @@ public class JdbcTeacherDao extends AbstractCrudDao<Teacher> implements TeacherD
 		return new Teacher(entity.getId(), entity.getFirstName(), entity.getLastName(), entity.getGender(),
 				entity.getEmail(), entity.getAddress(), entity.getAge(), entity.getPhoneNumber(), entity.getRole(),
 				entity.getProfile());
-
 	}
 
 	@Override
@@ -226,7 +227,7 @@ public class JdbcTeacherDao extends AbstractCrudDao<Teacher> implements TeacherD
 
 			teacher.setSubjects(subjects);
 
-			return pointFiredTeacher(teacher);
+			return doFilterSubjectsForTeacher(pointFiredTeacher(teacher));
 		});
 
 	}
@@ -307,6 +308,7 @@ public class JdbcTeacherDao extends AbstractCrudDao<Teacher> implements TeacherD
 				}
 
 			}
+			
 			return pointeFiredTeacher(teachers);
 		});
 	}
@@ -321,14 +323,12 @@ public class JdbcTeacherDao extends AbstractCrudDao<Teacher> implements TeacherD
 						rs.getString("address"), rs.getInt("age"), rs.getLong("phone_number"),
 						rs.getString("role"), rs.getString("profile")));
 			}
-			
-			return pointeFiredTeacher(teachers);
+			return doFilterSubjectsForTeachers(pointeFiredTeacher(teachers));
 		});
 	}
 	
 	private List<Teacher> pointeFiredTeacher (List<Teacher> teachers) {
 		List<Teacher> pointedFiredLectures = new ArrayList<>();
-		
 		if(!teachers.isEmpty()) {
 		teachers.stream().forEach(teach-> {
 			
@@ -336,15 +336,7 @@ public class JdbcTeacherDao extends AbstractCrudDao<Teacher> implements TeacherD
 				
 		teach.setIsFired(true);
 		pointedFiredLectures.add(teach);
-		
-		} 
-			
-			else {pointedFiredLectures.add(teach);}
-			
-			
-			
-			
-			
+		} else {pointedFiredLectures.add(teach);}
 		});
 		return pointedFiredLectures;
 		} return teachers;
@@ -357,5 +349,38 @@ public class JdbcTeacherDao extends AbstractCrudDao<Teacher> implements TeacherD
 		}
 		return pointingTeacher;	
 		}
+	
+	
+	private List<Teacher> doFilterSubjectsForTeachers (List<Teacher> teachers) {
+		List<Long> archivedSubjects = findArchivedSubjectIds();
+		List<Teacher> teachersWithFilteredSubjects = new ArrayList<>(teachers);
+		teachers.stream().forEach(teacher->{
+			teacher.setSubjects(teacher.getSubjects().stream().filter(s->{
+				return !archivedSubjects.contains(s.getId());
+			}).collect(Collectors.toList()));			
+		});
+		return teachersWithFilteredSubjects;
+	}
+	
+	private Teacher doFilterSubjectsForTeacher (Teacher teacher) {
+		List<Long> archivedSubjects = findArchivedSubjectIds();
+		Teacher teacherWithFilteredSubjects = teacher;
+		teacherWithFilteredSubjects.setSubjects(teacher.getSubjects().stream().filter(s->{
+			return !archivedSubjects.contains(s.getId());
+		}).collect(Collectors.toList()));
+		
+		return teacherWithFilteredSubjects;
+	}
+	
+	private List<Long> findArchivedSubjectIds() {
+		return jdbcTemplate.query(SELECT_SUBJECT_IDS_FROM_ARCHIVE, ps -> ps.setString(1, Status.DELETE_SUBJECT), rs -> {
+			List <Long> archivedSubjectIds = new ArrayList<>();
+			while(rs.next()) {
+				archivedSubjectIds.add(rs.getLong(1));
+			}
+			return archivedSubjectIds;
+		});
+	}
+	
 }
 	
