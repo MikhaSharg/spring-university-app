@@ -278,8 +278,8 @@ public class ControllersFacadeImpl implements ControllersFacade {
 	@Override
 	public void deleteSubject(Long teacherId, Long subjectId) {
 		boolean isExistLecturesForSubject = lectureService.cancelAllLecturesForDeletablegSubject(teacherId, subjectId);
+		subjectService.unenrollSubjectFromTeacher(teacherId, subjectId);
 		if (!isExistLecturesForSubject) {
-			subjectService.unenrollSubjectFromTeacher(teacherId, subjectId);
 			subjectService.deleteSubject(subjectId);
 		}
 	}
@@ -298,7 +298,5 @@ public class ControllersFacadeImpl implements ControllersFacade {
 	public void saveGroup(Group group) {
 		groupService.saveGroup(group);
 	}
-	
-	
 
 }

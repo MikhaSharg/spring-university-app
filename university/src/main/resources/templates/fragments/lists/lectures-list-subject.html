@@ -45,14 +45,41 @@
 							class="bg-secondary text-white h5"
 							th:text="'Lectures :' + ' ' + ${instance.key}">...</td>
 					</tr>
-
-					<tr th:each="lecture : ${instance.value}" th:onclick="'window.location.href=\'/lectures/' + ${lecture.getId()} + '\''">
-						<td th:text="${lecture.getSession().getPeriod()}">...</td>
-						<td th:text="${lecture.getTeacher().getFirstName()} +' ' + ${lecture.getTeacher().getLastName()}+ ', ' + ${lecture.getTeacher().getProfile()}">...</td>
-						<td
-							th:text="${lecture.getGroup().getName()}">...</td>
-						<td th:text="${lecture.getAudience().getRoomNumber()}">...</td>
-					</tr>
+					<div th:each="lecture : ${instance.value}">
+						
+						<div th:if="${lecture.isArchived()==false && lecture.isModified()==false}">
+							<tr  th:onclick="'window.location.href=\'/lectures/' + ${lecture.getId()} + '\''">
+								<td th:text="${lecture.getSession().getPeriod()}">...</td>
+								<td th:text="${lecture.getTeacher().getFirstName()} +' ' + ${lecture.getTeacher().getLastName()}+ ', ' + ${lecture.getTeacher().getProfile()}">...</td>
+								<td th:text="${lecture.getGroup().getName()}">...</td>
+								<td th:text="${lecture.getAudience().getRoomNumber()}">...</td>
+							</tr>
+						</div>
+						
+						<div th:if="${lecture.isArchived()==false && lecture.isModified()==true}">
+							<tr>
+								<td colspan="5" style="text-align: center" class="bg-warning text-dark" th:text="${lecture.getStatus()}">...</td>
+							</tr>
+							<tr class="bg-warning text-dark" th:onclick="'window.location.href=\'/lectures/' + ${lecture.getId()} + '\''">
+								<td th:text="${lecture.getSession().getPeriod()}">...</td>
+								<td th:text="${lecture.getTeacher().getFirstName()} +' ' + ${lecture.getTeacher().getLastName()}+ ', ' + ${lecture.getTeacher().getProfile()}">...</td>
+								<td th:text="${lecture.getGroup().getName()}">...</td>
+								<td th:text="${lecture.getAudience().getRoomNumber()}">...</td>
+							</tr>
+						</div>
+						
+						<div th:if="${lecture.isArchived()==true && lecture.isModified()==false}">
+							<tr>
+								<td colspan="4" style="text-align: center" class="bg-danger text-light" th:text="${lecture.getStatus()}">...</td>
+							</tr>
+							<tr class="bg-danger text-light">
+								<td th:text="${lecture.getSession().getPeriod()}">...</td>
+								<td th:text="${lecture.getTeacher().getFirstName()} +' ' + ${lecture.getTeacher().getLastName()}+ ', ' + ${lecture.getTeacher().getProfile()}">...</td>
+								<td th:text="${lecture.getGroup().getName()}">...</td>
+								<td th:text="${lecture.getAudience().getRoomNumber()}">...</td>
+							</tr>
+						</div>
+					</div>
 				</th:block>
 			</table>
 		</div>

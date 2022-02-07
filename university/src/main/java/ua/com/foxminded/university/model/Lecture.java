@@ -13,8 +13,8 @@ public class Lecture extends IdEntity implements Comparable<Lecture> {
 	private Teacher teacher;
 	private Group group;
 
-	private boolean modified; // if lecture was edited (but wasn't canceled)
-	private boolean archived; // if lecture was canceled or rescheduled and position became free
+	private boolean modified; // if lecture was edited (but wasn't cancelled)
+	private boolean archived; // if lecture was cancelled or rescheduled and position became free
 	private boolean update; //
 	private String status;
 	private Map<String, Boolean> modifiedField;

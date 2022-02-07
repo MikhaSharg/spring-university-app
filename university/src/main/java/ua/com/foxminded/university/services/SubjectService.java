@@ -36,7 +36,12 @@ public class SubjectService {
 
 	public List<Subject> findAllExistSubjects() {
 		List<Subject> subjects = subjectDao.findAll();
-
+		List<Long> subjectIdsWithTeachers = subjectDao.findSubjectsWithTeachers();
+		subjects.stream().forEach(sub -> {
+			if (subjectIdsWithTeachers.contains(sub.getId()) == false) {
+				sub.setIsWithoutTeacher(true);
+			}
+		});
 		if (!subjects.isEmpty()) {
 			log.info("Found {} subjects", subjects.size());
 		} else {
@@ -69,12 +74,4 @@ public class SubjectService {
 		subjectDao.deleteById(subjectId);
 		log.info("Subject ID {} was deleted from DB", subjectId);
 	}
-
 }
-
-//	public List<Subject> doFilterSubjects (List<Subject> subjects) {
-//		List<Long> archivedSubjectIds = subjectDao.findArchivedSubjectIds();
-//		List<Subject> filteredSubjects = subjects.stream().filter(subject->{return !archivedSubjectIds.contains(subject.getId());}).collect(Collectors.toList());
-//		log.info("Filter removed {} archived Subjects", subjects.size()-filteredSubjects.size());
-//		return filteredSubjects;
-//	}
