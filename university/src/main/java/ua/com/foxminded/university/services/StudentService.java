@@ -39,10 +39,9 @@ public class StudentService {
 	}
 
 	public List<Student> findAllStudentsByGroupId(Long groupId) {
-
 		List<Student> students = studentDao.findAllStudentsByGroupId(groupId);
 		if (!students.isEmpty()) {
-			log.info("Finded {} students for group ID {}", students.size(), groupId);
+			log.info("Found {} students for group ID {}", students.size(), groupId);
 		} else {
 			log.warn("Could not find any students for group ID {}", groupId);
 		}
@@ -50,10 +49,9 @@ public class StudentService {
 	}
 
 	public List<Student> findAllExistStudents() {
-
 		List<Student> students = studentDao.findAll();
 		if (!students.isEmpty()) {
-			log.info("Finded {} students", students.size());
+			log.info("Found {} students", students.size());
 		} else {
 			log.warn("Could not find any students");
 		}
@@ -63,7 +61,7 @@ public class StudentService {
 	public Student findStudentById(Long studentId) {
 		Optional<Student> student = studentDao.findById(studentId);
 		if (student.isPresent()) {
-			log.info("Finded student {}, {}, {}", student.get().getId(), student.get().getFirstName(),
+			log.info("Found student {}, {}, {}", student.get().getId(), student.get().getFirstName(),
 					student.get().getLastName());
 		} else {
 			log.warn("Could not find student with ID {}", student);

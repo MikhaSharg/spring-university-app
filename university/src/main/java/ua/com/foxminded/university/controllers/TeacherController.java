@@ -1,5 +1,7 @@
 package ua.com.foxminded.university.controllers;
 
+import static ua.com.foxminded.university.controllers.ControllerUtils.setTitle;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -10,8 +12,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import ua.com.foxminded.university.facade.ControllersFacade;
 import ua.com.foxminded.university.model.Teacher;
 import ua.com.foxminded.university.wrappers.TeacherWrapper;
-
-import static ua.com.foxminded.university.controllers.ControllerUtils.*;
 
 @Controller
 @RequestMapping("/teachers")
@@ -62,25 +62,26 @@ public class TeacherController {
 				teacher.getProfile()));
 		return "/teachers/view";
 	}
-	
-	@PostMapping(path="/{id}/delete")
-	String deleteTeacherWithSubjects(@PathVariable(name="id") Long id) {
+
+	@PostMapping(path = "/{id}/delete")
+	String deleteTeacherWithSubjects(@PathVariable(name = "id") Long id) {
 		facade.deleteTeacher(id);
 		return "redirect:/teachers/";
 	}
-	
-	@GetMapping(path="/registerNewTeacher")
-	String showNewTeacherRegistrationForm (Model model) {
+
+	@GetMapping(path = "/registerNewTeacher")
+	String showNewTeacherRegistrationForm(Model model) {
 		TeacherWrapper teacher = new TeacherWrapper();
 		model.addAttribute("teacher", teacher);
+		setTitle(model, "New Teacher registration");
 		return "teachers/registration";
 	}
-	
-	@PostMapping(path="/newTeacherRegistration")
-	String registrateNewTeacher (TeacherWrapper teacherRegistration, Model model) {
+
+	@PostMapping(path = "/newTeacherRegistration")
+	String registrateNewTeacher(TeacherWrapper teacherRegistration, Model model) {
 		Long newTeacherId = facade.updateTeacher(teacherRegistration.getNewTeacher()).getId();
 		model.addAttribute("teacher", facade.collectTeacherForView(newTeacherId));
 		return "teachers/view";
 	}
-	
-} 
+
+}

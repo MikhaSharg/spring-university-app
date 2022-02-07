@@ -18,33 +18,33 @@ public class TeacherWrapper {
 	private Long phoneNumber;
 	private String profile;
 	private List<Subject> subjects;
-	
+
 	private final List<String> genders = Arrays.asList(GENDER_FEMALE, GENDER_MALE);
-	
+
 	private Teacher newTeacher;
 	private Teacher oldTeacher;
-	
+
 	private static final String GENDER_MALE = "male";
 	private static final String GENDER_FEMALE = "female";
 	private static final String ROLE_TEACHER = "teacher";
-	
+
 	public TeacherWrapper() {
 		super();
 	}
-	
+
 	public TeacherWrapper(Teacher oldTeacher) {
 		super();
 		this.oldTeacher = oldTeacher;
-		this.id=oldTeacher.getId();
-		this.firstName=oldTeacher.getFirstName();
-		this.lastName=oldTeacher.getLastName();
-		this.gender=oldTeacher.getGender();
-		this.email=oldTeacher.getEmail();
-		this.address=oldTeacher.getAddress();
-		this.age=oldTeacher.getAge();
-		this.phoneNumber=oldTeacher.getPhoneNumber();
-		this.profile=oldTeacher.getProfile();
-		this.subjects=oldTeacher.getSubjects();
+		this.id = oldTeacher.getId();
+		this.firstName = oldTeacher.getFirstName();
+		this.lastName = oldTeacher.getLastName();
+		this.gender = oldTeacher.getGender();
+		this.email = oldTeacher.getEmail();
+		this.address = oldTeacher.getAddress();
+		this.age = oldTeacher.getAge();
+		this.phoneNumber = oldTeacher.getPhoneNumber();
+		this.profile = oldTeacher.getProfile();
+		this.subjects = oldTeacher.getSubjects();
 	}
 
 	public Long getId() {
@@ -126,16 +126,16 @@ public class TeacherWrapper {
 	public void setSubjects(List<Subject> subjects) {
 		this.subjects = subjects;
 	}
-	
+
 	public Teacher getNewTeacher() {
 		if (this.id == null) {
-			return new Teacher(firstName, lastName, gender, email, address, age, phoneNumber, ROLE_TEACHER,
-					profile);
+			return new Teacher(firstName, lastName, gender, email, address, age, phoneNumber, ROLE_TEACHER, profile);
 		} else {
 			return new Teacher(id, firstName, lastName, gender, email, address, age, phoneNumber, oldTeacher.getRole(),
 					profile, oldTeacher.getSubjects());
 		}
 	}
+
 	public void setNewTeacher(Teacher newTeacher) {
 		this.newTeacher = newTeacher;
 	}
@@ -159,5 +159,5 @@ public class TeacherWrapper {
 				+ ", profile=" + profile + ", subjects=" + subjects + ", genders=" + genders + ", newTeacher="
 				+ newTeacher + ", oldTeacher=" + oldTeacher + "]";
 	}
-	
+
 }

@@ -42,7 +42,7 @@ public class SubjectController {
 	String showNewSubjectForm(@PathVariable(name = "teacherId") Long teacherId, Model model) {
 		SubjectWrapper subject = new SubjectWrapper(facade.collectTeacherForView(teacherId));
 		model.addAttribute("subject", subject);
-		setTitle(model, "Add new subject to teacher", subject.getName());
+		setTitle(model, "Add new subject to teacher");
 		return "subjects/new";
 	}
 
@@ -69,6 +69,7 @@ public class SubjectController {
 		SubjectWrapper subject = new SubjectWrapper(facade.findSubjectById(subjectId),
 				facade.collectTeacherForView(teacherId), facade.collectTeachersForSubject(subjectId));
 		model.addAttribute("subject", subject);
+		setTitle(model, "Edit Subject to Teacher");
 		return "subjects/edit";
 	}
 
@@ -85,6 +86,7 @@ public class SubjectController {
 	String showSubjectEditFormBaseMode(@PathVariable(name = "id") Long id, Model model) {
 		SubjectWrapper subject = new SubjectWrapper(facade.findSubjectById(id), facade.collectTeachersForSubject(id));
 		model.addAttribute("subject", subject);
+		setTitle(model, "Edit Subject");
 		return "subjects/editBase";
 	}
 

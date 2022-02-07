@@ -105,6 +105,7 @@ public class StudentController {
 		StudentWrapper student = facade.prepareDataForMoveStudentForm(studentId);
 		studentBuffer = student.getBeforeUpdateStudent();
 		model.addAttribute("student", student);
+		setTitle(model, "Move student to another Group", String.format("%s %s", student.getFirstName(), student.getLastName()));
 		return "students/move";
 	}
 

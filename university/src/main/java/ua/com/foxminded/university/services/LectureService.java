@@ -3,7 +3,6 @@ package ua.com.foxminded.university.services;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -20,9 +19,9 @@ import ua.com.foxminded.university.dao.LectureSessionsDao;
 import ua.com.foxminded.university.misc.DateGenerationUtils;
 import ua.com.foxminded.university.misc.GeneratorConfig;
 import ua.com.foxminded.university.misc.Status;
+import ua.com.foxminded.university.model.FreeItem;
 import ua.com.foxminded.university.model.Lecture;
 import ua.com.foxminded.university.model.LectureSessions;
-import ua.com.foxminded.university.model.FreeItem;
 
 @Service
 @Transactional
@@ -137,14 +136,16 @@ public class LectureService {
 		lectureDao.deleteById(lectureId);
 		log.info("Lecture ID {} canceled (deleted)", lectureId);
 	}
-	
+
 	public void cancelLecturesForRetiredTeacher(Long teacherId) {
 		List<Lecture> lecturesWithRetiredTeacher = lectureDao.findAllLecturesByTeacherId(teacherId);
-		log.info("Prepare {} lectures to cancel that have fired teacher ID {}", lecturesWithRetiredTeacher.size(), teacherId);
-		lecturesWithRetiredTeacher.stream().forEach(lecture->{
+		log.info("Prepare {} lectures to cancel that have fired teacher ID {}", lecturesWithRetiredTeacher.size(),
+				teacherId);
+		lecturesWithRetiredTeacher.stream().forEach(lecture -> {
 			lecture.setStatus(FIRED_TEACHER);
 			lectureDao.archiveLecture(lecture);
-			log.info("Lecture ID {} was archived and deleted because Teacher ID {} was fired (deleted)", lecture.getId(), teacherId);
+			log.info("Lecture ID {} was archived and deleted because Teacher ID {} was fired (deleted)",
+					lecture.getId(), teacherId);
 			lectureDao.deleteById(lecture.getId());
 		});
 	}
@@ -152,14 +153,17 @@ public class LectureService {
 	public List<FreeItem> findAllFreeItemsInSchedule(Long teacherId, Long groupId) {
 		List<Lecture> lectures = lectureDao.findLecturesByTeacherAndGroupId(teacherId, groupId);
 		log.info("Found {} lectures for Teacher ID {} and Group ID {}", lectures.size(), teacherId, groupId);
-		List<LocalDate> allStudyDays = DateGenerationUtils.generateStudyDates(config.getHolidays(), config.getStartDate(), config.getEndDate());
-		List<LocalDate> studyDays = allStudyDays.stream().filter(e->e.getDayOfYear() >= LocalDate.now().getDayOfYear()).collect(Collectors.toList());
+		List<LocalDate> allStudyDays = DateGenerationUtils.generateStudyDates(config.getHolidays(),
+				config.getStartDate(), config.getEndDate());
+		List<LocalDate> studyDays = allStudyDays.stream()
+				.filter(e -> e.getDayOfYear() >= LocalDate.now().getDayOfYear()).collect(Collectors.toList());
 		log.info("Found {} days in current year", studyDays.size());
 		List<FreeItem> freeItems = new ArrayList<>();
 		List<LectureSessions> sessions = lectureSessionsDao.findAll();
-		
+
 		List<Lecture> archivedLectures = lectureDao.findArchivedLectures(teacherId, groupId);
-		List<Lecture> actualArchivedLectures = archivedLectures.stream().filter(e->e.getDate().getDayOfYear() >= LocalDate.now().getDayOfYear()).collect(Collectors.toList());
+		List<Lecture> actualArchivedLectures = archivedLectures.stream()
+				.filter(e -> e.getDate().getDayOfYear() >= LocalDate.now().getDayOfYear()).collect(Collectors.toList());
 		if (!actualArchivedLectures.isEmpty()) {
 			actualArchivedLectures.stream().forEach(lecture -> {
 				freeItems.add(new FreeItem(lecture.getDate(), lecture.getSession().getId(), lecture.getId()));
@@ -239,22 +243,23 @@ public class LectureService {
 
 	public Boolean cancelAllLecturesForDeletablegSubject(Long teacherId, Long subjectId) {
 		List<Lecture> lectures = lectureDao.findAllLecturesByTeacherId(teacherId);
-		lectures = lectures.stream().filter(lec->lec.getSubject().getId().equals(subjectId)).collect(Collectors.toList());
-	 	if(lectures.isEmpty()) {
-	 		return false;
-	 	} else {
-	 	
+		lectures = lectures.stream().filter(lec -> lec.getSubject().getId().equals(subjectId))
+				.collect(Collectors.toList());
+		if (lectures.isEmpty()) {
+			return false;
+		} else {
 
-		log.info("Prepare {} lectures to cancel because Subject ID {} was deleted from Teacher ID {}", lectures.size(), subjectId, teacherId);
-		List<Long> counter = new ArrayList<>();
-		lectures.stream().forEach(lec->{
-			lec.setStatus(DELETE_SUBJECT);
-			lectureDao.archiveLecture(lec);
-			counter.add(lec.getId());
-			lectureDao.deleteById(lec.getId());
-		});
-		log.info("{} lectures was archived (deleted)", counter.size());
-		return true;
-	 	}
+			log.info("Prepare {} lectures to cancel because Subject ID {} was deleted from Teacher ID {}",
+					lectures.size(), subjectId, teacherId);
+			List<Long> counter = new ArrayList<>();
+			lectures.stream().forEach(lec -> {
+				lec.setStatus(DELETE_SUBJECT);
+				lectureDao.archiveLecture(lec);
+				counter.add(lec.getId());
+				lectureDao.deleteById(lec.getId());
+			});
+			log.info("{} lectures was archived (deleted)", counter.size());
+			return true;
+		}
 	}
 }
